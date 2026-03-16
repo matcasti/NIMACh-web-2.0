@@ -86,3 +86,125 @@
   --s-text-2:   var(--t-muted);
   --s-text-3:   var(--t-dim);
 }
+
+/* ══════════════════════════════════
+   DARK MODE — body.dark-mode overrides
+   Activa el modo oscuro global sobre
+   las light-sections y componentes blancos.
+══════════════════════════════════ */
+
+/* Transición suave al cambiar tema */
+body.theme-transitioning,
+body.theme-transitioning *,
+body.theme-transitioning *::before,
+body.theme-transitioning *::after {
+  transition:
+    background-color .32s var(--ease-out),
+    border-color     .32s var(--ease-out),
+    color            .32s var(--ease-out),
+    box-shadow       .32s var(--ease-out) !important;
+}
+
+body.dark-mode {
+  background: var(--c-navy-2);
+  color: var(--t-hero);
+}
+
+/* Secciones con fondo inline (override !important necesario) */
+body.dark-mode #investigacion  { background: var(--c-navy-2)  !important; }
+body.dark-mode #proyectos      { background: var(--c-navy-3)  !important; }
+body.dark-mode #personas       { background: var(--c-navy-2)  !important; }
+body.dark-mode #publicaciones  { background: var(--c-navy-3)  !important; }
+body.dark-mode #herramientas   { background: var(--c-navy-2)  !important; }
+body.dark-mode #metricas       { background: var(--c-navy-3)  !important; }
+body.dark-mode #galeria        { background: var(--c-navy-2)  !important; }
+body.dark-mode #datasets       { background: var(--c-navy-3)  !important; }
+body.dark-mode #contacto       { background: var(--c-navy-2)  !important; }
+
+/* Variables semánticas en modo oscuro */
+body.dark-mode .light-section {
+  --s-bg:     var(--c-navy-2);
+  --s-bg-2:   var(--c-navy-3);
+  --s-border: var(--glass-border);
+  --s-text:   var(--t-hero);
+  --s-text-2: var(--t-muted);
+  --s-text-3: var(--t-dim);
+}
+
+/* Cards */
+body.dark-mode .research-card,
+body.dark-mode .person-card,
+body.dark-mode .project-card,
+body.dark-mode .pub-card,
+body.dark-mode .tool-card,
+body.dark-mode .dataset-card,
+body.dark-mode .metric-card {
+  background:    var(--c-navy-3);
+  border-color:  var(--glass-border);
+}
+
+body.dark-mode .card-title,
+body.dark-mode .person-name,
+body.dark-mode .project-title,
+body.dark-mode .pub-title,
+body.dark-mode .section-title,
+body.dark-mode .meta-value {
+  color: var(--t-hero);
+}
+
+body.dark-mode .card-desc,
+body.dark-mode .person-role,
+body.dark-mode .project-pi,
+body.dark-mode .pub-authors,
+body.dark-mode .section-desc {
+  color: var(--t-muted);
+}
+
+body.dark-mode .tag,
+body.dark-mode .person-chip,
+body.dark-mode .collab-chip,
+body.dark-mode .timeline-tag,
+body.dark-mode .footer-chip {
+  background: rgba(255,255,255,.07);
+  color: var(--t-muted);
+}
+
+/* Inputs */
+body.dark-mode .form-input {
+  background:   var(--c-navy-3);
+  border-color: var(--glass-border);
+  color:        var(--t-hero);
+}
+
+body.dark-mode .form-input::placeholder { color: var(--t-dim); }
+body.dark-mode .form-input:focus {
+  border-color: var(--c-blue);
+  box-shadow: 0 0 0 3px rgba(59,122,191,.15);
+}
+
+/* Timeline */
+body.dark-mode .timeline::before { background: rgba(255,255,255,.08); }
+body.dark-mode .timeline-dot     { background: var(--c-navy-3); }
+body.dark-mode .timeline-text,
+body.dark-mode .timeline-date    { color: var(--t-muted); }
+
+/* Progress tracks */
+body.dark-mode .progress-track { background: rgba(255,255,255,.07); }
+
+/* Contact info */
+body.dark-mode .contact-icon    { background: var(--c-navy-3); }
+body.dark-mode .contact-value   { color: var(--t-hero); }
+body.dark-mode .contact-label   { color: var(--t-dim); }
+
+/* Social buttons */
+body.dark-mode .social-btn {
+  background: rgba(255,255,255,.06);
+  color: var(--t-muted);
+}
+body.dark-mode .social-btn:hover {
+  background: rgba(255,255,255,.12);
+  color: var(--t-hero);
+}
+
+/* Scrollbar */
+body.dark-mode ::-webkit-scrollbar-track { background: var(--c-navy); }

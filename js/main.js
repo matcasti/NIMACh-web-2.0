@@ -5,9 +5,21 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  // ── Theme (antes que cualquier render) ──
+  new ThemeManager();
+
   // ── Canvas animations ──
   new NeuralCanvas('hero-canvas', 'hero');
   new ParticleField('dei-canvas');
+  
+  // ── Collaboration map ──
+  new CollabMap('collab-map-canvas');
+
+  // ── OpenAlex enrichment ──
+  new PublicationsEnricher();
+  
+  // ── 3D Brain-Heart viewer ──
+  new Brain3DViewer();
 
   // ── Publications filter ──
   initPubFilter();

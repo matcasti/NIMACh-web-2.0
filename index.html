@@ -46,6 +46,7 @@
     <a href="#investigacion" class="nav-link active" data-section="investigacion">Investigación</a>
     <a href="#proyectos"     class="nav-link"        data-section="proyectos">Proyectos</a>
     <a href="#personas"      class="nav-link"        data-section="personas">Personas</a>
+    <a href="#herramientas"  class="nav-link"        data-section="herramientas">Herramientas</a>
     <a href="#publicaciones" class="nav-link"        data-section="publicaciones">Publicaciones</a>
     <a href="#galeria"       class="nav-link"        data-section="galeria">Galería</a>
     <a href="#dei"           class="nav-link"        data-section="dei">DEI</a>
@@ -56,6 +57,9 @@
       <span class="badge-dot" style="background:var(--c-teal)"></span>
       FONDECYT Activo
     </div>
+    <button id="theme-toggle" class="theme-toggle" aria-label="Activar modo oscuro">
+      <span id="theme-icon">🌙</span>
+    </button>
     <a href="#contacto" class="nav-cta">Contáctanos</a>
   </div>
 
@@ -93,6 +97,9 @@
     <div class="hero-btns">
       <a href="#investigacion" class="btn-primary">Explorar investigación</a>
       <a href="#personas"      class="btn-secondary">Conocer el equipo</a>
+      <button id="btn-3d" class="btn-3d" aria-label="Ver eje cerebro-corazón en 3D">
+        <span class="btn-3d-icon">⬡</span> Ver en 3D
+      </button>
     </div>
 
     <!-- Stat rings -->
@@ -446,6 +453,109 @@
   </div>
 </section>
 
+<!-- ══════════════════════════════════
+     HERRAMIENTAS
+══════════════════════════════════ -->
+<section class="section-pad light-section" id="herramientas" style="background:#fff;">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header-left">
+        <span class="label">Software open-source</span>
+        <h2 class="section-title">Herramientas</h2>
+        <p class="section-desc">Desarrollamos herramientas de acceso libre para el análisis de señales fisiológicas, disponibles para la comunidad.</p>
+      </div>
+      <a href="pages/herramientas.html" class="see-all">Ver todas →</a>
+    </div>
+
+    <div class="tools-grid">
+
+      <article class="tool-card tool-featured reveal delay-1">
+        <div class="tool-header">
+          <div class="tool-icon-wrap">
+            <div class="tool-icon">💓</div>
+          </div>
+          <div class="tool-badges">
+            <span class="badge badge-active"><span class="badge-dot"></span>En producción</span>
+            <span class="badge badge-live">v2.0</span>
+          </div>
+        </div>
+        <h3 class="tool-title">HRV Analyzer — Polar H10 Web App</h3>
+        <p class="tool-desc">Aplicación web para análisis de variabilidad de frecuencia cardíaca en tiempo real usando bandas Polar H10 vía Web Bluetooth. Sin instalación, sin cuenta, sin costo.</p>
+
+        <div class="tool-features">
+          <div class="tool-feature">✓ Métricas en dominio tiempo (SDNN, RMSSD, pNN50)</div>
+          <div class="tool-feature">✓ Análisis frecuencial (LF, HF, LF/HF)</div>
+          <div class="tool-feature">✓ Poincaré plot en tiempo real</div>
+          <div class="tool-feature">✓ Exportación CSV / JSON</div>
+          <div class="tool-feature">✓ Compatible con Polar H10 y H9</div>
+        </div>
+
+        <div class="tool-tags">
+          <span class="tag">Web Bluetooth</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">HRV</span>
+          <span class="tag">Polar H10</span>
+          <span class="tag">Open Source</span>
+        </div>
+
+        <div class="tool-author">
+          <div class="avatar av2" style="width:28px;height:28px;font-size:11px;">MC</div>
+          <span>Desarrollado por Matías Castillo-Aguilar</span>
+        </div>
+
+        <div class="tool-actions">
+          <a href="https://deft-torte-3c1940.netlify.app/" target="_blank" rel="noopener"
+             class="tool-btn tool-btn-primary">→ Abrir aplicación</a>
+          <a href="#" class="tool-btn tool-btn-ghost">GitHub</a>
+          <a href="#" class="tool-btn tool-btn-ghost">Documentación</a>
+        </div>
+      </article>
+
+      <div class="tools-side">
+
+        <article class="tool-card tool-upcoming reveal delay-2">
+          <div class="tool-header">
+            <div class="tool-icon-wrap">
+              <div class="tool-icon">📊</div>
+            </div>
+            <span class="badge" style="background:rgba(123,82,212,.1);color:var(--c-purple);border-color:rgba(123,82,212,.2);">
+              En desarrollo
+            </span>
+          </div>
+          <h3 class="tool-title">NIM-Stats — Pipeline estadístico HRV</h3>
+          <p class="tool-desc">CLI en Python para procesamiento batch de archivos RR. Genera reportes automáticos en PDF con visualizaciones estandarizadas.</p>
+          <div class="tool-tags">
+            <span class="tag">Python</span><span class="tag">CLI</span><span class="tag">Batch</span>
+          </div>
+          <div class="tool-actions">
+            <a href="#" class="tool-btn tool-btn-ghost">Seguir desarrollo →</a>
+          </div>
+        </article>
+
+        <article class="tool-card tool-upcoming reveal delay-3">
+          <div class="tool-header">
+            <div class="tool-icon-wrap">
+              <div class="tool-icon">🗂️</div>
+            </div>
+            <span class="badge" style="background:rgba(123,82,212,.1);color:var(--c-purple);border-color:rgba(123,82,212,.2);">
+              Planificado
+            </span>
+          </div>
+          <h3 class="tool-title">NIM-Annotator — Etiquetado de artefactos</h3>
+          <p class="tool-desc">Interfaz visual para revisar y limpiar series RR, con detección automática de ectópicos y exportación de segmentos anotados.</p>
+          <div class="tool-tags">
+            <span class="tag">React</span><span class="tag">Annotation</span><span class="tag">QC</span>
+          </div>
+          <div class="tool-actions">
+            <a href="#" class="tool-btn tool-btn-ghost">Notificarme →</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <!-- ══════════════════════════════════
      PUBLICACIONES + NOTICIAS
@@ -558,6 +668,72 @@
 
 
 <!-- ══════════════════════════════════
+     MÉTRICAS DEL GRUPO
+══════════════════════════════════ -->
+<section class="section-pad light-section" id="metricas" style="background:#f6f8fc;">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header-left">
+        <span class="label">Impacto científico</span>
+        <h2 class="section-title">Métricas del grupo</h2>
+        <p class="section-desc">Datos en tiempo real vía OpenAlex · Actualizados automáticamente desde los DOIs.</p>
+      </div>
+      <a href="pages/publicaciones.html" class="see-all">Ver publicaciones →</a>
+    </div>
+
+    <!-- KPI strip -->
+    <div class="metrics-strip reveal delay-1">
+      <div class="metric-card">
+        <div class="metric-icon" style="background:rgba(59,122,191,.1)">📊</div>
+        <div class="metric-value" id="metric-citations">—</div>
+        <div class="metric-label">Citas totales</div>
+        <div class="metric-source">OpenAlex</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon" style="background:rgba(232,112,64,.1)">🎯</div>
+        <div class="metric-value" id="metric-hindex">—</div>
+        <div class="metric-label">h-index del grupo</div>
+        <div class="metric-source">Calculado</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon" style="background:rgba(29,184,132,.1)">📝</div>
+        <div class="metric-value" id="metric-pub-count">—</div>
+        <div class="metric-label">Publicaciones indexadas</div>
+        <div class="metric-source">Base interna</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon" style="background:rgba(123,82,212,.1)">🌐</div>
+        <div class="metric-value">5</div>
+        <div class="metric-label">Países colaboradores</div>
+        <div class="metric-source">MEDIANTAR · RIES-LAC</div>
+      </div>
+    </div>
+
+    <!-- Mapa de colaboraciones -->
+    <div class="collab-map-wrap reveal delay-2">
+      <div class="collab-map-header">
+        <span class="label">Red internacional</span>
+        <span class="collab-map-note">Colaboraciones activas 2024–2025</span>
+      </div>
+      <div class="collab-map-container">
+        <canvas id="collab-map-canvas" aria-label="Mapa de colaboraciones internacionales"></canvas>
+        <div class="collab-map-legend">
+          <span class="collab-legend-item">
+            <span class="collab-legend-dot" style="background:var(--c-coral)"></span>Sede (Punta Arenas)
+          </span>
+          <span class="collab-legend-item">
+            <span class="collab-legend-dot" style="background:var(--c-blue-light)"></span>Colaboradores activos
+          </span>
+          <span class="collab-legend-item">
+            <span class="collab-legend-dot" style="background:rgba(127,179,232,.4)"></span>Red RIES-LAC
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
      GALERÍA
 ══════════════════════════════════ -->
 <section class="section-pad light-section" id="galeria" style="background:#f6f8fc;">
@@ -657,6 +833,97 @@
           </div>
         </div>
       </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     DATASETS ABIERTOS
+══════════════════════════════════ -->
+<section class="section-pad light-section" id="datasets" style="background:#f6f8fc;">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header-left">
+        <span class="label">Ciencia abierta</span>
+        <h2 class="section-title">Datasets disponibles</h2>
+        <p class="section-desc">Compartimos nuestros datos con la comunidad científica bajo licencias abiertas. Cita el dataset si lo usas en tu investigación.</p>
+      </div>
+      <a href="pages/datasets.html" class="see-all">Ver todos →</a>
+    </div>
+
+    <div class="datasets-grid">
+
+      <!-- Los cards se generan dinámicamente por renderDatasets() en main.js -->
+      <!-- Placeholder mientras carga JS -->
+      <article class="dataset-card reveal delay-1" data-ds="ds-hrv-cold-2024">
+        <div class="ds-header">
+          <span class="ds-badge badge-active"><span class="badge-dot"></span>Público</span>
+          <div class="ds-format">CSV + JSON · 14 MB</div>
+        </div>
+        <h3 class="ds-title">HRV Cold-Water Swimmers · Magallanes 2024</h3>
+        <p class="ds-desc">Registros RR interval (Polar H10) de 28 nadadores en 3 condiciones: pre-inmersión, post-inmersión y recuperación.</p>
+        <div class="ds-meta">
+          <span><strong>n=</strong>28</span>
+          <span><strong>Licencia:</strong> CC BY 4.0</span>
+        </div>
+        <div class="ds-vars">
+          <span class="tag">RR intervals</span>
+          <span class="tag">RMSSD</span>
+          <span class="tag">LF/HF</span>
+          <span class="tag">Temperatura</span>
+        </div>
+        <div class="ds-actions">
+          <a href="#" class="ds-btn ds-btn-primary">↓ Descargar (Zenodo)</a>
+          <a href="#" class="ds-btn ds-btn-ghost">GitHub →</a>
+        </div>
+      </article>
+
+      <article class="dataset-card reveal delay-2" data-ds="ds-mindfulness-elderly-2023">
+        <div class="ds-header">
+          <span class="ds-badge badge-active"><span class="badge-dot"></span>Público</span>
+          <div class="ds-format">SPSS + CSV · 8 MB</div>
+        </div>
+        <h3 class="ds-title">Mindfulness & Aging · UMAG 2023</h3>
+        <p class="ds-desc">Datos pre/post intervención mindfulness 8 semanas. HRV, test cognitivos MMSE/MoCA y escalas de bienestar.</p>
+        <div class="ds-meta">
+          <span><strong>n=</strong>42</span>
+          <span><strong>Licencia:</strong> CC BY-NC 4.0</span>
+        </div>
+        <div class="ds-vars">
+          <span class="tag">HRV</span>
+          <span class="tag">MMSE</span>
+          <span class="tag">MoCA</span>
+          <span class="tag">STAI</span>
+        </div>
+        <div class="ds-actions">
+          <a href="#" class="ds-btn ds-btn-primary">↓ Descargar (Zenodo)</a>
+        </div>
+      </article>
+
+      <article class="dataset-card reveal delay-3" data-ds="ds-seasonal-light-2022">
+        <div class="ds-header">
+          <span class="ds-badge badge-active"><span class="badge-dot"></span>Público</span>
+          <div class="ds-format">CSV · 6 MB</div>
+        </div>
+        <h3 class="ds-title">Seasonal Light & ANS · High Latitude 2022</h3>
+        <p class="ds-desc">Mediciones autonómicas y de exposición lumínica en adultos mayores a lo largo de las 4 estaciones en Punta Arenas.</p>
+        <div class="ds-meta">
+          <span><strong>n=</strong>35</span>
+          <span><strong>Licencia:</strong> CC BY 4.0</span>
+        </div>
+        <div class="ds-vars">
+          <span class="tag">HRV</span>
+          <span class="tag">Lux</span>
+          <span class="tag">Melatonin</span>
+          <span class="tag">Sleep</span>
+        </div>
+        <div class="ds-actions">
+          <a href="#" class="ds-btn ds-btn-primary">↓ Descargar (Zenodo)</a>
+          <a href="#" class="ds-btn ds-btn-ghost">GitHub →</a>
+        </div>
+      </article>
 
     </div>
   </div>
@@ -799,6 +1066,9 @@
 <script src="js/data.js"></script>
 <script src="js/canvas.js"></script>
 <script src="js/scroll.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/publications.js"></script>
+<script src="js/brain3d.js"></script>
 <script src="js/main.js"></script>
 
 </body>

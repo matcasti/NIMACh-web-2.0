@@ -160,6 +160,30 @@
   transform: translateY(-1px);
 }
 
+/* ── Theme toggle ── */
+.theme-toggle {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-sm);
+  background: var(--glass);
+  border: 0.5px solid var(--glass-border);
+  color: var(--t-muted);
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--dur-fast), color var(--dur-fast),
+              transform var(--dur-fast) var(--ease-spring);
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  background: var(--glass-hover);
+  color: var(--t-hero);
+  transform: rotate(18deg) scale(1.08);
+}
+
 /* ── Mobile toggle ── */
 .nav-hamburger {
   display: none;
@@ -202,3 +226,4 @@
     border-radius: var(--r-md);
   }
 }
+

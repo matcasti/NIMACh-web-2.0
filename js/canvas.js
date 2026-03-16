@@ -219,6 +219,121 @@ class ParticleField {
   }
 }
 
+/**
+ * CollabMap — Mapa de colaboraciones internacionales
+ * SVG-path simplificado de Sudamérica/Europa con nodos animados.
+ */
+class CollabMap {
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    if (!this.canvas) return;
+    this.ctx = this.canvas.getContext('2d');
+    this.frame = 0;
+
+    // Coordenadas normalizadas [x%,y%] sobre el canvas
+    // proyección simple equirectangular recortada al área relevante
+    this.nodes = [
+      { x:.12, y:.72, label:'Punta Arenas',     color:'#e87040', r:7, home:true  },
+      { x:.13, y:.38, label:'Santiago',          color:'#7fb3e8', r:4, home:false },
+      { x:.22, y:.30, label:'Brasil · MEDIANTAR',color:'#7fb3e8', r:5, home:false },
+      { x:.20, y:.20, label:'México · RIES-LAC', color:'rgba(127,179,232,.6)', r:4, home:false },
+      { x:.67, y:.18, label:'España · ERASMUS+', color:'#7fb3e8', r:5, home:false },
+      { x:.59, y:.15, label:'Francia',           color:'rgba(127,179,232,.5)', r:3, home:false },
+      { x:.72, y:.21, label:'Italia',            color:'rgba(127,179,232,.5)', r:3, home:false },
+    ];
+
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
+    this.draw();
+  }
+
+  resize() {
+    const rect = this.canvas.parentElement.getBoundingClientRect();
+    this.W = this.canvas.width  = rect.width  || 900;
+    this.H = this.canvas.height = 260;
+  }
+
+  draw() {
+    const { ctx, W, H } = this;
+    this.frame++;
+    ctx.clearRect(0, 0, W, H);
+
+    // Fondo sutil
+    ctx.fillStyle = 'rgba(59,122,191,.03)';
+    ctx.fillRect(0, 0, W, H);
+
+    // Líneas de conexión pulsantes desde sede
+    const home = this.nodes[0];
+    const hx = home.x * W, hy = home.y * H;
+
+    this.nodes.slice(1).forEach((n, i) => {
+      const nx = n.x * W, ny = n.y * H;
+      const pulse = .4 + Math.sin(this.frame * .03 + i * .8) * .3;
+
+      // Línea curva
+      ctx.beginPath();
+      ctx.strokeStyle = n.color.includes('rgba')
+        ? n.color
+        : `rgba(127,179,232,${pulse * .5})`;
+      ctx.lineWidth = .8;
+      ctx.setLineDash([4, 6]);
+      ctx.lineDashOffset = -this.frame * .4;
+
+      // Bezier curva para simular arco de globo
+      const mx = (hx + nx) / 2;
+      const my = Math.min(hy, ny) - Math.abs(nx - hx) * .25;
+      ctx.moveTo(hx, hy);
+      ctx.quadraticCurveTo(mx, my, nx, ny);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Punto parpadeante en destino
+      const glow = ctx.createRadialGradient(nx, ny, 0, nx, ny, n.r * 3);
+      glow.addColorStop(0, `rgba(127,179,232,${pulse * .2})`);
+      glow.addColorStop(1, 'rgba(127,179,232,0)');
+      ctx.beginPath();
+      ctx.arc(nx, ny, n.r * 3, 0, Math.PI * 2);
+      ctx.fillStyle = glow;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(nx, ny, n.r * (.8 + Math.sin(this.frame * .05 + i) * .2), 0, Math.PI * 2);
+      ctx.fillStyle = n.color;
+      ctx.fill();
+
+      // Label
+      ctx.fillStyle = 'rgba(122,155,191,.8)';
+      ctx.font      = '9px Sora, sans-serif';
+      ctx.textAlign = nx > W / 2 ? 'right' : 'left';
+      const offX    = nx > W / 2 ? -n.r - 4 : n.r + 4;
+      ctx.fillText(n.label, nx + offX, ny + 3);
+    });
+
+    // Nodo sede (más grande, siempre encima)
+    const pulseHome = 1 + Math.sin(this.frame * .06) * .15;
+    const gHome = ctx.createRadialGradient(hx, hy, 0, hx, hy, home.r * 4);
+    gHome.addColorStop(0, 'rgba(232,112,64,.25)');
+    gHome.addColorStop(1, 'rgba(232,112,64,0)');
+    ctx.beginPath();
+    ctx.arc(hx, hy, home.r * 4, 0, Math.PI * 2);
+    ctx.fillStyle = gHome;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(hx, hy, home.r * pulseHome, 0, Math.PI * 2);
+    ctx.fillStyle = home.color;
+    ctx.fill();
+
+    ctx.fillStyle = '#e8f0fa';
+    ctx.font = 'bold 9px Sora, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('Punta Arenas', hx + home.r + 4, hy + 3);
+
+    requestAnimationFrame(() => this.draw());
+  }
+}
+
 // Export for use in main.js
+window.CollabMap = CollabMap;
 window.NeuralCanvas   = NeuralCanvas;
 window.ParticleField  = ParticleField;

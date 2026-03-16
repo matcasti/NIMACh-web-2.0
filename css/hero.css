@@ -142,6 +142,35 @@
   transform: translateY(-2px);
 }
 
+.btn-3d {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 12px 20px;
+  background: rgba(29,184,132,.1);
+  color: var(--c-teal);
+  border: 0.5px solid rgba(29,184,132,.25);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: background var(--dur-fast),
+              transform var(--dur-fast) var(--ease-spring),
+              box-shadow var(--dur-fast);
+  font-family: var(--font-sans);
+}
+
+.btn-3d:hover {
+  background: rgba(29,184,132,.18);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(29,184,132,.2);
+}
+
+.btn-3d-icon {
+  font-size: 16px;
+  animation: spin-slow 8s linear infinite;
+}
+
 /* ── Stats ── */
 .hero-stats {
   display: flex;
