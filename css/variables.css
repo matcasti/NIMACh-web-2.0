@@ -1,0 +1,88 @@
+/* ============================================
+   NIM-ACh Design System — Variables
+   ============================================ */
+
+:root {
+  /* ── Brand Colors ── */
+  --c-navy:        #060e1e;
+  --c-navy-2:      #0d1d35;
+  --c-navy-3:      #142440;
+  --c-blue:        #3b7abf;
+  --c-blue-light:  #7fb3e8;
+  --c-coral:       #e87040;
+  --c-coral-light: #f5a472;
+  --c-teal:        #1db884;
+  --c-purple:      #7b52d4;
+
+  /* ── Text ── */
+  --t-hero:        #e8f0fa;
+  --t-muted:       #7a9bbf;
+  --t-dim:         #3a5570;
+
+  /* ── Glass surfaces ── */
+  --glass:         rgba(255, 255, 255, 0.04);
+  --glass-hover:   rgba(255, 255, 255, 0.08);
+  --glass-border:  rgba(255, 255, 255, 0.09);
+
+  /* ── Gradients ── */
+  --grad-brand:    linear-gradient(135deg, var(--c-blue), var(--c-coral));
+  --grad-hero:     linear-gradient(105deg, rgba(6,14,30,.97) 0%, rgba(6,14,30,.72) 55%, rgba(6,14,30,.08) 100%);
+  --grad-accent:   linear-gradient(90deg, var(--c-coral), var(--c-coral-light), var(--c-blue-light));
+
+  /* ── Spacing ── */
+  --sp-xs:  4px;
+  --sp-sm:  8px;
+  --sp-md:  16px;
+  --sp-lg:  24px;
+  --sp-xl:  40px;
+  --sp-2xl: 64px;
+
+  /* ── Radius ── */
+  --r-sm:  6px;
+  --r-md:  10px;
+  --r-lg:  14px;
+  --r-xl:  20px;
+  --r-full: 9999px;
+
+  /* ── Transitions ── */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast:    180ms;
+  --dur-mid:     320ms;
+  --dur-slow:    600ms;
+
+  /* ── Shadows ── */
+  --shadow-blue:  0 8px 28px rgba(59, 122, 191, 0.35);
+  --shadow-coral: 0 8px 28px rgba(232, 112, 64, 0.38);
+  --shadow-card:  0 2px 16px rgba(0, 0, 0, 0.08);
+
+  /* ── Typography ── */
+  --font-sans: 'Sora', 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* ── Z-index scale ── */
+  --z-base:    1;
+  --z-above:   10;
+  --z-nav:     100;
+  --z-modal:   200;
+  --z-toast:   300;
+}
+
+/* ── Light-mode overrides (sections on white bg) ── */
+.light-section {
+  --s-bg:       #ffffff;
+  --s-bg-2:     #f6f8fc;
+  --s-border:   rgba(0, 0, 0, 0.07);
+  --s-text:     #0d1d35;
+  --s-text-2:   #4a6280;
+  --s-text-3:   #8aa0b8;
+}
+
+.dark-section {
+  --s-bg:       var(--c-navy);
+  --s-bg-2:     var(--c-navy-2);
+  --s-border:   var(--glass-border);
+  --s-text:     var(--t-hero);
+  --s-text-2:   var(--t-muted);
+  --s-text-3:   var(--t-dim);
+}

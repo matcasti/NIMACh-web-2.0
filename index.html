@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="NIM-ACh — Grupo de investigación en neurofisiología. Estudiamos la adaptación del eje cerebro-corazón desde Punta Arenas, Chile." />
+  <meta name="keywords" content="neurofisiología, HRV, variabilidad frecuencia cardíaca, cerebro, corazón, Patagonia, UMAG, FONDECYT" />
+  <meta property="og:title"       content="NIM-ACh · Neurofisiología" />
+  <meta property="og:description" content="Investigación del eje cerebro-corazón desde el fin del mundo." />
+  <meta property="og:image"       content="assets/images/og-image.jpg" />
+  <meta property="og:type"        content="website" />
+  <title>NIM-ACh · Inicio</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/nav.css" />
+  <link rel="stylesheet" href="css/hero.css" />
+  <link rel="stylesheet" href="css/components.css" />
+
+  <!-- Favicon (SVG inline fallback) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%233b7abf'/><circle cx='16' cy='11' r='5' fill='none' stroke='white' stroke-width='2'/><path d='M7 24Q11 17 16 17Q21 17 25 24' fill='none' stroke='%23f5a472' stroke-width='2' stroke-linecap='round'/></svg>" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     NAVIGATION
+══════════════════════════════════ -->
+<nav class="nav" id="main-nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="8" r="3.5" stroke="#fff" stroke-width="1.5"/>
+        <path d="M5 19Q8 13 12 13Q16 13 19 19" stroke="#f5a472" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M2 11Q5.5 8 9 11Q12 14 15 11Q18 8 22 11" stroke="rgba(255,255,255,.45)" stroke-width="1" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="nav-brand">
+      <span class="nav-name">NIM-ACh</span>
+      <span class="nav-sub">Neurofisiología · UMAG</span>
+    </div>
+  </a>
+
+  <div class="nav-links">
+    <a href="#investigacion" class="nav-link active" data-section="investigacion">Investigación</a>
+    <a href="#proyectos"     class="nav-link"        data-section="proyectos">Proyectos</a>
+    <a href="#personas"      class="nav-link"        data-section="personas">Personas</a>
+    <a href="#publicaciones" class="nav-link"        data-section="publicaciones">Publicaciones</a>
+    <a href="#galeria"       class="nav-link"        data-section="galeria">Galería</a>
+    <a href="#dei"           class="nav-link"        data-section="dei">DEI</a>
+  </div>
+
+  <div class="nav-right">
+    <div class="nav-pill">
+      <span class="badge-dot" style="background:var(--c-teal)"></span>
+      FONDECYT Activo
+    </div>
+    <a href="#contacto" class="nav-cta">Contáctanos</a>
+  </div>
+
+  <button class="nav-hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+
+<!-- ══════════════════════════════════
+     HERO
+══════════════════════════════════ -->
+<section class="hero" id="hero">
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
+  <div class="hero-gradient" aria-hidden="true"></div>
+  <div class="hero-noise"    aria-hidden="true"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="badge-dot" style="background:var(--c-coral);animation:blink 1.8s ease-in-out infinite;"></span>
+      Grupo de Investigación · Punta Arenas, Chile
+    </div>
+
+    <h1 class="hero-title">
+      <span class="hero-title-line">El eje</span>
+      <span class="hero-title-line"><em class="accent">cerebro-corazón</em></span>
+      <span class="hero-title-line">como ventana al organismo</span>
+    </h1>
+
+    <p class="hero-sub">
+      Estudiamos la adaptación neurofisiológica humana mediante técnicas contemporáneas —
+      desde ambientes extremos patagónicos hasta el envejecimiento saludable.
+    </p>
+
+    <div class="hero-btns">
+      <a href="#investigacion" class="btn-primary">Explorar investigación</a>
+      <a href="#personas"      class="btn-secondary">Conocer el equipo</a>
+    </div>
+
+    <!-- Stat rings -->
+    <div class="hero-stats">
+      <div class="stat-ring-wrap">
+        <svg class="stat-ring-svg" viewBox="0 0 40 40" aria-hidden="true">
+          <circle class="stat-ring-track" cx="20" cy="20" r="16"/>
+          <circle class="stat-ring-val ring-blue" cx="20" cy="20" r="16" id="ring1"/>
+        </svg>
+        <div class="stat-text">
+          <div class="stat-number" id="cnt1">0</div>
+          <div class="stat-label">Publicaciones</div>
+        </div>
+      </div>
+      <div class="stat-ring-wrap">
+        <svg class="stat-ring-svg" viewBox="0 0 40 40" aria-hidden="true">
+          <circle class="stat-ring-track" cx="20" cy="20" r="16"/>
+          <circle class="stat-ring-val ring-coral" cx="20" cy="20" r="16" id="ring2"/>
+        </svg>
+        <div class="stat-text">
+          <div class="stat-number" id="cnt2">0</div>
+          <div class="stat-label">Investigadores</div>
+        </div>
+      </div>
+      <div class="stat-ring-wrap">
+        <svg class="stat-ring-svg" viewBox="0 0 40 40" aria-hidden="true">
+          <circle class="stat-ring-track" cx="20" cy="20" r="16"/>
+          <circle class="stat-ring-val ring-teal" cx="20" cy="20" r="16" id="ring3"/>
+        </svg>
+        <div class="stat-text">
+          <div class="stat-number" id="cnt3">0</div>
+          <div class="stat-label">Países colaboradores</div>
+        </div>
+      </div>
+      <div class="stat-ring-wrap">
+        <svg class="stat-ring-svg" viewBox="0 0 40 40" aria-hidden="true">
+          <circle class="stat-ring-track" cx="20" cy="20" r="16"/>
+          <circle class="stat-ring-val" style="stroke:var(--c-purple)" cx="20" cy="20" r="16" id="ring4"/>
+        </svg>
+        <div class="stat-text">
+          <div class="stat-number" id="cnt4">0</div>
+          <div class="stat-label">Años activos</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ECG strip -->
+  <svg class="hero-ecg" viewBox="0 0 900 60" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="ecg-grad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%"   stop-color="#e87040" stop-opacity="0"/>
+        <stop offset="40%"  stop-color="#e87040" stop-opacity=".85"/>
+        <stop offset="100%" stop-color="#e87040" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <path id="ecg-path"
+      d="M0 38 L90 38 L100 38 L104 20 L108 50 L112 6 L118 54 L122 38 L200 38
+         L290 38 L294 20 L298 50 L302 6 L308 54 L312 38 L400 38
+         L490 38 L494 20 L498 50 L502 6 L508 54 L512 38 L600 38
+         L690 38 L694 20 L698 50 L702 6 L708 54 L712 38 L900 38"
+      fill="none" stroke="url(#ecg-grad)" stroke-width="1.8"
+      stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+
+  <div class="scroll-hint" aria-hidden="true">
+    <span class="scroll-hint-text">Desplazar</span>
+    <span class="scroll-hint-line"></span>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     INVESTIGACIÓN
+══════════════════════════════════ -->
+<section class="section-pad light-section" id="investigacion" style="background:#f6f8fc;">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header-left">
+        <span class="label">Áreas de estudio</span>
+        <h2 class="section-title">Líneas de investigación</h2>
+        <p class="section-desc">Tres ejes principales que conectan la neurofisiología con la realidad clínica y el entorno patagónico.</p>
+      </div>
+      <a href="pages/investigacion.html" class="see-all">Ver todas las líneas →</a>
+    </div>
+
+    <div class="research-grid">
+      <article class="research-card rc-blue reveal delay-1" tabindex="0">
+        <div class="card-icon ic-blue">🧠</div>
+        <h3 class="card-title">Neuromodulación y variabilidad de frecuencia cardíaca</h3>
+        <p class="card-desc">Evaluación de la VFC como marcador del control autonómico bajo diversas condiciones fisiológicas, psicológicas y ambientales.</p>
+        <div class="card-tags">
+          <span class="tag">HRV</span>
+          <span class="tag">Autonomic NS</span>
+          <span class="tag">Polar H10</span>
+          <span class="tag">Wearables</span>
+        </div>
+        <span class="card-arrow" aria-hidden="true">→</span>
+      </article>
+
+      <article class="research-card rc-coral reveal delay-2" tabindex="0">
+        <div class="card-icon ic-coral">🏔️</div>
+        <h3 class="card-title">Ambientes extremos y estrés fisiológico</h3>
+        <p class="card-desc">Respuesta del eje cerebro-corazón al frío extremo, altitud, inmersión en aguas gélidas y ejercicio intenso en la Patagonia.</p>
+        <div class="card-tags">
+          <span class="tag">Cold exposure</span>
+          <span class="tag">Exercise</span>
+          <span class="tag">Patagonia</span>
+          <span class="tag">Open water</span>
+        </div>
+        <span class="card-arrow" aria-hidden="true">→</span>
+      </article>
+
+      <article class="research-card rc-teal reveal delay-3" tabindex="0">
+        <div class="card-icon ic-teal">🌿</div>
+        <h3 class="card-title">Mindfulness y envejecimiento saludable</h3>
+        <p class="card-desc">Efecto de intervenciones de mindfulness sobre el deterioro cognitivo y la regulación autonómica en adultos mayores de Magallanes.</p>
+        <div class="card-tags">
+          <span class="tag">Aging</span>
+          <span class="tag">Mindfulness</span>
+          <span class="tag">Cognition</span>
+          <span class="tag">RIES-LAC</span>
+        </div>
+        <span class="card-arrow" aria-hidden="true">→</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     PROYECTOS
+══════════════════════════════════ -->
+<section class="section-pad light-section" id="proyectos" style="background:#fff;">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header-left">
+        <span class="label">Financiamiento adjudicado</span>
+        <h2 class="section-title">Proyectos</h2>
+      </div>
+      <a href="pages/proyectos.html" class="see-all">Ver historial completo →</a>
+    </div>
+
+    <div class="projects-grid">
+
+      <article class="project-card reveal delay-1">
+        <div class="project-top">
+          <span class="badge badge-active"><span class="badge-dot"></span>En curso</span>
+          <div class="project-agency">ANID · FONDECYT Regular<br>Nº 1XXXXXX</div>
+        </div>
+        <h3 class="project-title">Regulación autonómica cardíaca en condiciones de frío extremo: estudio en nadadores de aguas gélidas de Magallanes</h3>
+        <p class="project-pi">IP: Dr. Cristian Núñez Espinosa</p>
+        <div class="project-meta">
+          <div class="project-meta-item"><span class="meta-label">Período</span><span class="meta-value">2025–2028</span></div>
+          <div class="project-meta-item"><span class="meta-label">Monto</span><span class="meta-value">$105M CLP</span></div>
+          <div class="project-meta-item"><span class="meta-label">Tipo</span><span class="meta-value">Regular</span></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-header"><span>Progreso</span><span>25%</span></div>
+          <div class="progress-track"><div class="progress-fill pf-teal" data-width="25"></div></div>
+        </div>
+        <div class="project-tags">
+          <span class="tag">HRV</span><span class="tag">Cold water</span><span class="tag">Patagonia</span><span class="tag">Autonomic</span>
+        </div>
+      </article>
+
+      <article class="project-card reveal delay-2">
+        <div class="project-top">
+          <span class="badge badge-active"><span class="badge-dot"></span>En curso</span>
+          <div class="project-agency">UE · ERASMUS+<br>MEDIANTAR 2024–2028</div>
+        </div>
+        <h3 class="project-title">Mediterranean and Antarctic Research Network: ambientes extremos y ejercicio físico en contextos internacionales</h3>
+        <p class="project-pi">Colaborador: Dr. Cristian Núñez Espinosa</p>
+        <div class="project-meta">
+          <div class="project-meta-item"><span class="meta-label">Período</span><span class="meta-value">2024–2028</span></div>
+          <div class="project-meta-item"><span class="meta-label">Socios</span><span class="meta-value">5 países</span></div>
+          <div class="project-meta-item"><span class="meta-label">Tipo</span><span class="meta-value">Internacional</span></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-header"><span>Progreso</span><span>40%</span></div>
+          <div class="progress-track"><div class="progress-fill pf-blue" data-width="40"></div></div>
+        </div>
+        <div class="project-tags">
+          <span class="tag">International</span><span class="tag">Brazil</span><span class="tag">Exercise</span><span class="tag">Extreme env.</span>
+        </div>
+      </article>
+
+      <article class="project-card reveal delay-3">
+        <div class="project-top">
+          <span class="badge badge-complete">Finalizado</span>
+          <div class="project-agency">ANID · FONDECYT Iniciación<br>Nº 11XXXXX</div>
+        </div>
+        <h3 class="project-title">Efectos de la luz estacional en la regulación autonómica de personas mayores residentes en la Región de Magallanes</h3>
+        <p class="project-pi">IP: Dr. Cristian Núñez Espinosa</p>
+        <div class="project-meta">
+          <div class="project-meta-item"><span class="meta-label">Período</span><span class="meta-value">2022–2024</span></div>
+          <div class="project-meta-item"><span class="meta-label">Monto</span><span class="meta-value">$55M CLP</span></div>
+          <div class="project-meta-item"><span class="meta-label">Tipo</span><span class="meta-value">Iniciación</span></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-header"><span>Progreso</span><span>100%</span></div>
+          <div class="progress-track"><div class="progress-fill pf-coral" data-width="100"></div></div>
+        </div>
+        <div class="project-tags">
+          <span class="tag">Seasonal light</span><span class="tag">Elderly</span><span class="tag">Circadian</span>
+        </div>
+      </article>
+
+      <article class="project-card reveal delay-4">
+        <div class="project-top">
+          <span class="badge badge-active"><span class="badge-dot"></span>En curso</span>
+          <div class="project-agency">ANID · REDES<br>RIES-LAC</div>
+        </div>
+        <h3 class="project-title">Red Interuniversitaria de Envejecimiento Saludable para América Latina y el Caribe — participación NIM-ACh</h3>
+        <p class="project-pi">IP: Dr. Cristian Núñez Espinosa</p>
+        <div class="project-meta">
+          <div class="project-meta-item"><span class="meta-label">Período</span><span class="meta-value">2024–2026</span></div>
+          <div class="project-meta-item"><span class="meta-label">Red</span><span class="meta-value">LATAM</span></div>
+          <div class="project-meta-item"><span class="meta-label">Tipo</span><span class="meta-value">Red ANID</span></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-header"><span>Progreso</span><span>60%</span></div>
+          <div class="progress-track"><div class="progress-fill pf-purple" data-width="60"></div></div>
+        </div>
+        <div class="project-tags">
+          <span class="tag">Aging</span><span class="tag">LATAM</span><span class="tag">Network</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     PERSONAS
+══════════════════════════════════ -->
+<section class="section-pad light-section" id="personas" style="background:#f6f8fc;">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header-left">
+        <span class="label">Nuestro equipo</span>
+        <h2 class="section-title">Personas</h2>
+      </div>
+      <a href="pages/personas.html" class="see-all">Ver todos →</a>
+    </div>
+
+    <div class="people-grid">
+
+      <article class="person-card reveal delay-1">
+        <div class="avatar-wrap">
+          <div class="avatar av1">CN</div>
+          <div class="avatar-ring" style="color:#3b7abf;"></div>
+        </div>
+        <h3 class="person-name">Dr. Cristian Núñez Espinosa</h3>
+        <p class="person-role">Investigador Principal · CADI-UMAG</p>
+        <div class="person-chips">
+          <span class="person-chip">FONDECYT</span>
+          <span class="person-chip">Neurofisiología</span>
+          <span class="person-chip">HRV</span>
+        </div>
+        <div class="person-social">
+          <button class="social-btn" onclick="window.open('#')">ResearchGate</button>
+          <button class="social-btn" onclick="window.open('#')">ORCID</button>
+        </div>
+      </article>
+
+      <article class="person-card reveal delay-2">
+        <div class="avatar-wrap">
+          <div class="avatar av2">MC</div>
+          <div class="avatar-ring" style="color:#e87040;"></div>
+        </div>
+        <h3 class="person-name">Matías Castillo-Aguilar</h3>
+        <p class="person-role">Investigador · Desarrollador de herramientas</p>
+        <div class="person-chips">
+          <span class="person-chip">HRV</span>
+          <span class="person-chip">App Dev</span>
+          <span class="person-chip">Polar H10</span>
+        </div>
+        <div class="person-social">
+          <button class="social-btn" onclick="window.open('#')">GitHub</button>
+          <button class="social-btn" onclick="window.open('#')">ORCID</button>
+        </div>
+      </article>
+
+      <article class="person-card reveal delay-3">
+        <div class="avatar-wrap">
+          <div class="avatar av3">TI</div>
+          <div class="avatar-ring" style="color:#1db884;"></div>
+        </div>
+        <h3 class="person-name">Tiare Ibinarriaga</h3>
+        <p class="person-role">Investigadora doctoral · UDD 2025</p>
+        <div class="person-chips">
+          <span class="person-chip">PhD</span>
+          <span class="person-chip">Psicopatología</span>
+        </div>
+        <div class="person-social">
+          <button class="social-btn" onclick="window.open('#')">ResearchGate</button>
+        </div>
+      </article>
+
+      <article class="person-card reveal delay-1">
+        <div class="avatar-wrap">
+          <div class="avatar av4">LV</div>
+          <div class="avatar-ring" style="color:#7b52d4;"></div>
+        </div>
+        <h3 class="person-name">Leyla Vásquez</h3>
+        <p class="person-role">Investigadora asociada</p>
+        <div class="person-chips">
+          <span class="person-chip">Envejecimiento</span>
+          <span class="person-chip">Mindfulness</span>
+        </div>
+        <div class="person-social">
+          <button class="social-btn" onclick="window.open('#')">ResearchGate</button>
+        </div>
+      </article>
+
+      <article class="person-card reveal delay-2">
+        <div class="avatar-wrap">
+          <div class="avatar av5">JP</div>
+          <div class="avatar-ring" style="color:#d4903a;"></div>
+        </div>
+        <h3 class="person-name">Jonathan Pérez</h3>
+        <p class="person-role">Investigador asociado</p>
+        <div class="person-chips">
+          <span class="person-chip">Ejercicio</span>
+          <span class="person-chip">Fisiología</span>
+        </div>
+        <div class="person-social">
+          <button class="social-btn" onclick="window.open('#')">ResearchGate</button>
+        </div>
+      </article>
+
+      <article class="person-card reveal delay-3">
+        <div class="avatar-wrap">
+          <div class="avatar av6">PM</div>
+          <div class="avatar-ring" style="color:#3baabf;"></div>
+        </div>
+        <h3 class="person-name">Pedro Medina</h3>
+        <p class="person-role">Investigador asociado</p>
+        <div class="person-chips">
+          <span class="person-chip">Autonomic</span>
+          <span class="person-chip">Cold</span>
+        </div>
+        <div class="person-social">
+          <button class="social-btn" onclick="window.open('#')">ResearchGate</button>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     PUBLICACIONES + NOTICIAS
+══════════════════════════════════ -->
+<section class="section-pad light-section" id="publicaciones" style="background:#fff;">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1.15fr 0.85fr;gap:40px;">
+
+      <!-- Publications -->
+      <div>
+        <div class="section-header reveal">
+          <div class="section-header-left">
+            <span class="label">Output científico</span>
+            <h2 class="section-title">Publicaciones recientes</h2>
+          </div>
+          <a href="pages/publicaciones.html" class="see-all">Ver todas →</a>
+        </div>
+
+        <div class="pub-list">
+          <article class="pub-card reveal delay-1" data-year="2025" data-topic="hrv cold exercise">
+            <div class="pub-year">2025</div>
+            <div class="pub-body">
+              <h4 class="pub-title">Cardiac autonomic regulation in cold-water exposure: HRV analysis in Patagonian open-water swimmers</h4>
+              <p class="pub-authors">Núñez C., Castillo-Aguilar M., Medina P. et al.</p>
+              <div class="pub-journal">↗ Journal of Physiology <span class="pub-q">Q1</span></div>
+            </div>
+          </article>
+
+          <article class="pub-card reveal delay-2" data-year="2024" data-topic="mindfulness aging cognition">
+            <div class="pub-year">2024</div>
+            <div class="pub-body">
+              <h4 class="pub-title">Mindfulness-based intervention effects on autonomic regulation and cognitive function in older adults</h4>
+              <p class="pub-authors">Núñez C., Ibinarriaga T., Vásquez L. et al.</p>
+              <div class="pub-journal">↗ Frontiers in Aging Neuroscience <span class="pub-q">Q1</span></div>
+            </div>
+          </article>
+
+          <article class="pub-card reveal delay-3" data-year="2024" data-topic="circadian aging light">
+            <div class="pub-year">2024</div>
+            <div class="pub-body">
+              <h4 class="pub-title">Seasonal light variation and autonomic nervous system activity in high-latitude elderly populations</h4>
+              <p class="pub-authors">Núñez C., Pérez J. et al.</p>
+              <div class="pub-journal">↗ Chronobiology International <span class="pub-q">Q2</span></div>
+            </div>
+          </article>
+
+          <article class="pub-card reveal delay-4" data-year="2023" data-topic="hrv extreme review">
+            <div class="pub-year">2023</div>
+            <div class="pub-body">
+              <h4 class="pub-title">Heart rate variability as a biomarker of neuromodulation in extreme environments: a systematic review</h4>
+              <p class="pub-authors">Castillo-Aguilar M., Núñez C. et al.</p>
+              <div class="pub-journal">↗ Autonomic Neuroscience <span class="pub-q">Q2</span></div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- News timeline -->
+      <div>
+        <div class="section-header reveal">
+          <div class="section-header-left">
+            <span class="label">Actividad del grupo</span>
+            <h2 class="section-title">Noticias</h2>
+          </div>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-item reveal delay-1">
+            <div class="timeline-dot hot"></div>
+            <div class="timeline-date">Dic 2025</div>
+            <p class="timeline-text">Matías Castillo-Aguilar lanza <a href="https://deft-torte-3c1940.netlify.app/" style="color:var(--c-coral)">app web</a> para análisis de VFC con bandas Polar H10.</p>
+            <span class="timeline-tag">Herramienta open-source</span>
+          </div>
+          <div class="timeline-item reveal delay-2">
+            <div class="timeline-dot hot"></div>
+            <div class="timeline-date">Jun 2025</div>
+            <p class="timeline-text">Primer Seminario "Mentes del Fin del Mundo" — gran convocatoria regional.</p>
+            <span class="timeline-tag">Divulgación</span>
+          </div>
+          <div class="timeline-item reveal delay-3">
+            <div class="timeline-dot hot"></div>
+            <div class="timeline-date">Ene 2025</div>
+            <p class="timeline-text">Dr. Cristian Núñez adjudica FONDECYT Regular 2025.</p>
+            <span class="timeline-tag">Financiamiento</span>
+          </div>
+          <div class="timeline-item reveal delay-4">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">Nov 2024</div>
+            <p class="timeline-text">Tiare Ibinarriaga aceptada en Doctorado — Universidad del Desarrollo.</p>
+            <span class="timeline-tag">Formación</span>
+          </div>
+          <div class="timeline-item reveal">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">Jun 2024</div>
+            <p class="timeline-text">Inicio de mediciones en nadadores de aguas gélidas de Magallanes.</p>
+            <span class="timeline-tag">Terreno</span>
+          </div>
+          <div class="timeline-item reveal">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">May 2024</div>
+            <p class="timeline-text">Vínculo con Universidad de Salvador de Bahía — MEDIANTAR.</p>
+            <span class="timeline-tag">Internacional</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     GALERÍA
+══════════════════════════════════ -->
+<section class="section-pad light-section" id="galeria" style="background:#f6f8fc;">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-header-left">
+        <span class="label">Registro visual</span>
+        <h2 class="section-title">Galería</h2>
+        <p class="section-desc">Momentos del trabajo en terreno, seminarios y colaboraciones del grupo.</p>
+      </div>
+      <a href="pages/galeria.html" class="see-all">Ver galería completa →</a>
+    </div>
+
+    <div class="gallery-grid">
+
+      <div class="gallery-item g-span-2 reveal delay-1">
+        <div class="gallery-item-inner gi-1">
+          <svg class="gallery-svg" viewBox="0 0 200 360" aria-hidden="true">
+            <circle cx="100" cy="130" r="55" fill="none" stroke="rgba(127,179,232,.5)" stroke-width=".8"/>
+            <circle cx="100" cy="130" r="32" fill="none" stroke="rgba(127,179,232,.35)" stroke-width=".6"/>
+            <circle cx="100" cy="130" r="6"  fill="rgba(127,179,232,.85)"/>
+            <line x1="100" y1="130" x2="58"  y2="96"  stroke="rgba(127,179,232,.4)" stroke-width=".7"/>
+            <line x1="100" y1="130" x2="142" y2="96"  stroke="rgba(127,179,232,.4)" stroke-width=".7"/>
+            <line x1="100" y1="130" x2="62"  y2="168" stroke="rgba(127,179,232,.4)" stroke-width=".7"/>
+            <line x1="100" y1="130" x2="138" y2="168" stroke="rgba(127,179,232,.4)" stroke-width=".7"/>
+            <circle cx="58"  cy="96"  r="4" fill="rgba(232,112,64,.75)"/>
+            <circle cx="142" cy="96"  r="4" fill="rgba(232,112,64,.75)"/>
+            <circle cx="62"  cy="168" r="4" fill="rgba(127,179,232,.65)"/>
+            <circle cx="138" cy="168" r="4" fill="rgba(127,179,232,.65)"/>
+            <path d="M10 270 L44 270 L48 252 L52 280 L56 236 L60 286 L64 270 L190 270"
+              stroke="rgba(232,112,64,.72)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          </svg>
+          <div class="gallery-overlay"></div>
+          <div class="gallery-label">
+            <div class="gallery-label-title">Mediciones de VFC en laboratorio</div>
+            <div class="gallery-label-sub">CADI-UMAG · 2024</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery-item reveal delay-2">
+        <div class="gallery-item-inner gi-2">
+          <svg class="gallery-svg" viewBox="0 0 200 180" aria-hidden="true">
+            <path d="M30 140 Q60 80 90 70 Q120 60 150 45 Q175 35 190 18" stroke="rgba(29,184,132,.65)" stroke-width="1.2" fill="none"/>
+            <circle cx="90"  cy="70" r="5" fill="rgba(29,184,132,.9)"/>
+            <circle cx="150" cy="45" r="5" fill="rgba(29,184,132,.9)"/>
+          </svg>
+          <div class="gallery-overlay"></div>
+          <div class="gallery-label">
+            <div class="gallery-label-title">Terreno en Patagonia</div>
+            <div class="gallery-label-sub">Nadadores aguas gélidas · Jun 2024</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery-item reveal delay-3">
+        <div class="gallery-item-inner gi-3">
+          <svg class="gallery-svg" viewBox="0 0 200 180" aria-hidden="true">
+            <rect x="55" y="40" width="90" height="90" rx="4" fill="none" stroke="rgba(232,112,64,.55)" stroke-width=".9"/>
+            <line x1="55" y1="85" x2="145" y2="85" stroke="rgba(232,112,64,.3)" stroke-width=".6"/>
+            <line x1="100" y1="40" x2="100" y2="130" stroke="rgba(232,112,64,.3)" stroke-width=".6"/>
+            <circle cx="100" cy="85" r="3" fill="rgba(232,112,64,.8)"/>
+          </svg>
+          <div class="gallery-overlay"></div>
+          <div class="gallery-label">
+            <div class="gallery-label-title">Seminario Mentes del Fin del Mundo</div>
+            <div class="gallery-label-sub">Punta Arenas · Jun 2025</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery-item reveal delay-2">
+        <div class="gallery-item-inner gi-4">
+          <svg class="gallery-svg" viewBox="0 0 200 180" aria-hidden="true">
+            <circle cx="100" cy="90" r="48" fill="none" stroke="rgba(123,82,212,.65)" stroke-width=".9"/>
+            <circle cx="100" cy="90" r="24" fill="none" stroke="rgba(123,82,212,.4)"  stroke-width=".6"/>
+            <circle cx="100" cy="90" r="4"  fill="rgba(123,82,212,.9)"/>
+          </svg>
+          <div class="gallery-overlay"></div>
+          <div class="gallery-label">
+            <div class="gallery-label-title">Colaboración MEDIANTAR</div>
+            <div class="gallery-label-sub">Brasil · 2024</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery-item reveal delay-3">
+        <div class="gallery-item-inner gi-5">
+          <svg class="gallery-svg" viewBox="0 0 200 180" aria-hidden="true">
+            <path d="M30 130 Q65 65 100 88 Q135 112 170 38" stroke="rgba(59,170,191,.7)" stroke-width="1.2" fill="none"/>
+            <circle cx="100" cy="88" r="4" fill="rgba(59,170,191,.95)"/>
+          </svg>
+          <div class="gallery-overlay"></div>
+          <div class="gallery-label">
+            <div class="gallery-label-title">CIES Jornadas Talca</div>
+            <div class="gallery-label-sub">Congreso · Sep 2023</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     DEI
+══════════════════════════════════ -->
+<section class="dei-section dark-section" id="dei">
+  <canvas id="dei-canvas" aria-hidden="true"></canvas>
+  <div class="container dei-inner">
+    <div class="reveal">
+      <span class="badge badge-live" style="margin-bottom:14px;display:inline-flex;">
+        <span class="badge-dot" style="background:var(--c-teal)"></span>
+        Nuestro compromiso
+      </span>
+      <h2 style="font-size:clamp(22px,3vw,30px);font-weight:500;color:var(--t-hero);margin-bottom:10px;">
+        Diversidad, Equidad e Inclusión
+      </h2>
+      <p style="font-size:14px;color:var(--t-muted);line-height:1.78;max-width:540px;">
+        Creemos que la ciencia es más poderosa cuando refleja la diversidad de quienes la protagonizan.
+        La equidad no es un objetivo separado — es parte constitutiva de nuestra misión como grupo.
+      </p>
+    </div>
+
+    <div class="dei-grid">
+      <article class="dei-card reveal delay-1">
+        <div class="dei-card-icon">⚖️</div>
+        <h3 class="dei-card-title">Equidad en ciencia</h3>
+        <p class="dei-card-text">Promovemos oportunidades equitativas de formación y participación, con foco en grupos históricamente subrepresentados en ciencias de la salud.</p>
+      </article>
+      <article class="dei-card reveal delay-2">
+        <div class="dei-card-icon">🌍</div>
+        <h3 class="dei-card-title">Diversidad cultural</h3>
+        <p class="dei-card-text">Colaboraciones con Brasil, España, México y toda Latinoamérica enriquecen nuestros enfoques metodológicos y las preguntas de investigación.</p>
+      </article>
+      <article class="dei-card reveal delay-3">
+        <div class="dei-card-icon">🤝</div>
+        <h3 class="dei-card-title">Inclusión activa</h3>
+        <p class="dei-card-text">Vinculamos la ciencia con estudiantes de enseñanza media de Magallanes, democratizando el acceso al conocimiento científico desde el fin del mundo.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     CONTACTO
+══════════════════════════════════ -->
+<section class="section-pad light-section" id="contacto" style="background:#fff;">
+  <div class="container">
+    <div class="reveal">
+      <span class="label">Escríbenos</span>
+      <h2 class="section-title" style="margin-bottom:32px;">Contáctanos</h2>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-form reveal delay-1">
+        <div class="form-row">
+          <input class="form-input" type="text"  placeholder="Tu nombre" />
+          <input class="form-input" type="text"  placeholder="Tu institución" />
+        </div>
+        <input class="form-input" type="email" placeholder="Correo electrónico" />
+        <input class="form-input" type="text"  placeholder="Asunto" />
+        <textarea class="form-input form-textarea" placeholder="¿En qué podemos ayudarte? Consultas, colaboraciones, postulaciones..."></textarea>
+        <button class="form-submit">Enviar mensaje →</button>
+      </div>
+
+      <div class="contact-info reveal delay-2">
+        <div class="contact-info-item">
+          <div class="contact-icon">📍</div>
+          <div>
+            <div class="contact-label">Dirección</div>
+            <div class="contact-value">Edificio CADI-UMAG<br>Av. Los Flamencos 01364<br>Punta Arenas, Chile</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-icon">🌐</div>
+          <div>
+            <div class="contact-label">Sitio web</div>
+            <div class="contact-value">nimach.org</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-icon">🏛️</div>
+          <div>
+            <div class="contact-label">Institución</div>
+            <div class="contact-value">Centro Asistencial Docente e Investigación (CADI)<br>Universidad de Magallanes</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-icon">🤝</div>
+          <div>
+            <div class="contact-label">Colaboradores</div>
+            <div class="collab-chips">
+              <span class="collab-chip">MEDIANTAR</span>
+              <span class="collab-chip">RIES-LAC</span>
+              <span class="collab-chip">CIES</span>
+              <span class="collab-chip">HABITAT</span>
+              <span class="collab-chip">U. Salvador de Bahía</span>
+              <span class="collab-chip">FONDECYT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     FOOTER
+══════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-left">
+    <div class="nav-logo-mark" style="width:28px;height:28px;border-radius:7px;flex-shrink:0;">
+      <svg viewBox="0 0 24 24" fill="none" style="width:17px;height:17px;" aria-hidden="true">
+        <circle cx="12" cy="8" r="3.5" stroke="#fff" stroke-width="1.5"/>
+        <path d="M5 19Q8 13 12 13Q16 13 19 19" stroke="#f5a472" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+    <span class="footer-brand">NIM-ACh Group</span>
+    <span class="footer-copy">© 2025</span>
+  </div>
+
+  <div class="footer-chips">
+    <span class="footer-chip">MEDIANTAR</span>
+    <span class="footer-chip">HABITAT</span>
+    <span class="footer-chip">CIES</span>
+    <span class="footer-chip">RIES-LAC</span>
+    <span class="footer-chip">FONDECYT</span>
+  </div>
+
+  <div class="footer-copy">CADI · Universidad de Magallanes · Punta Arenas</div>
+</footer>
+
+
+<!-- Scripts (order matters) -->
+<script src="js/data.js"></script>
+<script src="js/canvas.js"></script>
+<script src="js/scroll.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>

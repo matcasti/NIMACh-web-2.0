@@ -1,0 +1,236 @@
+/**
+ * NIM-ACh — Site Data
+ * Centralised data store. Edit here to update all sections.
+ * In a production build, replace with API calls to a CMS.
+ */
+
+const NIMACH_DATA = {
+
+  /* ─── People ─── */
+  people: [
+    {
+      id:      'cristian-nunez',
+      initials:'CN',
+      name:    'Dr. Cristian Núñez Espinosa',
+      role:    'Investigador Principal · CADI-UMAG',
+      avatar:  'av1',
+      chips:   ['FONDECYT', 'Neurofisiología', 'HRV'],
+      links:   { researchgate: '#', orcid: '#', scholar: '#' },
+    },
+    {
+      id:      'matias-castillo',
+      initials:'MC',
+      name:    'Matías Castillo-Aguilar',
+      role:    'Investigador · Desarrollador de herramientas',
+      avatar:  'av2',
+      chips:   ['HRV', 'App Dev', 'Polar H10'],
+      links:   { github: '#', orcid: '#' },
+    },
+    {
+      id:      'tiare-ibinarriaga',
+      initials:'TI',
+      name:    'Tiare Ibinarriaga',
+      role:    'Investigadora doctoral · UDD 2025',
+      avatar:  'av3',
+      chips:   ['PhD', 'Psicopatología', 'Desarrollo'],
+      links:   { researchgate: '#' },
+    },
+    {
+      id:      'leyla-vasquez',
+      initials:'LV',
+      name:    'Leyla Vásquez',
+      role:    'Investigadora asociada',
+      avatar:  'av4',
+      chips:   ['Envejecimiento', 'Mindfulness'],
+      links:   { researchgate: '#' },
+    },
+    {
+      id:      'jonathan-perez',
+      initials:'JP',
+      name:    'Jonathan Pérez',
+      role:    'Investigador asociado',
+      avatar:  'av5',
+      chips:   ['Ejercicio', 'Fisiología'],
+      links:   { researchgate: '#' },
+    },
+    {
+      id:      'pedro-medina',
+      initials:'PM',
+      name:    'Pedro Medina',
+      role:    'Investigador asociado',
+      avatar:  'av6',
+      chips:   ['Autonomic', 'Cold'],
+      links:   { researchgate: '#' },
+    },
+  ],
+
+  /* ─── Publications ─── */
+  publications: [
+    {
+      id:      'pub-2025-hrv-cold',
+      year:    2025,
+      title:   'Cardiac autonomic regulation in cold-water exposure: HRV analysis in Patagonian open-water swimmers',
+      authors: 'Núñez C., Castillo-Aguilar M., Medina P. et al.',
+      journal: 'Journal of Physiology',
+      quartile:'Q1',
+      doi:     '10.XXXX/jphysiol.2025.XXXXX',
+      topics:  ['hrv', 'cold', 'exercise'],
+    },
+    {
+      id:      'pub-2024-mindfulness',
+      year:    2024,
+      title:   'Mindfulness-based intervention effects on autonomic regulation and cognitive function in older adults',
+      authors: 'Núñez C., Ibinarriaga T., Vásquez L. et al.',
+      journal: 'Frontiers in Aging Neuroscience',
+      quartile:'Q1',
+      doi:     '10.XXXX/fnagi.2024.XXXXX',
+      topics:  ['mindfulness', 'aging', 'cognition'],
+    },
+    {
+      id:      'pub-2024-seasonal',
+      year:    2024,
+      title:   'Seasonal light variation and autonomic nervous system activity in high-latitude elderly populations',
+      authors: 'Núñez C., Pérez J. et al.',
+      journal: 'Chronobiology International',
+      quartile:'Q2',
+      doi:     '10.XXXX/chrono.2024.XXXXX',
+      topics:  ['circadian', 'aging', 'light'],
+    },
+    {
+      id:      'pub-2023-review',
+      year:    2023,
+      title:   'Heart rate variability as a biomarker of neuromodulation in extreme environments: a systematic review',
+      authors: 'Castillo-Aguilar M., Núñez C. et al.',
+      journal: 'Autonomic Neuroscience',
+      quartile:'Q2',
+      doi:     '10.XXXX/autneu.2023.XXXXX',
+      topics:  ['hrv', 'extreme', 'review'],
+    },
+  ],
+
+  /* ─── Projects ─── */
+  projects: [
+    {
+      id:      'proj-fondecyt-regular-2025',
+      status:  'active',
+      agency:  'ANID · FONDECYT Regular',
+      code:    'Nº 1XXXXXX',
+      title:   'Regulación autonómica cardíaca en condiciones de frío extremo: estudio en nadadores de aguas gélidas de Magallanes',
+      pi:      'Dr. Cristian Núñez Espinosa',
+      period:  '2025–2028',
+      amount:  '$105M CLP',
+      type:    'Regular',
+      progress: 25,
+      barColor: 'pf-teal',
+      tags:    ['HRV', 'Cold water', 'Patagonia', 'Autonomic'],
+    },
+    {
+      id:      'proj-mediantar-2024',
+      status:  'active',
+      agency:  'UE · ERASMUS+',
+      code:    'MEDIANTAR 2024–2028',
+      title:   'Mediterranean and Antarctic Research Network: ambientes extremos y ejercicio físico en contextos internacionales',
+      pi:      'Colaborador: Dr. Cristian Núñez Espinosa',
+      period:  '2024–2028',
+      amount:  'Internacional',
+      type:    'Internacional',
+      progress: 40,
+      barColor: 'pf-blue',
+      tags:    ['International', 'Brazil', 'Exercise', 'Extreme env.'],
+    },
+    {
+      id:      'proj-fondecyt-ini-2022',
+      status:  'complete',
+      agency:  'ANID · FONDECYT Iniciación',
+      code:    'Nº 11XXXXX',
+      title:   'Efectos de la luz estacional en la regulación autonómica de personas mayores residentes en la Región de Magallanes',
+      pi:      'Dr. Cristian Núñez Espinosa',
+      period:  '2022–2024',
+      amount:  '$55M CLP',
+      type:    'Iniciación',
+      progress: 100,
+      barColor: 'pf-coral',
+      tags:    ['Seasonal light', 'Elderly', 'Circadian'],
+    },
+    {
+      id:      'proj-ries-lac',
+      status:  'active',
+      agency:  'ANID · REDES',
+      code:    'RIES-LAC',
+      title:   'Red Interuniversitaria de Envejecimiento Saludable para América Latina y el Caribe — participación NIM-ACh',
+      pi:      'Dr. Cristian Núñez Espinosa',
+      period:  '2024–2026',
+      amount:  'Red',
+      type:    'Red ANID',
+      progress: 60,
+      barColor: 'pf-purple',
+      tags:    ['Aging', 'LATAM', 'Network'],
+    },
+  ],
+
+  /* ─── News ─── */
+  news: [
+    { date:'Dic 2025', hot:true,  text:'Matías Castillo-Aguilar lanza app web para análisis de VFC con bandas Polar H10.',                                             tag:'Herramienta open-source', link:'https://deft-torte-3c1940.netlify.app/' },
+    { date:'Jun 2025', hot:true,  text:'Primer Seminario "Mentes del Fin del Mundo" — con estudiantes de toda la Región de Magallanes.',                               tag:'Divulgación' },
+    { date:'Ene 2025', hot:true,  text:'Dr. Cristian Núñez adjudica FONDECYT Regular 2025.',                                                                          tag:'Financiamiento' },
+    { date:'Nov 2024', hot:false, text:'Tiare Ibinarriaga aceptada en programa de Doctorado — UDD 2025.',                                                             tag:'Formación' },
+    { date:'Jun 2024', hot:false, text:'Inicio de mediciones en nadadores de aguas gélidas de Magallanes.',                                                           tag:'Terreno' },
+    { date:'May 2024', hot:false, text:'Vínculo con Universidad de Salvador de Bahía en el marco de MEDIANTAR.',                                                      tag:'Internacional' },
+    { date:'Ene 2024', hot:false, text:'Colaboraciones con RIES-LAC — Red Interuniversitaria de Envejecimiento Saludable.',                                           tag:'Colaboración' },
+    { date:'May 2023', hot:false, text:'Inicio de proyecto FONDECYT Iniciación con evaluación de deportistas y mindfulness en personas mayores.',                     tag:'Investigación' },
+  ],
+
+  /* ─── Research lines ─── */
+  research: [
+    {
+      id:    'neuromodulation',
+      icon:  '🧠',
+      color: 'rc-blue',
+      ic:    'ic-blue',
+      title: 'Neuromodulación y variabilidad de frecuencia cardíaca',
+      desc:  'Evaluación de la VFC como marcador del control autonómico bajo diversas condiciones fisiológicas, psicológicas y ambientales.',
+      tags:  ['HRV', 'Autonomic NS', 'Polar H10', 'Wearables'],
+    },
+    {
+      id:    'extreme-environments',
+      icon:  '🏔️',
+      color: 'rc-coral',
+      ic:    'ic-coral',
+      title: 'Ambientes extremos y estrés fisiológico',
+      desc:  'Respuesta del eje cerebro-corazón al frío extremo, altitud, inmersión en aguas gélidas y ejercicio intenso en la Patagonia.',
+      tags:  ['Cold exposure', 'Exercise', 'Patagonia', 'Open water'],
+    },
+    {
+      id:    'aging-mindfulness',
+      icon:  '🌿',
+      color: 'rc-teal',
+      ic:    'ic-teal',
+      title: 'Mindfulness y envejecimiento saludable',
+      desc:  'Efecto de intervenciones de mindfulness sobre el deterioro cognitivo y la regulación autonómica en adultos mayores de Magallanes.',
+      tags:  ['Aging', 'Mindfulness', 'Cognition', 'RIES-LAC'],
+    },
+  ],
+
+  /* ─── Collaborators ─── */
+  collaborators: [
+    { name:'MEDIANTAR',        url:'#' },
+    { name:'RIES-LAC',         url:'#' },
+    { name:'CIES',             url:'#' },
+    { name:'HABITAT',          url:'#' },
+    { name:'U. Salvador Bahía',url:'#' },
+    { name:'FONDECYT',         url:'#' },
+  ],
+
+  /* ─── Gallery items ─── */
+  gallery: [
+    { id:'g1', bg:'gi-1', span:true,  title:'Mediciones de VFC en laboratorio',           sub:'CADI-UMAG · 2024' },
+    { id:'g2', bg:'gi-2', span:false, title:'Terreno en Patagonia',                       sub:'Nadadores aguas gélidas · Jun 2024' },
+    { id:'g3', bg:'gi-3', span:false, title:'Seminario Mentes del Fin del Mundo',         sub:'Punta Arenas · Jun 2025' },
+    { id:'g4', bg:'gi-4', span:false, title:'Colaboración MEDIANTAR',                     sub:'Brasil · 2024' },
+    { id:'g5', bg:'gi-5', span:false, title:'CIES Jornadas Talca',                        sub:'Congreso · Sep 2023' },
+    { id:'g6', bg:'gi-6', span:false, title:'Mediciones mindfulness adultos mayores',     sub:'UMAG · 2023' },
+  ],
+
+};
+
+window.NIMACH_DATA = NIMACH_DATA;

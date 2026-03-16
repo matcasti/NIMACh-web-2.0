@@ -1,0 +1,204 @@
+/* ============================================
+   NIM-ACh — Navigation
+   ============================================ */
+
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: var(--z-nav);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  background: rgba(6, 14, 30, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 0.5px solid var(--glass-border);
+  transition: padding var(--dur-mid) var(--ease-out),
+              background var(--dur-mid) var(--ease-out);
+}
+
+.nav.scrolled {
+  padding: 10px 32px;
+  background: rgba(6, 14, 30, 0.95);
+}
+
+/* ── Logo ── */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  cursor: pointer;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.nav-logo-mark {
+  width: 36px;
+  height: 36px;
+  background: var(--grad-brand);
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--dur-fast) var(--ease-spring);
+}
+
+.nav-logo-mark::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,.14));
+  pointer-events: none;
+}
+
+.nav-logo:hover .nav-logo-mark {
+  transform: rotate(-4deg) scale(1.05);
+}
+
+.nav-logo-mark svg {
+  width: 22px;
+  height: 22px;
+  position: relative;
+  z-index: 1;
+}
+
+.nav-brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--t-hero);
+  letter-spacing: .04em;
+  line-height: 1.2;
+}
+
+.nav-sub {
+  font-size: 9px;
+  color: var(--t-muted);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+/* ── Links ── */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.nav-link {
+  font-size: 12px;
+  color: var(--t-muted);
+  padding: 7px 13px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: color var(--dur-fast), background var(--dur-fast);
+  position: relative;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  color: var(--t-hero);
+  background: var(--glass);
+}
+
+.nav-link.active {
+  color: var(--t-hero);
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--c-coral);
+}
+
+/* ── Right side ── */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.nav-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--c-blue-light);
+  background: rgba(59, 122, 191, .1);
+  border: 0.5px solid rgba(59, 122, 191, .22);
+  padding: 5px 12px;
+  border-radius: var(--r-full);
+}
+
+.nav-cta {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 18px;
+  background: var(--grad-brand);
+  color: #fff;
+  border-radius: var(--r-sm);
+  transition: opacity var(--dur-fast), transform var(--dur-fast) var(--ease-spring);
+  text-decoration: none;
+}
+
+.nav-cta:hover {
+  opacity: .88;
+  transform: translateY(-1px);
+}
+
+/* ── Mobile toggle ── */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--t-hero);
+  border-radius: 2px;
+  transition: transform .25s var(--ease-out), opacity .25s;
+}
+
+/* ── Mobile menu ── */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .nav-pill  { display: none; }
+  .nav-hamburger { display: flex; }
+
+  .nav-links.open {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 60px; left: 0; right: 0;
+    background: rgba(6,14,30,.97);
+    backdrop-filter: blur(20px);
+    padding: 16px;
+    gap: 4px;
+    border-bottom: 0.5px solid var(--glass-border);
+  }
+
+  .nav-links.open .nav-link {
+    padding: 12px 16px;
+    font-size: 14px;
+    border-radius: var(--r-md);
+  }
+}
