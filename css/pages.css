@@ -79,7 +79,14 @@
 }
 
 /* ── Section wrapper ── */
-.page-section { padding: 60px 0 80px; }
+.page-section {
+  padding: 60px 0 80px;
+  background: #f6f8fc;
+}
+
+body.dark-mode .page-section {
+  background: var(--c-navy);
+}
 
 /* ── Publications stat strip ── */
 .pub-page-stats {
@@ -126,7 +133,7 @@
   gap: 10px;
   margin-bottom: 28px;
   padding: 18px;
-  background: var(--c-navy);
+  background: #fff;
   border: 0.5px solid rgba(0,0,0,.07);
   border-radius: var(--r-lg);
 }
@@ -264,7 +271,7 @@ body.dark-mode .bib-note-desc  { color: var(--t-muted); }
   padding: 8px 16px;
   border-radius: var(--r-md);
   border: 0.5px solid rgba(0,0,0,.09);
-  background: var(--c-navy);
+  background: #fff;
   color: var(--s-text-2, #4a6280);
   cursor: pointer;
   font-family: var(--font-sans);
@@ -309,7 +316,7 @@ body.dark-mode .people-tab.active {
 }
 
 .person-page-card {
-  background: var(--c-navy);
+  background: #fff;
   border: 0.5px solid rgba(0,0,0,.07);
   border-radius: var(--r-lg);
   padding: 24px;
@@ -440,7 +447,7 @@ body.dark-mode .contribute-callout {
 }
 
 .rl-card {
-  background: var(--c-navy);
+  background: #fff;
   border: 0.5px solid rgba(0,0,0,.07);
   border-radius: var(--r-xl);
   padding: 32px;
@@ -541,7 +548,7 @@ body.dark-mode .rl-pub-title { color: var(--t-muted); }
 
 .rl-network {
   padding: 32px;
-  background: var(--c-navy);
+  background: #fff;
   border: 0.5px solid rgba(0,0,0,.07);
   border-radius: var(--r-xl);
 }

@@ -184,7 +184,7 @@ class NIMPage {
       </div>
 
       <!-- Filter + list -->
-      <section class="page-section light-section" style="background:#f6f8fc;">
+      <section class="page-section light-section" >
         <div class="container">
 
           <!-- Toolbar -->
@@ -270,7 +270,7 @@ class NIMPage {
         backLabel: 'Volver a inicio',
       })}
 
-      <section class="page-section light-section" style="background:#f6f8fc;">
+      <section class="page-section light-section" >
         <div class="container">
 
           <!-- Filter tabs -->
@@ -351,7 +351,7 @@ class NIMPage {
         backLabel: 'Volver a inicio',
       })}
 
-      <section class="page-section light-section" style="background:#f6f8fc;">
+      <section class="page-section light-section" >
         <div class="container">
 
           ${featured ? this._featuredToolHTML(featured) : ''}
@@ -512,7 +512,7 @@ class NIMPage {
         backLabel: 'Volver a inicio',
       })}
 
-      <section class="page-section light-section" style="background:#f6f8fc;">
+      <section class="page-section light-section" >
         <div class="container">
           <div class="rl-grid">${lineCards}</div>
 
@@ -610,7 +610,7 @@ class NIMPage {
         </div>
       </div>
 
-      <section class="page-section light-section" style="background:#f6f8fc;">
+      <section class="page-section light-section" >
         <div class="container">
 
           ${active.length ? `
@@ -719,7 +719,7 @@ class NIMPage {
       })}
 
       <!-- Gallery grid -->
-      <section class="page-section light-section" style="background:#f6f8fc;">
+      <section class="page-section light-section" >
         <div class="container">
           <span class="label reveal">Fotografías y eventos</span>
           <div class="gallery-grid" style="margin-top:16px;">${galleryCards}</div>
@@ -727,7 +727,7 @@ class NIMPage {
       </section>
 
       <!-- Timeline de noticias -->
-      <section class="page-section light-section" style="background:#fff;">
+      <section class="page-section light-section">
         <div class="container">
           <div class="reveal">
             <span class="label">Actividad del grupo</span>
