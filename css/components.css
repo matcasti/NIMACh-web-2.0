@@ -753,8 +753,8 @@ body.dark-mode .collab-map-wrap {
     rgba(2,10,24,0.40) 100%
   );
   border-radius: var(--r-lg);
-  padding: 8px;
-  min-height: 360px;
+  padding: 10px;
+  min-height: 400;
   /* En modo claro, el fondo del contenedor envuelve el escenario oscuro */
   --globe-bg: rgba(2,10,24,0.96);
 }
