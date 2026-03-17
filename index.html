@@ -380,109 +380,7 @@
       <a href="pages/personas.html" class="see-all">Ver todos →</a>
     </div>
 
-    <div class="people-grid">
-
-      <article class="person-card reveal delay-1">
-        <div class="avatar-wrap">
-          <div class="avatar av1">CN</div>
-          <div class="avatar-ring" style="color:#3b7abf;"></div>
-        </div>
-        <h3 class="person-name">Dr. Cristian Núñez Espinosa</h3>
-        <p class="person-role">Investigador Principal · CADI-UMAG</p>
-        <div class="person-chips">
-          <span class="person-chip">FONDECYT</span>
-          <span class="person-chip">Neurofisiología</span>
-          <span class="person-chip">HRV</span>
-        </div>
-        <div class="person-social">
-          <button class="social-btn" onclick="window.open('#')">ResearchGate</button>
-          <button class="social-btn" onclick="window.open('#')">ORCID</button>
-        </div>
-      </article>
-
-      <article class="person-card reveal delay-2">
-        <div class="avatar-wrap">
-          <div class="avatar av2">MC</div>
-          <div class="avatar-ring" style="color:#e87040;"></div>
-        </div>
-        <h3 class="person-name">Matías Castillo-Aguilar</h3>
-        <p class="person-role">Investigador · Desarrollador de herramientas</p>
-        <div class="person-chips">
-          <span class="person-chip">HRV</span>
-          <span class="person-chip">App Dev</span>
-          <span class="person-chip">Polar H10</span>
-        </div>
-        <div class="person-social">
-          <button class="social-btn" onclick="window.open('#')">GitHub</button>
-          <button class="social-btn" onclick="window.open('#')">ORCID</button>
-        </div>
-      </article>
-
-      <article class="person-card reveal delay-3">
-        <div class="avatar-wrap">
-          <div class="avatar av3">TI</div>
-          <div class="avatar-ring" style="color:#1db884;"></div>
-        </div>
-        <h3 class="person-name">Tiare Ibinarriaga</h3>
-        <p class="person-role">Investigadora doctoral · UDD 2025</p>
-        <div class="person-chips">
-          <span class="person-chip">PhD</span>
-          <span class="person-chip">Psicopatología</span>
-        </div>
-        <div class="person-social">
-          <button class="social-btn" onclick="window.open('#')">ResearchGate</button>
-        </div>
-      </article>
-
-      <article class="person-card reveal delay-1">
-        <div class="avatar-wrap">
-          <div class="avatar av4">LV</div>
-          <div class="avatar-ring" style="color:#7b52d4;"></div>
-        </div>
-        <h3 class="person-name">Leyla Vásquez</h3>
-        <p class="person-role">Investigadora asociada</p>
-        <div class="person-chips">
-          <span class="person-chip">Envejecimiento</span>
-          <span class="person-chip">Mindfulness</span>
-        </div>
-        <div class="person-social">
-          <button class="social-btn" onclick="window.open('#')">ResearchGate</button>
-        </div>
-      </article>
-
-      <article class="person-card reveal delay-2">
-        <div class="avatar-wrap">
-          <div class="avatar av5">JP</div>
-          <div class="avatar-ring" style="color:#d4903a;"></div>
-        </div>
-        <h3 class="person-name">Jonathan Pérez</h3>
-        <p class="person-role">Investigador asociado</p>
-        <div class="person-chips">
-          <span class="person-chip">Ejercicio</span>
-          <span class="person-chip">Fisiología</span>
-        </div>
-        <div class="person-social">
-          <button class="social-btn" onclick="window.open('#')">ResearchGate</button>
-        </div>
-      </article>
-
-      <article class="person-card reveal delay-3">
-        <div class="avatar-wrap">
-          <div class="avatar av6">PM</div>
-          <div class="avatar-ring" style="color:#3baabf;"></div>
-        </div>
-        <h3 class="person-name">Pedro Medina</h3>
-        <p class="person-role">Investigador asociado</p>
-        <div class="person-chips">
-          <span class="person-chip">Autonomic</span>
-          <span class="person-chip">Cold</span>
-        </div>
-        <div class="person-social">
-          <button class="social-btn" onclick="window.open('#')">ResearchGate</button>
-        </div>
-      </article>
-
-    </div>
+    <div class="people-grid" id="home-people-grid"></div>
   </div>
 </section>
 
@@ -968,6 +866,10 @@
 
 <!-- Scripts (order matters) -->
 <script src="js/data.js"></script>
+<script src="js/pages.js"></script>  <!-- already present, just verify -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => NIMPage.initHomePeople());
+</script>
 <script src="js/canvas.js"></script>
 <script src="js/scroll.js"></script>
 <script src="js/theme.js"></script>

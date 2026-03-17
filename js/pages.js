@@ -324,7 +324,7 @@ class NIMPage {
     const sizeStyle = size ? `width:${size}px;height:${size}px;font-size:${Math.round(size*0.35)}px;` : '';
     if (person.photo) {
       return `<div class="avatar ${person.avatar} avatar--photo" style="${sizeStyle}">
-        <img src="${person.photo}" alt="${person.name}" loading="lazy">
+        <img src="../${person.photo}" alt="${person.name}" loading="lazy">
       </div>`;
     }
     return `<div class="avatar ${person.avatar}" style="${sizeStyle}">${person.initials}</div>`;
@@ -420,6 +420,41 @@ class NIMPage {
           <div class="alumni-links">${linksHTML}</div>
         </div>
       </article>`;
+  }
+  
+  /* ══════════════════════════════════
+     HOME — People preview
+  ══════════════════════════════════ */
+  static _homePersonCardHTML(p, i) {
+    const delay   = ['','delay-1','delay-2','delay-3'][Math.min(i, 3)];
+    const linksHTML = Object.entries(p.links || {}).map(([k, v]) => {
+      const labels = { researchgate:'ResearchGate', orcid:'ORCID',
+                       scholar:'Scholar', github:'GitHub' };
+      return `<button class="social-btn" onclick="window.open('${v}')">${labels[k] || k}</button>`;
+    }).join('');
+
+    const chipsHTML = (p.chips || []).map(c =>
+      `<span class="person-chip">${c}</span>`).join('');
+
+    return `
+      <article class="person-card reveal ${delay}">
+        <div class="avatar-wrap">
+          ${NIMPage._avatarInnerHTML(p)}
+          <div class="avatar-ring" style="color:${p.ringColor};"></div>
+        </div>
+        <h3 class="person-name">${p.name}</h3>
+        <p class="person-role">${p.role}</p>
+        <div class="person-chips">${chipsHTML}</div>
+        <div class="person-social">${linksHTML}</div>
+      </article>`;
+  }
+
+  static initHomePeople() {
+    const grid = document.getElementById('home-people-grid');
+    if (!grid || !window.NIMACH_DATA) return;
+    const featured = (NIMACH_DATA.people || [])
+      .filter(p => p.active !== false && p.featured_home);
+    grid.innerHTML = featured.map((p, i) => NIMPage._homePersonCardHTML(p, i)).join('');
   }
 
   /* ══════════════════════════════════
