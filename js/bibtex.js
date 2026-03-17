@@ -26,8 +26,9 @@ class BibTeXParser {
       const pubs = this.parse(text);
       this._mergeToDATAStore(pubs);
       this._render(pubs);
-      // Reconectar filtro (los botones ya están en DOM)
-      initPubFilter();
+      // Reconstruir toolbar + stats con datos reales del .bib
+      if (window.NIMPage) NIMPage._updatePubToolbarAndStats();
+      else initPubFilter();          // fallback para index.html (sin NIMPage activo)
       // Reconectar OpenAlex enricher
       new PublicationsEnricher();
     } catch (e) {

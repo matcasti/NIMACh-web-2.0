@@ -164,7 +164,7 @@ class NIMPage {
               <div class="pub-stat-lbl">Publicaciones</div>
             </div>
             <div class="pub-stat">
-              <div class="pub-stat-val" style="color:var(--c-coral);">${q1Count}</div>
+              <div class="pub-stat-val" id="ps-q1" style="color:var(--c-coral);">${q1Count}</div>
               <div class="pub-stat-lbl">Revistas Q1</div>
             </div>
             <div class="pub-stat">
@@ -176,7 +176,7 @@ class NIMPage {
               <div class="pub-stat-lbl">h-index</div>
             </div>
             <div class="pub-stat">
-              <div class="pub-stat-val" style="color:var(--c-teal);">${yearRange}</div>
+              <div class="pub-stat-val" id="ps-period" style="color:var(--c-teal);">${yearRange}</div>
               <div class="pub-stat-lbl">Período</div>
             </div>
           </div>
@@ -895,6 +895,53 @@ class NIMPage {
         NIMPage._applyPubFilters();
       });
     });
+  }
+  
+  /**
+   * Reconstruye el toolbar (botones de año y topic) y actualiza los
+   * stats del strip a partir del estado actual de NIMACH_DATA.publications.
+   * Se llama tras BibTeXParser._render() para reflejar los datos del .bib.
+   */
+  static _updatePubToolbarAndStats() {
+    const pubs = window.NIMACH_DATA?.publications || [];
+    if (!pubs.length) return;
+
+    // ── Recomputar derivados ──
+    const years     = [...new Set(pubs.map(p => p.year))].sort((a, b) => b - a);
+    const topics    = [...new Set(pubs.flatMap(p => p.topics || []))].sort();
+    const yearRange = years.length > 1
+      ? `${years[years.length - 1]} – ${years[0]}`
+      : years[0] || '—';
+
+    // ── Actualizar stat strip ──
+    const setEl = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    };
+    setEl('ps-total',  pubs.length);
+    setEl('ps-q1',     pubs.filter(p => p.quartile === 'Q1').length);
+    setEl('ps-period', yearRange);
+
+    // ── Reconstruir botones de año ──
+    const yearGroup = document.querySelector('.pub-filter-group');
+    if (yearGroup) {
+      yearGroup.innerHTML =
+        `<button class="pub-filter-btn active" data-filter="all" data-type="year">Todos</button>` +
+        years.map(y =>
+          `<button class="pub-filter-btn" data-filter="${y}" data-type="year">${y}</button>`
+        ).join('');
+    }
+
+    // ── Reconstruir botones de topic ──
+    const topicGroup = document.querySelectorAll('.pub-filter-group')[1];
+    if (topicGroup && topics.length) {
+      topicGroup.innerHTML = topics.map(t =>
+        `<button class="pub-topic-btn" data-topic="${t}">${t}</button>`
+      ).join('');
+    }
+
+    // ── Re-enlazar listeners (los nodos fueron recreados) ──
+    NIMPage._initPubFilter();
   }
 
   static _applyPubFilters() {
