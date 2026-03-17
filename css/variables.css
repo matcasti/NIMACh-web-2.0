@@ -206,5 +206,127 @@ body.dark-mode .social-btn:hover {
   color: var(--t-hero);
 }
 
+/* Sección títulos y descripciones en light-sections */
+body.dark-mode .section-title      { color: var(--t-hero); }
+body.dark-mode .section-desc       { color: var(--t-muted); }
+body.dark-mode .label              { color: var(--t-dim); }
+
+/* Timeline */
+body.dark-mode .timeline-tag {
+  background: rgba(255,255,255,.06);
+  color: var(--t-muted);
+}
+body.dark-mode .timeline-date { color: var(--t-dim); }
+body.dark-mode .timeline-text { color: var(--t-muted); }
+body.dark-mode .timeline-text a { color: var(--c-coral); }
+
+/* Collab chips & contact */
+body.dark-mode .collab-chip {
+  background: rgba(255,255,255,.06);
+  color: var(--t-muted);
+  border-color: var(--glass-border);
+}
+
+/* Publications */
+body.dark-mode .pub-card {
+  background: var(--c-navy-3);
+  border-color: var(--glass-border);
+}
+body.dark-mode .pub-title   { color: var(--t-hero); }
+body.dark-mode .pub-authors { color: var(--t-muted); }
+
+/* Tools */
+body.dark-mode .tool-card {
+  background: var(--c-navy-3);
+  border-color: var(--glass-border);
+}
+body.dark-mode .tool-title  { color: var(--t-hero); }
+body.dark-mode .tool-desc   { color: var(--t-muted); }
+body.dark-mode .tool-feature{ color: var(--t-muted); }
+body.dark-mode .tool-author { color: var(--t-dim); border-top-color: var(--glass-border); }
+body.dark-mode .tool-btn-ghost {
+  background: rgba(255,255,255,.06);
+  color: var(--t-muted);
+  border-color: var(--glass-border);
+}
+
+/* Datasets */
+body.dark-mode .dataset-card,
+body.dark-mode .ds-title    { color: var(--t-hero); }
+body.dark-mode .ds-desc     { color: var(--t-muted); }
+body.dark-mode .ds-format   { color: var(--t-dim); }
+body.dark-mode .ds-meta     { color: var(--t-muted); }
+body.dark-mode .ds-meta strong { color: var(--t-hero); }
+body.dark-mode .ds-btn-ghost {
+  background: rgba(255,255,255,.06);
+  color: var(--c-teal);
+  border-color: rgba(29,184,132,.22);
+}
+
+/* Projects */
+body.dark-mode .project-card {
+  background: var(--c-navy-3);
+  border-color: var(--glass-border);
+}
+body.dark-mode .project-title   { color: var(--t-hero); }
+body.dark-mode .project-pi      { color: var(--t-muted); }
+body.dark-mode .project-agency  { color: var(--t-dim); }
+body.dark-mode .meta-label      { color: var(--t-dim); }
+body.dark-mode .meta-value      { color: var(--t-hero); }
+body.dark-mode .progress-header { color: var(--t-muted); }
+body.dark-mode .project-tags .tag {
+  background: rgba(255,255,255,.06);
+  color: var(--t-muted);
+}
+
+/* Research cards */
+body.dark-mode .research-card {
+  background: var(--c-navy-3);
+  border-color: var(--glass-border);
+}
+body.dark-mode .card-title   { color: var(--t-hero); }
+body.dark-mode .card-desc    { color: var(--t-muted); }
+body.dark-mode .research-card .tag {
+  background: rgba(255,255,255,.06);
+  color: var(--t-muted);
+}
+
+/* Person cards */
+body.dark-mode .person-card {
+  background: var(--c-navy-3);
+  border-color: var(--glass-border);
+}
+body.dark-mode .person-name  { color: var(--t-hero); }
+body.dark-mode .person-role  { color: var(--t-muted); }
+body.dark-mode .person-chip {
+  background: rgba(255,255,255,.06);
+  color: var(--t-muted);
+}
+
+/* Metrics */
+body.dark-mode .metric-card {
+  background: var(--c-navy-3);
+  border-color: var(--glass-border);
+}
+body.dark-mode .metric-value  { color: var(--t-hero); }
+body.dark-mode .metric-label  { color: var(--t-muted); }
+body.dark-mode .metric-source { color: var(--t-dim); }
+
+/* Contact section title */
+body.dark-mode #contacto .section-title { color: var(--t-hero); }
+
+/* Footer (ya es dark, pero por si acaso) */
+body.dark-mode .footer-copy { color: var(--t-dim); }
+
+/* See-all links */
+body.dark-mode .see-all { color: var(--t-muted); }
+body.dark-mode .see-all:hover { color: var(--t-hero); }
+
+/* Section headers separators */
+body.dark-mode .section-header { border-color: var(--glass-border); }
+
+/* Pub list loading */
+body.dark-mode .pub-list-loading { color: var(--t-dim); }
+
 /* Scrollbar */
 body.dark-mode ::-webkit-scrollbar-track { background: var(--c-navy); }

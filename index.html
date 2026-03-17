@@ -21,6 +21,13 @@
 
   <!-- Favicon (SVG inline fallback) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%233b7abf'/><circle cx='16' cy='11' r='5' fill='none' stroke='white' stroke-width='2'/><path d='M7 24Q11 17 16 17Q21 17 25 24' fill='none' stroke='%23f5a472' stroke-width='2' stroke-linecap='round'/></svg>" />
+  
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    // Reemplaza con tu Public Key de emailjs.com
+    (function(){ emailjs.init({ publicKey: 'YP6iPMMZXPwjyDn4z' }); })();
+  </script>
 </head>
 <body>
 
@@ -578,41 +585,12 @@
         </div>
 
         <div class="pub-list">
-          <article class="pub-card reveal delay-1" data-year="2025" data-topic="hrv cold exercise">
-            <div class="pub-year">2025</div>
-            <div class="pub-body">
-              <h4 class="pub-title">Cardiac autonomic regulation in cold-water exposure: HRV analysis in Patagonian open-water swimmers</h4>
-              <p class="pub-authors">Núñez C., Castillo-Aguilar M., Medina P. et al.</p>
-              <div class="pub-journal">↗ Journal of Physiology <span class="pub-q">Q1</span></div>
-            </div>
-          </article>
-
-          <article class="pub-card reveal delay-2" data-year="2024" data-topic="mindfulness aging cognition">
-            <div class="pub-year">2024</div>
-            <div class="pub-body">
-              <h4 class="pub-title">Mindfulness-based intervention effects on autonomic regulation and cognitive function in older adults</h4>
-              <p class="pub-authors">Núñez C., Ibinarriaga T., Vásquez L. et al.</p>
-              <div class="pub-journal">↗ Frontiers in Aging Neuroscience <span class="pub-q">Q1</span></div>
-            </div>
-          </article>
-
-          <article class="pub-card reveal delay-3" data-year="2024" data-topic="circadian aging light">
-            <div class="pub-year">2024</div>
-            <div class="pub-body">
-              <h4 class="pub-title">Seasonal light variation and autonomic nervous system activity in high-latitude elderly populations</h4>
-              <p class="pub-authors">Núñez C., Pérez J. et al.</p>
-              <div class="pub-journal">↗ Chronobiology International <span class="pub-q">Q2</span></div>
-            </div>
-          </article>
-
-          <article class="pub-card reveal delay-4" data-year="2023" data-topic="hrv extreme review">
-            <div class="pub-year">2023</div>
-            <div class="pub-body">
-              <h4 class="pub-title">Heart rate variability as a biomarker of neuromodulation in extreme environments: a systematic review</h4>
-              <p class="pub-authors">Castillo-Aguilar M., Núñez C. et al.</p>
-              <div class="pub-journal">↗ Autonomic Neuroscience <span class="pub-q">Q2</span></div>
-            </div>
-          </article>
+          <!-- Publicaciones cargadas dinámicamente desde data/publications.bib -->
+          <div class="pub-list-loading" style="
+            text-align:center;padding:32px;
+            font-size:12px;color:var(--s-text-3,#8aa0b8);">
+            Cargando publicaciones…
+          </div>
         </div>
       </div>
 
@@ -987,12 +965,12 @@
     <div class="contact-grid">
       <div class="contact-form reveal delay-1">
         <div class="form-row">
-          <input class="form-input" type="text"  placeholder="Tu nombre" />
-          <input class="form-input" type="text"  placeholder="Tu institución" />
+          <input class="form-input" type="text"  name="from_name"  placeholder="Tu nombre" />
+          <input class="form-input" type="text"  name="from_inst"  placeholder="Tu institución" />
         </div>
-        <input class="form-input" type="email" placeholder="Correo electrónico" />
-        <input class="form-input" type="text"  placeholder="Asunto" />
-        <textarea class="form-input form-textarea" placeholder="¿En qué podemos ayudarte? Consultas, colaboraciones, postulaciones..."></textarea>
+        <input class="form-input" type="email" name="reply_to"   placeholder="Correo electrónico" />
+        <input class="form-input" type="text"  name="subject"    placeholder="Asunto" />
+        <textarea class="form-input form-textarea" name="message" placeholder="¿En qué podemos ayudarte? Consultas, colaboraciones, postulaciones..."></textarea>
         <button class="form-submit">Enviar mensaje →</button>
       </div>
 
@@ -1072,6 +1050,7 @@
 <script src="js/theme.js"></script>
 <script src="js/publications.js"></script>
 <script src="js/brain3d.js"></script>
+<script src="js/bibtex.js"></script>
 <script src="js/main.js"></script>
 
 </body>

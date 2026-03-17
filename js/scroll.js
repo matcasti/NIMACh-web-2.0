@@ -14,6 +14,7 @@ class ScrollReveal {
   }
 
   init() {
+    window._scrollRevealObserver = this.observer; // exponer para módulos dinámicos
     document.querySelectorAll('.reveal').forEach(el => {
       this.observer.observe(el);
     });

@@ -15,8 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Collaboration map ──
   new CollabMap('collab-map-canvas');
 
-  // ── OpenAlex enrichment ──
-  new PublicationsEnricher();
+  // ── BibTeX → publicaciones (carga, renderiza y enriquece con OpenAlex) ──
+  new BibTeXParser('data/publications.bib');
+  // Nota: PublicationsEnricher se instancia dentro de BibTeXParser tras el render.
+  // Si no hay archivo bib, el enricher corre igualmente sobre los datos estáticos.
   
   // ── 3D Brain-Heart viewer ──
   new Brain3DViewer();
@@ -154,14 +156,27 @@ function initAnchorScroll() {
 }
 
 /* ── Contact form ── */
+/* ── Contact form (EmailJS multi-destinatario) ──
+ *
+ * Configuración en emailjs.com:
+ *   1. Crea una cuenta y un Email Service (Gmail / Outlook / SMTP)
+ *   2. Crea un Email Template con las variables:
+ *        {{from_name}}, {{from_inst}}, {{reply_to}},
+ *        {{subject}}, {{message}}, {{sent_at}}
+ *   3. En el template, agrega múltiples "To emails" separados por coma:
+ *        cristian.nunez@umag.cl, it-support@umag.cl
+ *   4. Reemplaza SERVICE_ID y TEMPLATE_ID abajo con los tuyos.
+ */
 function initContactForm() {
   const form = document.querySelector('.contact-form');
   if (!form) return;
-
   const btn = form.querySelector('.form-submit');
   if (!btn) return;
 
-  btn.addEventListener('click', () => {
+  const SERVICE_ID  = 'service_kr8za2r';   // ← reemplazar
+  const TEMPLATE_ID = 'template_issi1g4'; // ← reemplazar
+
+  btn.addEventListener('click', async () => {
     const inputs = form.querySelectorAll('.form-input');
     let valid = true;
 
@@ -184,17 +199,34 @@ function initContactForm() {
     btn.textContent = 'Enviando…';
     btn.disabled = true;
 
-    // Simulate send (replace with real API call)
-    setTimeout(() => {
+    // Construir los parámetros del template
+    const params = {
+      from_name: form.querySelector('[name="from_name"]').value.trim(),
+      from_inst:  form.querySelector('[name="from_inst"]').value.trim(),
+      reply_to:   form.querySelector('[name="reply_to"]').value.trim(),
+      subject:    form.querySelector('[name="subject"]').value.trim(),
+      message:    form.querySelector('[name="message"]').value.trim(),
+      sent_at:    new Date().toLocaleString('es-CL', { timeZone: 'America/Punta_Arenas' }),
+    };
+
+    try {
+      if (typeof emailjs === 'undefined') throw new Error('EmailJS no cargado');
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, params);
+
       btn.textContent = '✓ Mensaje enviado';
       btn.style.background = 'linear-gradient(135deg,#1a6e50,#1db884)';
-      inputs.forEach(i => i.value = '');
+      inputs.forEach(i => { i.value = ''; i.style.borderColor = ''; });
+    } catch (err) {
+      console.error('EmailJS error:', err);
+      btn.textContent = '✗ Error al enviar — intenta por correo directo';
+      btn.style.background = 'linear-gradient(135deg,#c84020,#e06030)';
+    } finally {
       setTimeout(() => {
         btn.textContent = 'Enviar mensaje →';
         btn.style.background = '';
         btn.disabled = false;
-      }, 3500);
-    }, 1400);
+      }, 4000);
+    }
   });
 }
 
