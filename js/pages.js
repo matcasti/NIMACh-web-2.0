@@ -534,6 +534,70 @@ class NIMPage {
         </div>
       </article>`;
   }
+  
+  /* ══════════════════════════════════
+     PARADIGM BLOCK (shared renderer)
+  ══════════════════════════════════ */
+  static _paradigmHTML() {
+    const p = window.NIMACH_DATA.paradigm;
+    if (!p) return '';
+
+    const colorMap = {
+      blue:  { border: 'var(--c-blue)',  bg: 'rgba(59,122,191,.08)',  text: 'var(--c-blue-light)' },
+      coral: { border: 'var(--c-coral)', bg: 'rgba(232,112,64,.08)',  text: 'var(--c-coral)' },
+      teal:  { border: 'var(--c-teal)',  bg: 'rgba(29,184,132,.08)',  text: 'var(--c-teal)' },
+    };
+
+    const pillarsHTML = p.pillars.map((pl, i) => {
+      const c = colorMap[pl.color];
+      const delay = ['', 'delay-1', 'delay-2'][i];
+      const tagsHTML = pl.tags.map(t => `<span class="tag">${t}</span>`).join('');
+      return `
+        <div class="pdg-pillar pdg-${pl.color} reveal ${delay}">
+          <div class="pdg-pillar-top">
+            <span class="pdg-pillar-icon" style="color:${c.text};background:${c.bg};">${pl.icon}</span>
+            <span class="pdg-pillar-num" style="color:${c.text};">${pl.num}</span>
+          </div>
+          <h3 class="pdg-pillar-name">${pl.label}</h3>
+          <p class="pdg-pillar-question">${pl.question}</p>
+          <p class="pdg-pillar-desc">${pl.desc}</p>
+          <div class="pdg-pillar-tags">${tagsHTML}</div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="pdg-header reveal">
+        <span class="paradigm-eyebrow">Paradigma central · ¿Para qué investigamos?</span>
+        <h2 class="pdg-title">La resiliencia como proceso,<br>no como rasgo</h2>
+      </div>
+
+      <div class="pdg-quote-block reveal delay-1">
+        <div class="pdg-quote-mark">"</div>
+        <blockquote class="pdg-quote-text">${p.quote}</blockquote>
+        <div class="pdg-core-badge">
+          <span class="pdg-core-icon">⬡</span>
+          <span>Autopoiesis · Auto-organización dinámica</span>
+        </div>
+      </div>
+
+      <div class="pdg-diagram">
+        <div class="pdg-diagram-center">
+          <div class="pdg-diagram-node">
+            <div class="pdg-node-pulse"></div>
+            <span class="pdg-node-icon">⬡</span>
+            <span class="pdg-node-label">Resiliencia<br>como proceso</span>
+          </div>
+          <div class="pdg-diagram-arms">
+            <div class="pdg-arm pdg-arm-blue"></div>
+            <div class="pdg-arm pdg-arm-coral"></div>
+            <div class="pdg-arm pdg-arm-teal"></div>
+          </div>
+        </div>
+        <div class="pdg-pillars-row">
+          ${pillarsHTML}
+        </div>
+      </div>`;
+  }
 
   /* ══════════════════════════════════
      INVESTIGACIÓN
@@ -588,11 +652,17 @@ class NIMPage {
       ${this._pageHeroHTML({
         label:     'Áreas de estudio',
         title:     'Líneas de investigación',
-        desc:      'Tres ejes principales que conectan la neurofisiología contemporánea con la realidad clínica y el entorno único de la Patagonia chilena.',
+        desc:      'Tres ejes principales articulados por un paradigma común: la resiliencia como proceso dinámico de autopoiesis que conecta la neurofisiología con la realidad clínica y el entorno patagónico.',
         accent:    'blue',
         backHref:  '../index.html#investigacion',
         backLabel: 'Volver a inicio',
       })}
+      
+      <section class="paradigm-section">
+        <div class="container">
+          ${this._paradigmHTML()}
+        </div>
+      </section>
 
       <section class="page-section light-section" >
         <div class="container">

@@ -260,6 +260,43 @@ const NIMACH_DATA = {
       tags:  ['Aging', 'Mindfulness', 'Cognition', 'RIES-LAC'],
     },
   ],
+  
+  /* ─── Paradigm ─── */
+  paradigm: {
+    quote: 'La resiliencia no es un rasgo, es un proceso dinámico de auto-organización (autopoiesis) mediante el cual el organismo gestiona recursos fisiológicos para preservar la funcionalidad y la autonomía regulatoria en escenarios de perturbación, y esa gestión se aprende.',
+    pillars: [
+      {
+        id:       'dynamism',
+        num:      '01',
+        icon:     '↺',
+        color:    'blue',
+        label:    'Dinamismo',
+        question: '¿Cómo se mide la adaptación?',
+        desc:     'Lo relevante no es solo el nivel promedio, sino la capacidad de reorganizarse: flexibilidad, estabilidad, recuperación y acoplamientos entre sistemas.',
+        tags:     ['Flexibilidad', 'Estabilidad', 'Recuperación', 'Acoplamientos'],
+      },
+      {
+        id:       'resources',
+        num:      '02',
+        icon:     '⚡',
+        color:    'coral',
+        label:    'Gestión de recursos',
+        question: '¿Qué distribuye el organismo?',
+        desc:     'La adaptación depende de cómo el cuerpo distribuye y recupera recursos en el eje autonómico–inmune–cerebro.',
+        tags:     ['Autonómico', 'Inmune', 'Cerebro', 'Distribución'],
+      },
+      {
+        id:       'learning',
+        num:      '03',
+        icon:     '◉',
+        color:    'teal',
+        label:    'Aprendizaje corporal',
+        question: '¿Cómo se consolida la resiliencia?',
+        desc:     'Las estrategias se consolidan por repetición y dejan huellas fisiológicas medibles: hábitos, entrenamiento, regulación emocional, sueño, exposición al frío.',
+        tags:     ['Hábitos', 'Entrenamiento', 'Sueño', 'Huellas fisiológicas'],
+      },
+    ],
+  },
 
   /* ─── Collaborators ─── */
   collaborators: [

@@ -1053,3 +1053,136 @@ body:not(.dark-mode) .collab-map-note {
   .people-grid { grid-template-columns: 1fr; }
   .gallery-grid .g-span-2 { grid-row: span 1; }
 }
+
+/* ─────────────────────────────────────────
+   HERO — Paradigm strip
+───────────────────────────────────────── */
+.hero-paradigm {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fade-in .8s .40s forwards;
+}
+
+.hero-paradigm-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--t-dim);
+}
+
+.hero-paradigm-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.hpc {
+  font-size: 10px;
+  font-weight: 400;
+  padding: 4px 11px;
+  border-radius: var(--r-full);
+  border: 0.5px solid;
+  letter-spacing: .04em;
+}
+.hpc-blue  { color: var(--c-blue-light);  border-color: rgba(127,179,232,.3);  background: rgba(59,122,191,.08); }
+.hpc-coral { color: var(--c-coral);       border-color: rgba(245,164,114,.3);  background: rgba(232,112,64,.08); }
+.hpc-teal  { color: var(--c-teal);        border-color: rgba(46,204,142,.3);   background: rgba(29,184,132,.08); }
+
+/* ─────────────────────────────────────────
+   HOMEPAGE — Paradigm banner (investigación)
+───────────────────────────────────────── */
+.paradigm-banner {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  background: #fff;
+  border: 0.5px solid rgba(0,0,0,.07);
+  border-radius: var(--r-xl);
+  padding: 28px 32px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.paradigm-banner::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--c-blue), var(--c-coral), var(--c-teal));
+}
+
+body.dark-mode .paradigm-banner {
+  background: var(--c-navy-3);
+  border-color: var(--glass-border);
+}
+
+.paradigm-banner-left { flex: 1; min-width: 0; }
+
+.paradigm-banner-eyebrow {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--c-blue);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.paradigm-banner-text {
+  font-size: 13px;
+  color: var(--s-text-2, #4a6280);
+  line-height: 1.75;
+  font-style: italic;
+  margin: 0;
+}
+
+body.dark-mode .paradigm-banner-text { color: var(--t-muted); }
+
+.paradigm-banner-pillars {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.pb-pillar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 18px;
+  border-radius: var(--r-md);
+  text-align: center;
+  min-width: 88px;
+}
+
+.pb-icon { font-size: 18px; line-height: 1; }
+
+.pb-num {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  opacity: .6;
+}
+
+.pb-name {
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: .02em;
+}
+
+.pb-blue  { background: rgba(59,122,191,.07);  color: var(--c-blue); }
+.pb-coral { background: rgba(232,112,64,.07);  color: #c05a28; }
+.pb-teal  { background: rgba(29,184,132,.07);  color: var(--c-teal); }
+
+body.dark-mode .pb-blue  { background: rgba(59,122,191,.12);  color: var(--c-blue-light); }
+body.dark-mode .pb-coral { background: rgba(232,112,64,.12);  color: var(--c-coral); }
+body.dark-mode .pb-teal  { background: rgba(29,184,132,.12);  color: var(--c-teal); }
+
+@media (max-width: 767px) {
+  .paradigm-banner { flex-direction: column; gap: 20px; padding: 20px; }
+  .paradigm-banner-pillars { width: 100%; justify-content: space-between; }
+  .pb-pillar { flex: 1; padding: 12px 8px; min-width: 0; }
+}

@@ -559,6 +559,286 @@ body.dark-mode .rl-network {
 }
 
 /* ─────────────────────────────────────────
+   PARADIGMA section (investigacion page)
+───────────────────────────────────────── */
+.paradigm-section {
+  background: var(--c-navy);
+  padding: 56px 0 64px;
+  border-bottom: 0.5px solid rgba(255,255,255,.07);
+}
+
+.paradigm-eyebrow {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--c-blue-light);
+  margin-bottom: 12px;
+}
+
+.pdg-header { margin-bottom: 32px; }
+
+.pdg-title {
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 500;
+  color: var(--t-hero);
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* Quote block */
+.pdg-quote-block {
+  position: relative;
+  background: rgba(255,255,255,.04);
+  border: 0.5px solid rgba(255,255,255,.1);
+  border-radius: var(--r-xl);
+  padding: 32px 40px;
+  margin-bottom: 48px;
+  overflow: hidden;
+}
+
+.pdg-quote-mark {
+  position: absolute;
+  top: -10px; left: 24px;
+  font-size: 120px;
+  font-weight: 700;
+  color: var(--c-blue);
+  opacity: .1;
+  line-height: 1;
+  font-family: Georgia, serif;
+  pointer-events: none;
+}
+
+.pdg-quote-text {
+  font-size: 15px;
+  color: var(--t-muted);
+  line-height: 1.85;
+  font-style: italic;
+  margin: 0 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.pdg-core-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--c-blue-light);
+  background: rgba(59,122,191,.1);
+  border: 0.5px solid rgba(59,122,191,.25);
+  padding: 6px 14px;
+  border-radius: var(--r-full);
+  letter-spacing: .06em;
+}
+
+.pdg-core-icon { font-size: 13px; }
+
+/* Diagram */
+.pdg-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.pdg-diagram-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.pdg-diagram-node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: rgba(59,122,191,.12);
+  border: 1px solid rgba(59,122,191,.35);
+  border-radius: 50%;
+  width: 110px;
+  height: 110px;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+  box-shadow: 0 0 40px rgba(59,122,191,.15);
+  z-index: 1;
+}
+
+.pdg-node-pulse {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(59,122,191,.2);
+  animation: pulse-ring 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse-ring {
+  0%, 100% { transform: scale(1); opacity: .6; }
+  50%       { transform: scale(1.08); opacity: .2; }
+}
+
+.pdg-node-icon {
+  font-size: 22px;
+  color: var(--c-blue-light);
+}
+
+.pdg-node-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--t-muted);
+  line-height: 1.4;
+}
+
+/* Connecting arms */
+.pdg-diagram-arms {
+  display: flex;
+  gap: 0;
+  align-items: flex-start;
+  justify-content: center;
+  width: 680px;
+  max-width: 100%;
+  height: 36px;
+  position: relative;
+}
+
+.pdg-arm {
+  position: absolute;
+  bottom: 0;
+  height: 100%;
+  width: 1px;
+  opacity: .35;
+}
+
+.pdg-arm-blue  { left: calc(50% - 220px); background: linear-gradient(to bottom, var(--c-blue), transparent); }
+.pdg-arm-coral { left: 50%;               background: linear-gradient(to bottom, var(--c-coral), transparent); transform: translateX(-50%); }
+.pdg-arm-teal  { left: calc(50% + 220px); background: linear-gradient(to bottom, var(--c-teal), transparent); }
+
+/* Pillar row */
+.pdg-pillars-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  width: 100%;
+  border-top: 0.5px solid rgba(255,255,255,.06);
+  padding-top: 28px;
+  margin-top: 0;
+}
+
+.pdg-pillar {
+  background: rgba(255,255,255,.03);
+  border: 0.5px solid rgba(255,255,255,.08);
+  border-radius: var(--r-xl);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform var(--dur-mid) var(--ease-out), border-color var(--dur-mid);
+  position: relative;
+  overflow: hidden;
+}
+
+.pdg-pillar::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  transition: height var(--dur-mid);
+}
+
+.pdg-blue::before  { background: var(--c-blue); }
+.pdg-coral::before { background: var(--c-coral); }
+.pdg-teal::before  { background: var(--c-teal); }
+
+.pdg-pillar:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,.14);
+}
+
+.pdg-pillar:hover::before { height: 3px; }
+
+.pdg-pillar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pdg-pillar-icon {
+  width: 36px; height: 36px;
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.pdg-pillar-num {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  opacity: .5;
+}
+
+.pdg-pillar-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--t-hero);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.pdg-pillar-question {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--t-dim);
+  margin: 0;
+}
+
+.pdg-pillar-desc {
+  font-size: 13px;
+  color: var(--t-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.pdg-pillar-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.pdg-pillar-tags .tag {
+  background: rgba(255,255,255,.06);
+  color: var(--t-dim);
+  border: 0.5px solid rgba(255,255,255,.08);
+}
+
+/* Light mode overrides for the page section */
+body:not(.dark-mode) .paradigm-section {
+  background: #0d1d35;
+}
+
+@media (max-width: 899px) {
+  .pdg-pillars-row { grid-template-columns: 1fr; }
+  .pdg-diagram-arms { display: none; }
+  .pdg-diagram-node { width: 90px; height: 90px; }
+}
+
+@media (min-width: 900px) and (max-width: 1199px) {
+  .pdg-arm-blue  { left: calc(50% - 160px); }
+  .pdg-arm-teal  { left: calc(50% + 160px); }
+}
+
+/* ─────────────────────────────────────────
    PROYECTOS page
 ───────────────────────────────────────── */
 .proj-page-grid {
