@@ -319,6 +319,17 @@ class NIMPage {
       </section>` : ''}`;
   }
   
+  // ─── INSERT inside class Pages, before _personCardHTML ───
+  static _avatarInnerHTML(person, size = null) {
+    const sizeStyle = size ? `width:${size}px;height:${size}px;font-size:${Math.round(size*0.35)}px;` : '';
+    if (person.photo) {
+      return `<div class="avatar ${person.avatar} avatar--photo" style="${sizeStyle}">
+        <img src="${person.photo}" alt="${person.name}" loading="lazy">
+      </div>`;
+    }
+    return `<div class="avatar ${person.avatar}" style="${sizeStyle}">${person.initials}</div>`;
+  }
+  
   static _personCardHTML(p, i) {
     const delay = ['','delay-1','delay-2','delay-3'][Math.min(i % 4, 3)];
     const pubs  = (window.NIMACH_DATA.publications || [])
@@ -339,7 +350,7 @@ class NIMPage {
         data-cat="${p.role_category}">
         <div class="person-page-top">
           <div class="avatar-wrap">
-            <div class="avatar ${p.avatar}">${p.initials}</div>
+            ${Pages._avatarInnerHTML(p)}
             <div class="avatar-ring" style="color:${p.ringColor};"></div>
           </div>
           <div class="person-page-meta">
@@ -359,9 +370,7 @@ class NIMPage {
     const owner = (window.NIMACH_DATA.people || []).find(p => p.id === pet.owner);
     const ownerHTML = owner ? `
       <div class="pet-owner">
-        <div class="avatar ${owner.avatar}" style="width:22px;height:22px;font-size:9px;">
-          ${owner.initials}
-        </div>
+        ${Pages._avatarInnerHTML(owner, 22)}
         <span>Compañero de ${owner.name.split(' ')[0]}</span>
       </div>` : '';
 
@@ -395,9 +404,7 @@ class NIMPage {
     return `
       <article class="alumni-card reveal ${delay}">
         <div class="alumni-avatar-wrap">
-          <div class="avatar ${a.avatar}" style="width:38px;height:38px;font-size:13px;opacity:.75;">
-            ${a.initials}
-          </div>
+          ${Pages._avatarInnerHTML(a, 38)}
         </div>
         <div class="alumni-body">
           <div class="alumni-header">

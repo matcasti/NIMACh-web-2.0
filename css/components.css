@@ -155,6 +155,20 @@
   transition: border-color var(--dur-mid);
 }
 
+/* ── Photo avatar ── */
+.avatar--photo {
+  overflow: hidden;
+  background: none;   /* photo replaces the colour swatch */
+}
+
+.avatar--photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
 .person-card:hover .avatar-ring { border-color: currentColor; }
 
 /* Avatar color sets */
