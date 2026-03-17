@@ -73,7 +73,7 @@ class GlobeViewer {
 
     this.scene  = new T.Scene();
     this.camera = new T.PerspectiveCamera(42, W / H, 0.1, 200);
-    this.camera.position.z = 2.85;
+    this.camera.position.z = 4.6;
 
     // Grupo raíz — toda la geometría del globo rota aquí
     this.globe = new T.Group();
