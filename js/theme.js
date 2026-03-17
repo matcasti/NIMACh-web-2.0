@@ -31,8 +31,12 @@ class ThemeManager {
   toggle() { this.apply(this.current === 'dark' ? 'light' : 'dark'); }
 
   bindToggle() {
-    const btn = document.getElementById('theme-toggle');
-    if (btn) btn.addEventListener('click', () => this.toggle());
+    // Delegación en document: funciona aunque el botón se inyecte dinámicamente
+    if (this._boundHandler) document.removeEventListener('click', this._boundHandler);
+    this._boundHandler = e => {
+      if (e.target.closest('#theme-toggle')) this.toggle();
+    };
+    document.addEventListener('click', this._boundHandler);
   }
 }
 
