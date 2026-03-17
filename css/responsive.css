@@ -1,0 +1,637 @@
+/* ============================================================
+   NIM-ACh — Responsive System
+   Breakpoints (mobile-first + wide):
+     xs  : 300–479px
+     sm  : 480–639px
+     md  : 640–767px
+     lg  : 768–899px
+     xl  : 900–1023px
+     2xl : 1024–1279px   (base design target)
+     3xl : 1280–1535px
+     4xl : 1536–2047px
+     5xl : 2048–3000px
+   ============================================================ */
+
+/* ────────────────────────────────────────────────────────────
+   0. FLUID TOKENS — sobrescriben variables.css en extremos
+──────────────────────────────────────────────────────────── */
+@media (max-width: 479px) {
+  :root {
+    --sp-xl:  24px;
+    --sp-2xl: 32px;
+    --r-xl:   14px;
+    --r-lg:   10px;
+  }
+}
+
+@media (min-width: 1536px) {
+  :root {
+    --sp-xl:  56px;
+    --sp-2xl: 88px;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   1. LAYOUT — .container y .section-pad
+──────────────────────────────────────────────────────────── */
+
+/* xs: lateral padding mínimo */
+@media (max-width: 479px) {
+  .container { padding: 0 16px; }
+  .section-pad    { padding: 48px 0; }
+  .section-pad-sm { padding: 32px 0; }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .container { padding: 0 20px; }
+  .section-pad    { padding: 56px 0; }
+}
+
+@media (min-width: 768px) and (max-width: 899px) {
+  .container { padding: 0 28px; }
+}
+
+/* Wide: container crece para aprovechar el espacio */
+@media (min-width: 1536px) {
+  .container { max-width: 1420px; padding: 0 48px; }
+  .section-pad    { padding: 96px 0; }
+}
+
+@media (min-width: 2048px) {
+  .container { max-width: 1800px; padding: 0 64px; }
+  .section-pad    { padding: 120px 0; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   2. NAVIGATION
+──────────────────────────────────────────────────────────── */
+
+/* Reduce padding nav en pantallas pequeñas */
+@media (max-width: 479px) {
+  .nav { padding: 10px 16px; }
+  .nav.scrolled { padding: 8px 16px; }
+  .nav-name { font-size: 13px; }
+  .nav-sub  { display: none; }
+  .nav-right .nav-pill { display: none; }
+  .nav-cta  { padding: 7px 12px; font-size: 11px; }
+}
+
+@media (min-width: 480px) and (max-width: 899px) {
+  .nav { padding: 12px 20px; }
+}
+
+/* Impide que el nav-right desborde en tablets */
+@media (min-width: 900px) and (max-width: 1023px) {
+  .nav { padding: 14px 24px; }
+  .nav-link { padding: 7px 10px; font-size: 11px; }
+}
+
+/* Wide: más aire en el nav */
+@media (min-width: 1536px) {
+  .nav { padding: 16px 48px; }
+}
+
+@media (min-width: 2048px) {
+  .nav { padding: 18px 64px; }
+}
+
+/* Mobile menu - cierre suave 300px */
+@media (max-width: 360px) {
+  .nav-links.open .nav-link {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   3. HERO
+──────────────────────────────────────────────────────────── */
+
+@media (max-width: 479px) {
+  .hero { min-height: 100svh; padding-top: 56px; }
+  .hero-content { padding: 0 16px; max-width: 100%; }
+
+  .hero-eyebrow { font-size: 9px; padding: 5px 11px; }
+
+  .hero-btns {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .btn-primary, .btn-secondary {
+    width: 100%;
+    text-align: center;
+    padding: 14px 20px;
+  }
+
+  .btn-3d-link { font-size: 11px; margin-bottom: 24px; }
+
+  .hero-stats {
+    gap: 14px;
+    padding-top: 16px;
+  }
+  .stat-ring-svg { width: 38px; height: 38px; }
+  .stat-number   { font-size: 17px; }
+  .stat-label    { font-size: 9px; }
+  .stat-ring-wrap { gap: 8px; }
+}
+
+@media (min-width: 480px) and (max-width: 639px) {
+  .hero-content { padding: 0 20px; max-width: 100%; }
+  .hero-btns { flex-direction: column; }
+  .btn-primary, .btn-secondary { width: 100%; text-align: center; }
+  .hero-stats { gap: 16px; }
+}
+
+@media (min-width: 640px) and (max-width: 767px) {
+  .hero-content { padding: 0 32px; max-width: 100%; }
+  .hero-btns { flex-wrap: wrap; }
+  .hero-stats { gap: 18px; }
+}
+
+@media (min-width: 768px) and (max-width: 899px) {
+  .hero-content { padding: 0 40px; max-width: 100%; }
+}
+
+/* Wide hero: aprovecha más pantalla */
+@media (min-width: 1536px) {
+  .hero-content { padding: 0 88px; max-width: 900px; }
+}
+
+@media (min-width: 2048px) {
+  .hero-content { max-width: 1100px; }
+  .hero-title   { font-size: clamp(48px, 3.5vw, 72px); }
+  .hero-sub     { font-size: 18px; }
+}
+
+/* ECG + reserva espacio en móvil */
+@media (max-width: 479px) {
+  .hero        { padding-bottom: 76px; }  /* ECG 56px + 20px */
+  .hero-ecg    { height: 56px; }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .hero        { padding-bottom: 96px; }  /* ECG 76px + 20px */
+  .hero-ecg    { height: 76px; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   4. SECTION HEADERS
+──────────────────────────────────────────────────────────── */
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  gap: 12px;
+}
+
+@media (max-width: 639px) {
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  .see-all { align-self: flex-start; font-size: 12px; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   5. INVESTIGACIÓN (research-grid)
+──────────────────────────────────────────────────────────── */
+@media (max-width: 899px) {
+  .research-grid { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 1536px) {
+  .research-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   6. PROYECTOS
+──────────────────────────────────────────────────────────── */
+@media (max-width: 899px) {
+  .projects-grid { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 1536px) {
+  .projects-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   7. PERSONAS
+──────────────────────────────────────────────────────────── */
+@media (max-width: 479px) {
+  .people-grid { grid-template-columns: 1fr; gap: 12px; }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .people-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1280px) {
+  .people-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 1536px) {
+  .people-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; }
+}
+
+/* Person cards en xs */
+@media (max-width: 479px) {
+  .person-card { padding: 16px; }
+  .avatar      { width: 44px; height: 44px; font-size: 14px; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   8. HERRAMIENTAS
+──────────────────────────────────────────────────────────── */
+@media (max-width: 899px) {
+  .tools-grid { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 1536px) {
+  .tools-grid { gap: 20px; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   9. PUBLICACIONES + NOTICIAS (grid interno en index.html)
+──────────────────────────────────────────────────────────── */
+/* El grid inline style="grid-template-columns:1.15fr 0.85fr" 
+   necesita ser sobreescrito en mobile */
+@media (max-width: 899px) {
+  #publicaciones .container > div[style*="grid"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 40px;
+  }
+}
+
+/* Pub cards en xs */
+@media (max-width: 479px) {
+  .pub-card {
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+  .pub-year {
+    align-self: flex-start;
+    margin-top: 0;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   10. GALERÍA
+──────────────────────────────────────────────────────────── */
+@media (max-width: 479px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 160px;
+  }
+  .gallery-grid .g-span-2 { grid-row: span 1; }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 160px;
+  }
+  .gallery-grid .g-span-2 { grid-row: span 1; }
+}
+
+@media (min-width: 1536px) {
+  .gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 220px;
+    gap: 16px;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   11. MÉTRICAS DASHBOARD
+──────────────────────────────────────────────────────────── */
+@media (max-width: 479px) {
+  .metrics-strip { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .metric-value  { font-size: 24px; }
+}
+
+@media (min-width: 480px) and (max-width: 899px) {
+  .metrics-strip { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1536px) {
+  .metrics-strip { grid-template-columns: repeat(4, 1fr); gap: 18px; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   12. GLOBO 3D
+──────────────────────────────────────────────────────────── */
+@media (max-width: 479px) {
+  .globe-stage {
+    flex-direction: column;
+    align-items: center;
+    min-height: auto;
+    padding: 16px 8px;
+    background: radial-gradient(
+      ellipse 90% 55% at 50% 35%,
+      rgba(4,14,30,0.96) 0%,
+      rgba(4,14,30,0.55) 100%
+    );
+  }
+  #globe-canvas {
+    width: 260px !important;
+    height: 260px !important;
+  }
+  .globe-points-legend {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 4px 0;
+  }
+  .globe-legend-item { font-size: 10px; gap: 6px; }
+  .globe-interact-hint { font-size: 8px; }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .globe-stage {
+    flex-direction: column;
+    align-items: center;
+    min-height: auto;
+  }
+  #globe-canvas {
+    width: 300px !important;
+    height: 300px !important;
+  }
+  .globe-points-legend {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 1536px) {
+  #globe-canvas {
+    width: 420px !important;
+    height: 420px !important;
+  }
+}
+
+@media (min-width: 2048px) {
+  #globe-canvas {
+    width: 520px !important;
+    height: 520px !important;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   13. DEI
+──────────────────────────────────────────────────────────── */
+@media (max-width: 479px) {
+  .dei-grid { grid-template-columns: 1fr; gap: 10px; }
+  .dei-card { padding: 16px; }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .dei-grid { grid-template-columns: 1fr; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   14. CONTACTO
+──────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .contact-grid { grid-template-columns: 1fr; gap: 32px; }
+  .form-row     { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 479px) {
+  .form-input   { padding: 11px 13px; font-size: 14px; }
+  .form-submit  { padding: 14px; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   15. FOOTER
+──────────────────────────────────────────────────────────── */
+@media (max-width: 639px) {
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 16px;
+    gap: 12px;
+  }
+  .footer-left  { gap: 10px; }
+  .footer-chips { display: none; } /* simplifica en móvil */
+}
+
+@media (min-width: 1536px) {
+  .footer { padding: 32px 48px; }
+}
+
+@media (min-width: 2048px) {
+  .footer { padding: 36px 64px; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   16. TIMELINE
+──────────────────────────────────────────────────────────── */
+@media (max-width: 479px) {
+  .timeline { padding-left: 20px; }
+  .timeline-date { font-size: 9px; }
+  .timeline-text { font-size: 12px; }
+  .timeline-dot  { left: -16px; width: 11px; height: 11px; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   17. PAGES — Inner pages CSS
+──────────────────────────────────────────────────────────── */
+
+/* Page hero */
+@media (max-width: 479px) {
+  .page-hero { padding: 88px 0 40px; }
+  .page-hero-title { font-size: clamp(22px, 7vw, 32px); }
+  .page-hero-desc  { font-size: 13px; }
+  .page-back-link  { font-size: 10px; }
+}
+
+@media (min-width: 1536px) {
+  .page-hero { padding: 160px 0 80px; }
+  .page-hero-title { font-size: clamp(40px, 3.5vw, 60px); }
+}
+
+/* Pub stat strip */
+@media (max-width: 479px) {
+  .pub-stat-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .pub-stat {
+    border-right: none;
+    border-bottom: 0.5px solid rgba(255,255,255,.07);
+    padding: 10px 16px;
+  }
+  .pub-stat-val  { font-size: 22px; }
+  .pub-stat-lbl  { font-size: 9px; }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .pub-stat-strip { flex-wrap: wrap; }
+  .pub-stat { flex: 1 1 40%; }
+}
+
+/* Pub toolbar */
+@media (max-width: 479px) {
+  .pub-toolbar  { padding: 14px; gap: 8px; }
+  .pub-filter-btn { font-size: 10px; padding: 4px 10px; }
+  .pub-topic-btn  { font-size: 9px;  padding: 3px 9px;  }
+}
+
+/* People page grid */
+@media (max-width: 479px) {
+  .people-page-grid { grid-template-columns: 1fr; }
+  .person-page-card { padding: 18px; }
+}
+
+@media (min-width: 1536px) {
+  .people-page-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Tools page */
+@media (max-width: 479px) {
+  .tools-page-grid { grid-template-columns: 1fr; }
+  .contribute-callout { flex-direction: column; padding: 20px; }
+}
+
+/* RL (investigacion) */
+@media (max-width: 479px) {
+  .rl-card { padding: 18px; }
+  .rl-card-header { flex-direction: column; gap: 8px; }
+  .rl-card-title  { font-size: 16px; }
+}
+
+/* Projects page */
+@media (min-width: 1024px) {
+  .proj-page-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1536px) {
+  .proj-page-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   18. PETS & ALUMNI
+──────────────────────────────────────────────────────────── */
+@media (max-width: 479px) {
+  .pets-grid   { grid-template-columns: 1fr; }
+  .alumni-grid { grid-template-columns: 1fr; }
+  .pet-card    { flex-direction: column; gap: 12px; }
+  .pet-emoji   { width: 44px; height: 44px; font-size: 26px; }
+  .alumni-card { flex-direction: row; }
+}
+
+@media (min-width: 1536px) {
+  .pets-grid   { grid-template-columns: repeat(3, 1fr); }
+  .alumni-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ────────────────────────────────────────────────────────────
+   19. ULTRA-WIDE (1536px – 3000px) — aprovecha pantallas grandes
+──────────────────────────────────────────────────────────── */
+
+@media (min-width: 1536px) {
+  /* Tipografía ligeramente mayor */
+  body { font-size: 17px; }
+  h3   { font-size: 19px; }
+  p    { font-size: 15px; }
+
+  .section-title { font-size: clamp(24px, 2vw, 32px); }
+  .section-desc  { font-size: 15px; max-width: 680px; }
+
+  /* Cards con más padding */
+  .research-card,
+  .project-card,
+  .person-card,
+  .tool-card,
+  .pub-card { padding: 26px 28px; }
+
+  /* Section headers */
+  .section-header { margin-bottom: 36px; }
+}
+
+@media (min-width: 2048px) {
+  body { font-size: 18px; }
+
+  /* Grids más generosos */
+  .research-grid { gap: 24px; }
+  .people-grid   { gap: 20px; }
+  .gallery-grid  {
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 260px;
+    gap: 18px;
+  }
+  .dei-grid  { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  /* Metrics: más anchura */
+  .metric-value { font-size: 38px; }
+
+  /* Globe: más grande */
+  #globe-canvas {
+    width: 520px !important;
+    height: 520px !important;
+  }
+
+  /* Person cards: 4 por fila */
+  .people-page-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+}
+
+@media (min-width: 2560px) {
+  .container     { max-width: 2200px; }
+  .section-pad   { padding: 140px 0; }
+
+  .gallery-grid {
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: 300px;
+  }
+
+  .people-page-grid { grid-template-columns: repeat(5, 1fr); }
+  .people-grid      { grid-template-columns: repeat(5, 1fr); }
+}
+
+/* ────────────────────────────────────────────────────────────
+   20. TOUCH — hover states desactivados en dispositivos táctiles
+──────────────────────────────────────────────────────────── */
+@media (hover: none) and (pointer: coarse) {
+  /* Sin efectos hover en touch para evitar estados pegados */
+  .pub-card:hover      { transform: none; border-color: rgba(0,0,0,.07); }
+  .person-card:hover   { transform: none; box-shadow: none; }
+  .project-card:hover  { transform: none; box-shadow: none; }
+  .research-card:hover { transform: none; }
+  .tool-card:hover     { transform: none; box-shadow: none; }
+  .gallery-item:hover  { transform: none; }
+
+  .pub-card:hover::before    { transform: none; }
+  .research-card:hover .card-arrow { transform: none; }
+
+  /* Hover en globo — usar tap */
+  #globe-canvas { cursor: default; }
+
+  /* Back to top visible siempre en touch (se hace visible al scroll) */
+  #back-to-top { right: 16px; bottom: 16px; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   21. PRINT
+──────────────────────────────────────────────────────────── */
+@media print {
+  .nav, .hero-ecg, .scroll-hint, #back-to-top,
+  .btn-3d-link, #btn-3d, .theme-toggle { display: none !important; }
+
+  .hero { min-height: auto; padding: 32px 0; }
+  .hero-content { padding: 0 32px; }
+
+  .pub-card { break-inside: avoid; }
+  .person-card { break-inside: avoid; }
+  .section-pad { padding: 32px 0; }
+  .container { max-width: 100%; padding: 0 24px; }
+
+  body { background: white; color: black; font-size: 12pt; }
+  a[href]::after { content: ' (' attr(href) ')'; font-size: 9pt; color: #666; }
+}

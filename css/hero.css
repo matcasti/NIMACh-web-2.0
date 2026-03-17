@@ -9,7 +9,8 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  padding-top: 64px; /* nav height */
+  padding-top: 64px;    /* nav height */
+  padding-bottom: 116px; /* reserva espacio del ECG (96px) + 20px respiro */
 }
 
 #hero-canvas {
@@ -242,6 +243,7 @@
 }
 
 /* ── ECG canvas ── */
+/* ── ECG canvas ── */
 .hero-ecg {
   position: absolute;
   bottom: 0; left: 0; right: 0;
@@ -249,6 +251,19 @@
   pointer-events: none;
   display: block;
   width: 100%;
+  z-index: 1;                         /* debajo del hero-content (z-index: 10) */
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0,0,0,0.4) 25%,
+    rgba(0,0,0,1) 60%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0,0,0,0.4) 25%,
+    rgba(0,0,0,1) 60%
+  );
 }
 
 /* ── Scroll hint ── */

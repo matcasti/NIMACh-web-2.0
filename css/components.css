@@ -1032,6 +1032,13 @@ body:not(.dark-mode) .collab-map-note {
   .tools-grid { grid-template-columns: 1fr; }
 }
 
+/* ── Pub + News two-column grid ── */
+.pub-news-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 40px;
+}
+
 /* ─────────────────────────────────────────
    RESPONSIVE
 ───────────────────────────────────────── */
