@@ -157,23 +157,9 @@
     </div>
   </div>
 
-  <!-- ECG strip -->
-  <svg class="hero-ecg" viewBox="0 0 900 60" preserveAspectRatio="none" aria-hidden="true">
-    <defs>
-      <linearGradient id="ecg-grad" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%"   stop-color="#e87040" stop-opacity="0"/>
-        <stop offset="40%"  stop-color="#e87040" stop-opacity=".85"/>
-        <stop offset="100%" stop-color="#e87040" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-    <path id="ecg-path"
-      d="M0 38 L90 38 L100 38 L104 20 L108 50 L112 6 L118 54 L122 38 L200 38
-         L290 38 L294 20 L298 50 L302 6 L308 54 L312 38 L400 38
-         L490 38 L494 20 L498 50 L502 6 L508 54 L512 38 L600 38
-         L690 38 L694 20 L698 50 L702 6 L708 54 L712 38 L900 38"
-      fill="none" stroke="url(#ecg-grad)" stroke-width="1.8"
-      stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
+  <!-- ECG strip — canvas renderizado por ECGRenderer en scroll.js -->
+  <canvas id="hero-ecg-canvas" class="hero-ecg"
+    role="img" aria-label="Trazado ECG en tiempo real"></canvas>
 
   <div class="scroll-hint" aria-hidden="true">
     <span class="scroll-hint-text">Desplazar</span>

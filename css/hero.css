@@ -241,17 +241,14 @@
   margin-top: 3px;
 }
 
-/* ── ECG ── */
+/* ── ECG canvas ── */
 .hero-ecg {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  height: 60px;
+  height: 96px;
   pointer-events: none;
-}
-
-#ecg-path {
-  stroke-dasharray: 1400;
-  stroke-dashoffset: 1400;
+  display: block;
+  width: 100%;
 }
 
 /* ── Scroll hint ── */
