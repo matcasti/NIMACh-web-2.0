@@ -256,9 +256,12 @@ class NIMPage {
      PERSONAS
   ══════════════════════════════════ */
   static _personasHTML() {
-    const people = window.NIMACH_DATA.publications
-      ? window.NIMACH_DATA.people
-      : [];
+    const people  = (window.NIMACH_DATA.people  || []).filter(p => p.active !== false);
+    const alumni  = window.NIMACH_DATA.alumni   || [];
+    const pets    = window.NIMACH_DATA.pets      || [];
+
+    // Contar por categoría (solo activos)
+    const count = cat => people.filter(p => p.role_category === cat).length;
 
     return `
       ${this._pageHeroHTML({
@@ -270,34 +273,63 @@ class NIMPage {
         backLabel: 'Volver a inicio',
       })}
 
-      <section class="page-section light-section" >
+      <!-- Miembros activos -->
+      <section class="page-section light-section" style="background:#f6f8fc;">
         <div class="container">
 
-          <!-- Filter tabs -->
           <div class="people-filter-bar reveal">
-            <button class="people-tab active" data-cat="all">Todos
-              <span class="tab-count">${people.length}</span>
+            <button class="people-tab active" data-cat="all">
+              Todos <span class="tab-count">${people.length}</span>
             </button>
-            <button class="people-tab" data-cat="pi">Investigadores Principales
-              <span class="tab-count">${people.filter(p=>p.role_category==='pi').length}</span>
+            <button class="people-tab" data-cat="pi">
+              Investigadores Principales <span class="tab-count">${count('pi')}</span>
             </button>
-            <button class="people-tab" data-cat="researcher">Investigadores
-              <span class="tab-count">${people.filter(p=>p.role_category==='researcher').length}</span>
+            <button class="people-tab" data-cat="researcher">
+              Investigadores <span class="tab-count">${count('researcher')}</span>
             </button>
-            <button class="people-tab" data-cat="doctoral">Doctorales
-              <span class="tab-count">${people.filter(p=>p.role_category==='doctoral').length}</span>
+            <button class="people-tab" data-cat="doctoral">
+              Doctorales <span class="tab-count">${count('doctoral')}</span>
             </button>
           </div>
 
-          <!-- Grid -->
           <div class="people-page-grid" id="people-page-grid">
             ${people.map((p, i) => this._personCardHTML(p, i)).join('')}
           </div>
 
         </div>
-      </section>`;
-  }
+      </section>
 
+      <!-- NIMAChinos -->
+      ${pets.length ? `
+      <section class="page-section light-section" id="nimachinos" style="background:#fff;">
+        <div class="container">
+          <div class="reveal" style="margin-bottom:28px;">
+            <span class="label">Los que realmente mandan</span>
+            <h2 class="section-title">NIMAChinos</h2>
+            <p class="section-desc">Las mascotas del equipo. Co-investigadores no remunerados, expertos en reducción de estrés y en arruinar presentaciones importantes.</p>
+          </div>
+          <div class="pets-grid">
+            ${pets.map((pet, i) => this._petCardHTML(pet, i)).join('')}
+          </div>
+        </div>
+      </section>` : ''}
+
+      <!-- Alumni -->
+      ${alumni.length ? `
+      <section class="page-section light-section" id="alumni" style="background:#f6f8fc;">
+        <div class="container">
+          <div class="reveal" style="margin-bottom:28px;">
+            <span class="label">Parte de nuestra historia</span>
+            <h2 class="section-title" style="font-size:18px;">Alumni</h2>
+            <p class="section-desc">Exmiembros que formaron parte del grupo y siguen siendo parte de la red NIM-ACh.</p>
+          </div>
+          <div class="alumni-grid">
+            ${alumni.map((a, i) => this._alumniCardHTML(a, i)).join('')}
+          </div>
+        </div>
+      </section>` : ''}`;
+  }
+  
   static _personCardHTML(p, i) {
     const delay = ['','delay-1','delay-2','delay-3'][Math.min(i % 4, 3)];
     const pubs  = (window.NIMACH_DATA.publications || [])
@@ -330,6 +362,67 @@ class NIMPage {
         <p class="person-bio">${p.bio || ''}</p>
         <div class="person-chips">${chipsHTML}</div>
         <div class="person-links">${linksHTML}</div>
+      </article>`;
+  }
+  
+  static _petCardHTML(pet, i) {
+    const delay = ['','delay-1','delay-2','delay-3'][Math.min(i, 3)];
+    const owner = (window.NIMACH_DATA.people || []).find(p => p.id === pet.owner);
+    const ownerHTML = owner ? `
+      <div class="pet-owner">
+        <div class="avatar ${owner.avatar}" style="width:22px;height:22px;font-size:9px;">
+          ${owner.initials}
+        </div>
+        <span>Compañero de ${owner.name.split(' ')[0]}</span>
+      </div>` : '';
+
+    const chipsHTML = (pet.chips || []).map(c =>
+      `<span class="person-chip">${c}</span>`).join('');
+
+    return `
+      <article class="pet-card reveal ${delay}">
+        <div class="pet-emoji">${pet.emoji}</div>
+        <div class="pet-body">
+          <div class="pet-header">
+            <h3 class="pet-name">${pet.name}</h3>
+            <span class="pet-species">${pet.species} · ${pet.breed}</span>
+          </div>
+          <p class="pet-bio">${pet.bio}</p>
+          <div class="person-chips" style="margin-top:8px;">${chipsHTML}</div>
+          ${ownerHTML}
+        </div>
+      </article>`;
+  }
+
+  static _alumniCardHTML(a, i) {
+    const delay = ['','delay-1','delay-2','delay-3'][Math.min(i, 3)];
+    const linksHTML = Object.entries(a.links || {}).map(([k, v]) => {
+      const labels = { researchgate:'RG', orcid:'ORCID', scholar:'Scholar', github:'GitHub' };
+      return `<a href="${v}" target="_blank" rel="noopener"
+        class="person-link-btn" style="font-size:10px;padding:4px 9px;">
+        ${labels[k] || k}</a>`;
+    }).join('');
+
+    return `
+      <article class="alumni-card reveal ${delay}">
+        <div class="alumni-avatar-wrap">
+          <div class="avatar ${a.avatar}" style="width:38px;height:38px;font-size:13px;opacity:.75;">
+            ${a.initials}
+          </div>
+        </div>
+        <div class="alumni-body">
+          <div class="alumni-header">
+            <h4 class="alumni-name">${a.name}</h4>
+            <span class="alumni-period">${a.period}</span>
+          </div>
+          <p class="alumni-role">${a.role}</p>
+          ${a.currentPosition ? `
+          <p class="alumni-current">
+            <span class="alumni-current-label">Actualmente en:</span>
+            ${a.currentPosition}
+          </p>` : ''}
+          <div class="alumni-links">${linksHTML}</div>
+        </div>
       </article>`;
   }
 
@@ -777,8 +870,18 @@ class NIMPage {
       searchEl.addEventListener('input', () => NIMPage._applyPubFilters());
     }
 
-    // OpenAlex enrichment si está disponible
+    // OpenAlex enrichment (calcula y actualiza todos los stats al terminar)
     if (window.PublicationsEnricher) new PublicationsEnricher();
+
+    // Stats iniciales síncronos desde NIMACH_DATA (antes de OpenAlex)
+    const pubs = window.NIMACH_DATA?.publications || [];
+    const setEl = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    };
+    setEl('ps-total', pubs.length);
+    setEl('ps-q1',    pubs.filter(p => p.quartile === 'Q1').length);
+    // ps-cites y ps-hindex quedan en "—" hasta que OpenAlex responda
 
     // BibTeX parser si está disponible
     if (window.BibTeXParser) new BibTeXParser('../data/publications.bib');

@@ -117,9 +117,15 @@ class GlobeViewer {
 
   _buildStars() {
     const T    = window.THREE;
+    const dark = document.body.classList.contains('dark-mode') ||
+                 localStorage.getItem('nimach-theme') === 'dark';
+
+    // En modo claro las estrellas son muy sutiles (el canvas se embebe sobre blanco)
+    const starOpacity = dark ? 0.85 : 0.18;
+    const starColor   = dark ? 0xaaccff : 0x8899cc;
+
     const N    = 2000;
     const verts = new Float32Array(N * 3);
-
     for (let i = 0; i < N; i++) {
       const r     = 55 + Math.random() * 45;
       const theta = Math.random() * Math.PI * 2;
@@ -131,12 +137,11 @@ class GlobeViewer {
 
     const geo = new T.BufferGeometry();
     geo.setAttribute('position', new T.BufferAttribute(verts, 3));
-
-    // Dos capas: puntos grandes y pequeños para sensación de profundidad
-    this.scene.add(new T.Points(geo, new T.PointsMaterial({
-      color: 0xaaccff, size: 0.07, transparent: true, opacity: 0.85,
+    this._starsMat1 = new T.PointsMaterial({
+      color: starColor, size: 0.07, transparent: true, opacity: starOpacity,
       sizeAttenuation: true,
-    })));
+    });
+    this.scene.add(new T.Points(geo, this._starsMat1));
 
     const geo2 = new T.BufferGeometry();
     const v2   = new Float32Array(800 * 3);
@@ -149,10 +154,11 @@ class GlobeViewer {
       v2[i*3+2] = r * Math.sin(phi) * Math.sin(theta);
     }
     geo2.setAttribute('position', new T.BufferAttribute(v2, 3));
-    this.scene.add(new T.Points(geo2, new T.PointsMaterial({
-      color: 0xffffff, size: 0.12, transparent: true, opacity: 0.5,
+    this._starsMat2 = new T.PointsMaterial({
+      color: 0xffffff, size: 0.12, transparent: true, opacity: starOpacity * 0.55,
       sizeAttenuation: true,
-    })));
+    });
+    this.scene.add(new T.Points(geo2, this._starsMat2));
   }
 
   /* ══════════ esfera principal ══════════ */
@@ -719,6 +725,14 @@ class GlobeViewer {
         mesh.material.opacity = Math.min(edgeFade, 1) * trailFactor * 0.95;
       });
     });
+    
+    // Adaptar opacidad de estrellas al tema activo
+    const dark = document.body.classList.contains('dark-mode');
+    if (this._starsMat1) {
+      this._starsMat1.opacity = dark ? 0.85 : 0.18;
+      this._starsMat2.opacity = dark ? 0.47 : 0.09;
+      this._starsMat1.color.set(dark ? 0xaaccff : 0x8899cc);
+    }
 
     this.renderer.render(this.scene, this.camera);
   }

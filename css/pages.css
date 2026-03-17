@@ -610,3 +610,166 @@ body.dark-mode .rl-network {
   transition: width .1s linear;
   pointer-events: none;
 }
+
+/* ─────────────────────────────────────────
+   NIMACHINOS (pets)
+───────────────────────────────────────── */
+.pets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.pet-card {
+  background: #fff;
+  border: 0.5px solid rgba(0,0,0,.07);
+  border-radius: var(--r-lg);
+  padding: 22px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: transform var(--dur-mid) var(--ease-out), box-shadow var(--dur-mid);
+  position: relative;
+  overflow: hidden;
+}
+
+.pet-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--c-teal), var(--c-blue-light));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform var(--dur-mid) var(--ease-out);
+}
+
+.pet-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
+.pet-card:hover::before { transform: scaleX(1); }
+
+body.dark-mode .pet-card {
+  background: var(--c-navy-3);
+  border-color: var(--glass-border);
+}
+
+.pet-emoji {
+  font-size: 36px;
+  flex-shrink: 0;
+  width: 52px; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(29,184,132,.08);
+  border-radius: var(--r-md);
+  border: 0.5px solid rgba(29,184,132,.14);
+}
+
+.pet-body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+.pet-header { display: flex; flex-direction: column; gap: 2px; }
+
+.pet-name {
+  font-size: 15px; font-weight: 600;
+  color: var(--s-text, #0d1d35);
+}
+
+body.dark-mode .pet-name { color: var(--t-hero); }
+
+.pet-species {
+  font-size: 10px;
+  color: var(--s-text-3, #8aa0b8);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.pet-bio {
+  font-size: 12.5px;
+  color: var(--s-text-2, #4a6280);
+  line-height: 1.7;
+}
+
+body.dark-mode .pet-bio { color: var(--t-muted); }
+
+.pet-owner {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 10px; color: var(--s-text-3, #8aa0b8);
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 0.5px solid rgba(0,0,0,.06);
+}
+
+body.dark-mode .pet-owner { border-top-color: var(--glass-border); }
+
+/* ─────────────────────────────────────────
+   ALUMNI
+───────────────────────────────────────── */
+.alumni-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.alumni-card {
+  background: #fff;
+  border: 0.5px solid rgba(0,0,0,.06);
+  border-radius: var(--r-md);
+  padding: 16px 18px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  opacity: .82;
+  transition: opacity var(--dur-mid), transform var(--dur-mid);
+}
+
+.alumni-card:hover { opacity: 1; transform: translateX(3px); }
+
+body.dark-mode .alumni-card {
+  background: var(--c-navy-3);
+  border-color: var(--glass-border);
+  opacity: .75;
+}
+
+body.dark-mode .alumni-card:hover { opacity: .92; }
+
+.alumni-avatar-wrap { flex-shrink: 0; }
+
+.alumni-body { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+
+.alumni-header {
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 8px;
+}
+
+.alumni-name {
+  font-size: 13px; font-weight: 500;
+  color: var(--s-text, #0d1d35);
+}
+
+body.dark-mode .alumni-name { color: var(--t-hero); }
+
+.alumni-period {
+  font-size: 9px;
+  background: rgba(59,122,191,.08);
+  color: var(--c-blue);
+  padding: 2px 7px; border-radius: var(--r-sm);
+  white-space: nowrap;
+  border: 0.5px solid rgba(59,122,191,.15);
+}
+
+.alumni-role {
+  font-size: 11px; color: var(--s-text-2, #4a6280);
+}
+
+body.dark-mode .alumni-role { color: var(--t-muted); }
+
+.alumni-current {
+  font-size: 11px; color: var(--s-text-3, #8aa0b8);
+}
+
+.alumni-current-label {
+  color: var(--c-teal); font-size: 9px;
+  text-transform: uppercase; letter-spacing: .07em;
+  margin-right: 4px;
+}
+
+.alumni-links { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 4px; }
+
+@media (max-width: 768px) {
+  .pets-grid  { grid-template-columns: 1fr; }
+  .alumni-grid { grid-template-columns: 1fr; }
+}

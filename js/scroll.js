@@ -34,6 +34,7 @@ class ScrollReveal {
 class StatAnimator {
   constructor() {
     this.triggered = false;
+    window._nimachStatAnimator = this; // exponer para re-run desde publications.js
     const target = document.querySelector('.hero-stats');
     if (!target) return;
 
@@ -54,11 +55,27 @@ class StatAnimator {
 
   run() {
     const CIRC = 113; // 2π × r(18) ≈ 113
+    const D    = window.NIMACH_DATA || {};
+
+    // Valores derivados de los datos reales
+    const pubCount   = (D.publications || []).length;
+    const peopleCount= (D.people       || []).filter(p => p.active !== false).length;
+    const collabCount= (D.globePoints  || []).filter(p => !p.home).length
+                    || (D.collaborators|| []).length;
+    const years      = (() => {
+      const pubs = D.publications || [];
+      if (!pubs.length) return 8;
+      const minY = Math.min(...pubs.map(p => p.year));
+      return new Date().getFullYear() - minY + 1;
+    })();
+
+    // Porcentajes de los anillos escalados a 100%
+    const maxPubs = Math.max(pubCount, 1);
     const stats = [
-      { ring: 'ring1', cnt: 'cnt1', target: 12, suffix: '+', pct: 72 },
-      { ring: 'ring2', cnt: 'cnt2', target: 6,  suffix: '',  pct: 55 },
-      { ring: 'ring3', cnt: 'cnt3', target: 4,  suffix: '',  pct: 45 },
-      { ring: 'ring4', cnt: 'cnt4', target: 8,  suffix: '',  pct: 65 },
+      { ring:'ring1', cnt:'cnt1', target: pubCount,    suffix:'+', pct: Math.min(Math.round(pubCount / 20 * 100), 95) },
+      { ring:'ring2', cnt:'cnt2', target: peopleCount, suffix:'',  pct: Math.min(Math.round(peopleCount / 10 * 100), 90) },
+      { ring:'ring3', cnt:'cnt3', target: collabCount, suffix:'',  pct: Math.min(Math.round(collabCount / 8 * 100), 85) },
+      { ring:'ring4', cnt:'cnt4', target: years,       suffix:'',  pct: Math.min(Math.round(years / 10 * 100), 88) },
     ];
 
     stats.forEach(({ ring, cnt, target, suffix, pct }) => {

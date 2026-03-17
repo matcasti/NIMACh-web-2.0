@@ -83,27 +83,41 @@ class PublicationsEnricher {
 
   /** Calcula h-index y actualiza el dashboard de métricas */
   renderMetrics() {
-    const counts = window.NIMACH_DATA.publications
-      .map(p => p.citations ?? 0)
-      .sort((a, b) => b - a);
+    const pubs   = window.NIMACH_DATA.publications || [];
+    const counts = pubs.map(p => p.citations ?? 0).sort((a, b) => b - a);
 
     // h-index
     let h = 0;
     counts.forEach((c, i) => { if (c >= i + 1) h = i + 1; });
+    const total   = counts.reduce((s, c) => s + c, 0);
+    const pubLen  = pubs.length;
+    const q1Count = pubs.filter(p => p.quartile === 'Q1').length;
 
-    const total = counts.reduce((s, c) => s + c, 0);
+    // Exponer en data global
+    window.NIMACH_DATA.metrics = { h, total, counts, pubLen, q1Count };
 
-    // Actualizar elementos del dashboard (Feature I.2)
-    const set = (id, val) => {
+    // IDs compartidos entre index.html, #metricas y pages/publicaciones.html
+    const targets = [
+      ['metric-hindex',     h],
+      ['metric-citations',  total],
+      ['metric-pub-count',  pubLen],
+      // Página publicaciones.html
+      ['ps-total',          pubLen],
+      ['ps-cites',          total],
+      ['ps-hindex',         h],
+      ['ps-q1',             q1Count],
+    ];
+
+    targets.forEach(([id, val]) => {
       const el = document.getElementById(id);
       if (el) this.animateCount(el, val);
-    };
-    set('metric-hindex',     h);
-    set('metric-citations',  total);
-    set('metric-pub-count',  window.NIMACH_DATA.publications.length);
+    });
 
-    // Exponer en data global para otros módulos
-    window.NIMACH_DATA.metrics = { h, total, counts };
+    // También forzar actualización del StatAnimator (hero rings)
+    // si ya se triggereó (el observer desconectó), re-run con datos frescos
+    if (window._nimachStatAnimator?.triggered) {
+      window._nimachStatAnimator.run();
+    }
   }
 
   animateCount(el, target) {

@@ -10,6 +10,7 @@ const NIMACH_DATA = {
   people: [
     {
       id:            'cristian-nunez',
+      active:        true,
       initials:      'CN',
       name:          'Dr. Cristian Núñez Espinosa',
       role:          'Investigador Principal · CADI-UMAG',
@@ -22,6 +23,7 @@ const NIMACH_DATA = {
     },
     {
       id:            'matias-castillo',
+      active:        true,
       initials:      'MC',
       name:          'Matías Castillo-Aguilar',
       role:          'Investigador · Desarrollador de herramientas',
@@ -34,6 +36,7 @@ const NIMACH_DATA = {
     },
     {
       id:            'tiare-ibinarriaga',
+      active:        false,
       initials:      'TI',
       name:          'Tiare Ibinarriaga',
       role:          'Investigadora doctoral · UDD 2025',
@@ -46,6 +49,7 @@ const NIMACH_DATA = {
     },
     {
       id:            'leyla-vasquez',
+      active:        true,
       initials:      'LV',
       name:          'Leyla Vásquez',
       role:          'Investigadora asociada',
@@ -58,6 +62,7 @@ const NIMACH_DATA = {
     },
     {
       id:            'jonathan-perez',
+      active:        true,
       initials:      'JP',
       name:          'Jonathan Pérez',
       role:          'Investigador asociado',
@@ -70,6 +75,7 @@ const NIMACH_DATA = {
     },
     {
       id:            'pedro-medina',
+      active:        true,
       initials:      'PM',
       name:          'Pedro Medina',
       role:          'Investigador asociado',
@@ -127,6 +133,73 @@ const NIMACH_DATA = {
       doi:     '10.XXXX/autneu.2023.XXXXX',
       openalex_id: '',
       topics:  ['hrv', 'extreme', 'review'],
+    },
+  ],
+  
+  /* ─── Alumni ─── */
+  alumni: [
+    {
+      id:        'sofia-reyes',
+      initials:  'SR',
+      name:      'Dra. Sofía Reyes',
+      role:      'Investigadora Postdoctoral',
+      period:    '2021–2023',
+      avatar:    'av3',   // reutiliza colores de avatar existentes
+      ringColor: '#7b52d4',
+      bio:       'Desarrolló su postdoctorado en el grupo trabajando en regulación autonómica y estrés oxidativo. Actualmente en la Universidad de Concepción.',
+      chips:     ['Postdoc', 'Estrés oxidativo', 'HRV'],
+      links:     { researchgate: '#', orcid: '#' },
+      currentPosition: 'Universidad de Concepción',
+    },
+    {
+      id:        'marco-soto',
+      initials:  'MS',
+      name:      'Marco Soto',
+      role:      'Tesista de pregrado',
+      period:    '2022–2023',
+      avatar:    'av5',
+      ringColor: '#3baabf',
+      bio:       'Realizó su tesis de kinesiología sobre VFC en nadadores de aguas abiertas. Actualmente kinesiólogo clínico en Punta Arenas.',
+      chips:     ['Pregrado', 'Kinesiología', 'HRV'],
+      links:     { researchgate: '#' },
+      currentPosition: 'Clínica Magallanes',
+    },
+  ],
+
+  /* ─── NIMAChinos (mascotas del equipo) ─── */
+  pets: [
+    {
+      id:       'pet-canela',
+      name:     'Canela',
+      species:  'Perra',
+      breed:    'Mestiza rescatada',
+      emoji:    '🐕',
+      owner:    'cristian-nunez',   // id del dueño en people[]
+      bio:      'La primera NIMAChina oficial. Experta en HRV de reposo y en interrumpir reuniones de Zoom en los momentos más inoportunos.',
+      chips:    ['Jefa de seguridad', 'HRV en reposo'],
+      joined:   '2020',
+    },
+    {
+      id:       'pet-bits',
+      name:     'Bits',
+      species:  'Gato',
+      breed:    'Scottish Fold naranja',
+      emoji:    '🐱',
+      owner:    'matias-castillo',
+      bio:      'Supervisor técnico del desarrollo del HRV Analyzer. Verifica cada commit con su mirada escéptica y ocasionalmente camina sobre el teclado para contribuir.',
+      chips:    ['Code review', 'QA testing'],
+      joined:   '2022',
+    },
+    {
+      id:       'pet-darwin',
+      name:     'Darwin',
+      species:  'Perro',
+      breed:    'Labrador negro',
+      emoji:    '🐶',
+      owner:    'leyla-vasquez',
+      bio:      'Participa activamente en los protocolos de mindfulness como co-terapeuta no certificado. Su presencia reduce el cortisol en un 40% (no revisado por pares).',
+      chips:    ['Mindfulness', 'Terapia asistida'],
+      joined:   '2021',
     },
   ],
 
