@@ -89,52 +89,7 @@ const NIMACH_DATA = {
   ],
 
   /* ─── Publications ─── */
-  publications: [
-    {
-      id:      'pub-2025-hrv-cold',
-      year:    2025,
-      title:   'Cardiac autonomic regulation in cold-water exposure: HRV analysis in Patagonian open-water swimmers',
-      authors: 'Núñez C., Castillo-Aguilar M., Medina P. et al.',
-      journal: 'Journal of Physiology',
-      quartile:'Q1',
-      doi:     '10.XXXX/jphysiol.2025.XXXXX',
-      openalex_id: '',
-      topics:  ['hrv', 'cold', 'exercise'],
-    },
-    {
-      id:      'pub-2024-mindfulness',
-      year:    2024,
-      title:   'Mindfulness-based intervention effects on autonomic regulation and cognitive function in older adults',
-      authors: 'Núñez C., Ibinarriaga T., Vásquez L. et al.',
-      journal: 'Frontiers in Aging Neuroscience',
-      quartile:'Q1',
-      doi:     '10.XXXX/fnagi.2024.XXXXX',
-      openalex_id: '',
-      topics:  ['mindfulness', 'aging', 'cognition'],
-    },
-    {
-      id:      'pub-2024-seasonal',
-      year:    2024,
-      title:   'Seasonal light variation and autonomic nervous system activity in high-latitude elderly populations',
-      authors: 'Núñez C., Pérez J. et al.',
-      journal: 'Chronobiology International',
-      quartile:'Q2',
-      doi:     '10.XXXX/chrono.2024.XXXXX',
-      openalex_id: '',
-      topics:  ['circadian', 'aging', 'light'],
-    },
-    {
-      id:      'pub-2023-review',
-      year:    2023,
-      title:   'Heart rate variability as a biomarker of neuromodulation in extreme environments: a systematic review',
-      authors: 'Castillo-Aguilar M., Núñez C. et al.',
-      journal: 'Autonomic Neuroscience',
-      quartile:'Q2',
-      doi:     '10.XXXX/autneu.2023.XXXXX',
-      openalex_id: '',
-      topics:  ['hrv', 'extreme', 'review'],
-    },
-  ],
+  publications: [],
   
   /* ─── Alumni ─── */
   alumni: [
