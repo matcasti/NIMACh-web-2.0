@@ -12,8 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
   new NeuralCanvas('hero-canvas', 'hero');
   new ParticleField('dei-canvas');
   
-  // ── Collaboration map ──
-  new CollabMap('collab-map-canvas');
+  // ── Globo 3D de colaboraciones ──
+  new GlobeViewer('globe-canvas');
+  _renderGlobeLegend();
 
   // ── BibTeX → publicaciones (carga, renderiza y enriquece con OpenAlex) ──
   new BibTeXParser('data/publications.bib');
@@ -238,8 +239,7 @@ function initCopyDOI() {
     el.addEventListener('click', e => {
       e.stopPropagation();
       navigator.clipboard.writeText(el.dataset.doi).then(() => {
-        el.setAttribute('data-tooltip', '¡Copiado!');
-        setTimeout(() => el.setAttribute('data-tooltip', 'Copiar DOI'), 1800);
+        showToast('DOI copiado al portapapeles', 'success');
       });
     });
   });
@@ -250,5 +250,44 @@ function debounce(fn, delay = 150) {
   let t;
   return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay); };
 }
+
+/* ── Renderiza leyenda del globo desde NIMACH_DATA ── */
+function _renderGlobeLegend() {
+  const wrap = document.querySelector('.globe-points-legend');
+  if (!wrap) return;
+  const pts = window.NIMACH_DATA?.globePoints || [];
+  wrap.innerHTML = pts.map(p => `
+    <div class="globe-legend-item">
+      <span class="globe-legend-dot ${p.home ? 'globe-legend-home' : ''}"
+        style="background:${p.color};color:${p.color};"></span>
+      <span>${p.label}</span>
+    </div>`).join('');
+}
+
+/* ── Toast system (UX global) ── */
+function showToast(msg, type = 'info', duration = 3200) {
+  let wrap = document.getElementById('toast-wrap');
+  if (!wrap) {
+    wrap = document.createElement('div');
+    wrap.id = 'toast-wrap';
+    wrap.style.cssText = `position:fixed;bottom:24px;right:24px;z-index:400;
+      display:flex;flex-direction:column;gap:8px;pointer-events:none;`;
+    document.body.appendChild(wrap);
+  }
+  const colors = { info:'#3b7abf', success:'#1db884', error:'#e87040', warn:'#f5a472' };
+  const t = document.createElement('div');
+  t.style.cssText = `background:rgba(6,14,30,.96);backdrop-filter:blur(12px);
+    color:#e8f0fa;font-size:12px;padding:10px 16px;border-radius:8px;
+    border-left:3px solid ${colors[type]||colors.info};
+    box-shadow:0 4px 20px rgba(0,0,0,.35);pointer-events:all;
+    animation:slide-right .24s var(--ease-out) forwards;font-family:var(--font-sans);
+    max-width:300px;line-height:1.5;`;
+  t.textContent = msg;
+  wrap.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transition='opacity .3s';
+    setTimeout(() => t.remove(), 320); }, duration);
+}
+
+window.showToast = showToast;
 
 window.nimach = { debounce };

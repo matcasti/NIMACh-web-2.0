@@ -118,7 +118,6 @@ body.dark-mode #publicaciones  { background: var(--c-navy-3)  !important; }
 body.dark-mode #herramientas   { background: var(--c-navy-2)  !important; }
 body.dark-mode #metricas       { background: var(--c-navy-3)  !important; }
 body.dark-mode #galeria        { background: var(--c-navy-2)  !important; }
-body.dark-mode #datasets       { background: var(--c-navy-3)  !important; }
 body.dark-mode #contacto       { background: var(--c-navy-2)  !important; }
 
 /* Variables semánticas en modo oscuro */
@@ -248,19 +247,6 @@ body.dark-mode .tool-btn-ghost {
   background: rgba(255,255,255,.06);
   color: var(--t-muted);
   border-color: var(--glass-border);
-}
-
-/* Datasets */
-body.dark-mode .dataset-card,
-body.dark-mode .ds-title    { color: var(--t-hero); }
-body.dark-mode .ds-desc     { color: var(--t-muted); }
-body.dark-mode .ds-format   { color: var(--t-dim); }
-body.dark-mode .ds-meta     { color: var(--t-muted); }
-body.dark-mode .ds-meta strong { color: var(--t-hero); }
-body.dark-mode .ds-btn-ghost {
-  background: rgba(255,255,255,.06);
-  color: var(--c-teal);
-  border-color: rgba(29,184,132,.22);
 }
 
 /* Projects */

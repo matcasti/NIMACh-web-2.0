@@ -242,6 +242,17 @@ const NIMACH_DATA = {
     { name:'U. Salvador Bahía',url:'#' },
     { name:'FONDECYT',         url:'#' },
   ],
+  
+  globePoints: [
+    { lat:-53.16, lon:-70.91, label:'Punta Arenas — NIM-ACh', color:'#e87040', r:1.0, home:true  },
+    { lat:-33.45, lon:-70.66, label:'Santiago',                color:'#7fb3e8', r:0.6, home:false },
+    { lat:-12.97, lon:-38.50, label:'Salvador de Bahía · MEDIANTAR', color:'#7fb3e8', r:0.7, home:false },
+    { lat: 19.43, lon:-99.13, label:'Ciudad de México · RIES-LAC',   color:'#7fb3e8', r:0.6, home:false },
+    { lat: 40.42, lon: -3.70, label:'Madrid · ERASMUS+',       color:'#1db884', r:0.7, home:false },
+    { lat: 48.86, lon:  2.35, label:'París',                   color:'#7fb3e8', r:0.5, home:false },
+    { lat: 41.90, lon: 12.49, label:'Roma · MEDIANTAR',        color:'#7fb3e8', r:0.6, home:false },
+    { lat:-34.90, lon:-56.17, label:'Montevideo · RIES-LAC',   color:'#b07fd4', r:0.5, home:false },
+  ],
 
   /* ─── Gallery items ─── */
   gallery: [
@@ -251,55 +262,6 @@ const NIMACH_DATA = {
     { id:'g4', bg:'gi-4', span:false, title:'Colaboración MEDIANTAR',                     sub:'Brasil · 2024' },
     { id:'g5', bg:'gi-5', span:false, title:'CIES Jornadas Talca',                        sub:'Congreso · Sep 2023' },
     { id:'g6', bg:'gi-6', span:false, title:'Mediciones mindfulness adultos mayores',     sub:'UMAG · 2023' },
-  ],
-  
-  /* ─── Open Datasets ─── */
-  datasets: [
-    {
-      id:       'ds-hrv-cold-2024',
-      title:    'HRV Cold-Water Swimmers · Magallanes 2024',
-      desc:     'Registros RR interval (Polar H10) de 28 nadadores de aguas gélidas en 3 condiciones: pre-inmersión, post-inmersión y recuperación.',
-      variables:['RR intervals', 'SDNN', 'RMSSD', 'LF/HF', 'Temperatura agua', 'Temperatura corporal'],
-      n:        28,
-      format:   'CSV + JSON',
-      license:  'CC BY 4.0',
-      doi:      null,
-      zenodo:   '#',
-      github:   '#',
-      tags:     ['HRV', 'Cold', 'Patagonia'],
-      status:   'public',
-      size:     '14 MB',
-    },
-    {
-      id:       'ds-mindfulness-elderly-2023',
-      title:    'Mindfulness & Aging · UMAG 2023',
-      desc:     'Datos pre/post intervención mindfulness 8 semanas. Incluye HRV, test cognitivos MMSE/MoCA y escalas de bienestar.',
-      variables:['HRV', 'MMSE', 'MoCA', 'STAI', 'MAAS'],
-      n:        42,
-      format:   'SPSS + CSV',
-      license:  'CC BY-NC 4.0',
-      doi:      null,
-      zenodo:   '#',
-      github:   null,
-      tags:     ['Aging', 'Mindfulness', 'Cognition'],
-      status:   'public',
-      size:     '8 MB',
-    },
-    {
-      id:       'ds-seasonal-light-2022',
-      title:    'Seasonal Light & ANS · High Latitude 2022',
-      desc:     'Mediciones autonómicas y de exposición lumínica en adultos mayores de Punta Arenas a lo largo de las 4 estaciones.',
-      variables:['HRV', 'Lux exposure', 'Melatonin proxy', 'Sleep quality'],
-      n:        35,
-      format:   'CSV',
-      license:  'CC BY 4.0',
-      doi:      null,
-      zenodo:   '#',
-      github:   '#',
-      tags:     ['Circadian', 'Elderly', 'Seasonal'],
-      status:   'public',
-      size:     '6 MB',
-    },
   ],
   
   /* ─── Tools ─── */

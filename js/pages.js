@@ -26,13 +26,12 @@ class NIMPage {
   /* ══ NAV ══ */
   static _navHTML(active) {
     const links = [
-      { label: 'Investigación',  href: '../index.html#investigacion', key: 'investigacion' },
-      { label: 'Proyectos',      href: '../index.html#proyectos',     key: 'proyectos'     },
-      { label: 'Personas',       href: 'personas.html',               key: 'personas'      },
-      { label: 'Herramientas',   href: 'herramientas.html',           key: 'herramientas'  },
-      { label: 'Publicaciones',  href: 'publicaciones.html',          key: 'publicaciones' },
-      { label: 'Galería',        href: '../index.html#galeria',       key: 'galeria'       },
-      { label: 'DEI',            href: '../index.html#dei',           key: 'dei'           },
+      { label: 'Investigación', href: 'investigacion.html', key: 'investigacion' },
+      { label: 'Proyectos',     href: 'proyectos.html',     key: 'proyectos'     },
+      { label: 'Personas',      href: 'personas.html',      key: 'personas'      },
+      { label: 'Herramientas',  href: 'herramientas.html',  key: 'herramientas'  },
+      { label: 'Publicaciones', href: 'publicaciones.html', key: 'publicaciones' },
+      { label: 'Galería',       href: 'galeria.html',       key: 'galeria'       },
     ];
 
     const linksHTML = links.map(l => `
@@ -121,10 +120,12 @@ class NIMPage {
   /* ══ MAIN DISPATCHER ══ */
   static _mainHTML(pageId) {
     switch (pageId) {
-      case 'publicaciones': return this._publicacionesHTML();
-      case 'personas':      return this._personasHTML();
-      case 'herramientas':  return this._herramientasHTML();
-      case 'datasets':      return this._datasetsHTML();
+      case 'publicaciones':  return this._publicacionesHTML();
+      case 'personas':       return this._personasHTML();
+      case 'herramientas':   return this._herramientasHTML();
+      case 'investigacion':  return this._investigacionHTML();
+      case 'proyectos':      return this._proyectosHTML();
+      case 'galeria':        return this._galeriaHTML();
       default: return '<p style="padding:80px 32px;color:#8aa0b8;">Página no encontrada.</p>';
     }
   }
@@ -453,42 +454,157 @@ class NIMPage {
   }
 
   /* ══════════════════════════════════
-     DATASETS
+     INVESTIGACIÓN
   ══════════════════════════════════ */
-  static _datasetsHTML() {
-    const ds = window.NIMACH_DATA.datasets || [];
-    const totalN = ds.reduce((s, d) => s + (d.n || 0), 0);
-    const vars   = [...new Set(ds.flatMap(d => d.variables || []))];
+  static _investigacionHTML() {
+    const lines = window.NIMACH_DATA.research || [];
+
+    // Publicaciones por línea (match por tags/topics)
+    const pubsByLine = id => (window.NIMACH_DATA.publications || [])
+      .filter(p => (p.topics||[]).some(t =>
+        lines.find(l => l.id === id)?.tags?.some(tag =>
+          tag.toLowerCase().includes(t) || t.includes(tag.toLowerCase())
+        )
+      )).slice(0, 3);
+
+    const lineCards = lines.map((l, i) => {
+      const delay = ['','delay-1','delay-2'][i] || '';
+      const relPubs = pubsByLine(l.id);
+
+      const pubsHTML = relPubs.length ? `
+        <div class="rl-pubs">
+          <div class="rl-pubs-label">Publicaciones relacionadas</div>
+          ${relPubs.map(p => `
+            <div class="rl-pub-item">
+              <span class="rl-pub-year">${p.year}</span>
+              <span class="rl-pub-title">${p.title.slice(0,75)}…</span>
+            </div>`).join('')}
+        </div>` : '';
+
+      const tagsHTML = (l.tags||[]).map(t => `<span class="tag">${t}</span>`).join('');
+
+      return `
+        <article class="rl-card ${l.color} reveal ${delay}">
+          <div class="rl-card-header">
+            <div class="card-icon ${l.ic}">${l.icon}</div>
+            <div class="rl-card-meta">
+              <h2 class="rl-card-title">${l.title}</h2>
+            </div>
+          </div>
+          <p class="rl-card-desc">${l.desc}</p>
+          <div class="rl-tags">${tagsHTML}</div>
+          ${pubsHTML}
+        </article>`;
+    }).join('');
+
+    // Colaboradores
+    const collabs = (window.NIMACH_DATA.collaborators||[]).map(c =>
+      `<a href="${c.url}" class="collab-chip" target="_blank" rel="noopener">${c.name}</a>`
+    ).join('');
 
     return `
       ${this._pageHeroHTML({
-        label:     'Ciencia abierta',
-        title:     'Datasets abiertos',
-        desc:      'Compartimos nuestros datos con la comunidad científica bajo licencias CC abiertas. Cita el dataset correspondiente si lo usas en tu investigación.',
-        accent:    'teal',
-        backHref:  '../index.html#datasets',
+        label:     'Áreas de estudio',
+        title:     'Líneas de investigación',
+        desc:      'Tres ejes principales que conectan la neurofisiología contemporánea con la realidad clínica y el entorno único de la Patagonia chilena.',
+        accent:    'blue',
+        backHref:  '../index.html#investigacion',
         backLabel: 'Volver a inicio',
       })}
 
-      <!-- Open data stats -->
+      <section class="page-section light-section" style="background:#f6f8fc;">
+        <div class="container">
+          <div class="rl-grid">${lineCards}</div>
+
+          <div class="rl-network reveal">
+            <span class="label">Red de colaboración activa</span>
+            <h3 class="section-title" style="margin-bottom:16px;">Instituciones colaboradoras</h3>
+            <div class="collab-chips" style="margin-top:0;">${collabs}</div>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  /* ══════════════════════════════════
+     PROYECTOS
+  ══════════════════════════════════ */
+  static _proyectosHTML() {
+    const projects = window.NIMACH_DATA.projects || [];
+    const active   = projects.filter(p => p.status === 'active');
+    const complete = projects.filter(p => p.status === 'complete');
+    const funding  = projects.reduce((s, p) => s + (p.amount?.includes('CLP')
+      ? parseInt(p.amount.replace(/[^0-9]/g,'')) || 0 : 0), 0);
+
+    const _card = (p, i) => {
+      const delay = ['','delay-1','delay-2','delay-3'][Math.min(i,3)];
+      const badge = p.status === 'active'
+        ? `<span class="badge badge-active"><span class="badge-dot"></span>En curso</span>`
+        : `<span class="badge badge-complete">Finalizado</span>`;
+      const tagsHTML = (p.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
+
+      return `
+        <article class="project-card reveal ${delay}">
+          <div class="project-top">
+            ${badge}
+            <div class="project-agency">${p.agency}<br>${p.code}</div>
+          </div>
+          <h3 class="project-title">${p.title}</h3>
+          <p class="project-pi">${p.pi}</p>
+          <div class="project-meta">
+            <div class="project-meta-item">
+              <span class="meta-label">Período</span>
+              <span class="meta-value">${p.period}</span>
+            </div>
+            <div class="project-meta-item">
+              <span class="meta-label">Financiamiento</span>
+              <span class="meta-value">${p.amount}</span>
+            </div>
+            <div class="project-meta-item">
+              <span class="meta-label">Tipo</span>
+              <span class="meta-value">${p.type}</span>
+            </div>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-header">
+              <span>Progreso</span><span>${p.progress}%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill ${p.barColor}" data-width="${p.progress}"></div>
+            </div>
+          </div>
+          <div class="project-tags">${tagsHTML}</div>
+        </article>`;
+    };
+
+    return `
+      ${this._pageHeroHTML({
+        label:     'Portfolio de financiamiento',
+        title:     'Proyectos',
+        desc:      'Historial completo de proyectos de investigación financiados. Desde FONDECYT hasta redes internacionales ERASMUS+ y ANID-REDES.',
+        accent:    'coral',
+        backHref:  '../index.html#proyectos',
+        backLabel: 'Volver a inicio',
+      })}
+
+      <!-- KPIs -->
       <div class="pub-page-stats">
         <div class="container">
           <div class="pub-stat-strip">
             <div class="pub-stat">
-              <div class="pub-stat-val" style="color:var(--c-teal);">${ds.length}</div>
-              <div class="pub-stat-lbl">Datasets públicos</div>
+              <div class="pub-stat-val" style="color:var(--c-teal);">${active.length}</div>
+              <div class="pub-stat-lbl">Proyectos activos</div>
             </div>
             <div class="pub-stat">
-              <div class="pub-stat-val">${totalN}</div>
-              <div class="pub-stat-lbl">Participantes totales</div>
+              <div class="pub-stat-val">${projects.length}</div>
+              <div class="pub-stat-lbl">Total proyectos</div>
             </div>
             <div class="pub-stat">
-              <div class="pub-stat-val">${vars.length}</div>
-              <div class="pub-stat-lbl">Variables únicas</div>
+              <div class="pub-stat-val" style="color:var(--c-coral);">${complete.length}</div>
+              <div class="pub-stat-lbl">Completados</div>
             </div>
             <div class="pub-stat">
-              <div class="pub-stat-val" style="color:var(--c-blue-light);">CC</div>
-              <div class="pub-stat-lbl">Licencia abierta</div>
+              <div class="pub-stat-val" style="font-size:18px;">ANID · UE</div>
+              <div class="pub-stat-lbl">Fuentes de financiamiento</div>
             </div>
           </div>
         </div>
@@ -497,63 +613,145 @@ class NIMPage {
       <section class="page-section light-section" style="background:#f6f8fc;">
         <div class="container">
 
-          <!-- Grid -->
-          <div class="datasets-page-grid">
-            ${ds.map((d, i) => this._datasetCardHTML(d, i)).join('')}
+          ${active.length ? `
+          <div class="proj-section-title reveal">
+            <span class="label">En desarrollo</span>
+            <h3 class="section-title">Proyectos activos</h3>
           </div>
+          <div class="projects-grid proj-page-grid">
+            ${active.map(_card).join('')}
+          </div>` : ''}
 
-          <!-- Citation guide -->
-          <div class="cite-guide reveal">
-            <div class="cite-guide-title">📋 ¿Cómo citar un dataset?</div>
-            <code class="cite-example">
-              Núñez C., et al. (2024). <em>[Título del dataset]</em>.
-              NIM-ACh Research Group, Universidad de Magallanes.
-              Zenodo. https://doi.org/10.5281/zenodo.XXXXXXX
-            </code>
-            <p class="cite-note">
-              Si publicas resultados usando datos de NIM-ACh, por favor notifícanos
-              en <a href="../index.html#contacto" style="color:var(--c-teal)">contacto</a> —
-              nos ayuda a rastrear el impacto de nuestra ciencia abierta.
-            </p>
+          ${complete.length ? `
+          <div class="proj-section-title reveal" style="margin-top:48px;">
+            <span class="label">Historial</span>
+            <h3 class="section-title">Proyectos completados</h3>
           </div>
+          <div class="projects-grid proj-page-grid" style="opacity:.78;">
+            ${complete.map((p,i) => _card(p, i)).join('')}
+          </div>` : ''}
 
         </div>
       </section>`;
   }
 
-  static _datasetCardHTML(d, i) {
-    const delay = ['','delay-1','delay-2','delay-3'][Math.min(i, 3)];
-    const varsHTML = (d.variables||[]).map(v=>`<span class="tag">${v}</span>`).join('');
-    const tagsHTML = (d.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
+  /* ══════════════════════════════════
+     GALERÍA
+  ══════════════════════════════════ */
+  static _galeriaHTML() {
+    const items = window.NIMACH_DATA.gallery || [];
+    const news  = window.NIMACH_DATA.news    || [];
+
+    // SVGs representativos para cada bg class (reutiliza los del index)
+    const svgByBg = {
+      'gi-1': `<svg viewBox="0 0 200 360" aria-hidden="true">
+        <circle cx="100" cy="130" r="55" fill="none" stroke="rgba(127,179,232,.5)" stroke-width=".8"/>
+        <circle cx="100" cy="130" r="6" fill="rgba(127,179,232,.85)"/>
+        <line x1="100" y1="130" x2="58"  y2="96"  stroke="rgba(127,179,232,.4)" stroke-width=".7"/>
+        <line x1="100" y1="130" x2="142" y2="96"  stroke="rgba(127,179,232,.4)" stroke-width=".7"/>
+        <circle cx="58"  cy="96"  r="4" fill="rgba(232,112,64,.75)"/>
+        <circle cx="142" cy="96"  r="4" fill="rgba(232,112,64,.75)"/>
+        <path d="M10 270 L44 270 L48 252 L52 280 L56 236 L60 286 L64 270 L110 270 L114 250 L118 278 L122 232 L128 282 L132 270 L190 270"
+          stroke="rgba(232,112,64,.7)" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+      </svg>`,
+      'gi-2': `<svg viewBox="0 0 200 180" aria-hidden="true">
+        <path d="M20 90 Q60 40 100 90 Q140 140 180 90" stroke="rgba(127,179,232,.7)" stroke-width="1.2" fill="none"/>
+        <circle cx="20"  cy="90" r="4" fill="rgba(232,112,64,.9)"/>
+        <circle cx="100" cy="90" r="5" fill="rgba(29,184,132,.9)"/>
+        <circle cx="180" cy="90" r="4" fill="rgba(127,179,232,.9)"/>
+      </svg>`,
+      'gi-3': `<svg viewBox="0 0 200 180" aria-hidden="true">
+        <rect x="30" y="40" width="140" height="90" rx="4" fill="none" stroke="rgba(127,179,232,.4)" stroke-width=".8"/>
+        <line x1="30" y1="60" x2="170" y2="60" stroke="rgba(127,179,232,.3)" stroke-width=".6"/>
+        <circle cx="100" cy="100" r="20" fill="none" stroke="rgba(232,112,64,.6)" stroke-width="1"/>
+        <circle cx="100" cy="100" r="4" fill="rgba(232,112,64,.9)"/>
+      </svg>`,
+      'gi-4': `<svg viewBox="0 0 200 180" aria-hidden="true">
+        <circle cx="100" cy="90" r="48" fill="none" stroke="rgba(123,82,212,.65)" stroke-width=".9"/>
+        <circle cx="100" cy="90" r="24" fill="none" stroke="rgba(123,82,212,.4)" stroke-width=".6"/>
+        <circle cx="100" cy="90" r="4" fill="rgba(123,82,212,.9)"/>
+      </svg>`,
+      'gi-5': `<svg viewBox="0 0 200 180" aria-hidden="true">
+        <path d="M30 130 Q65 65 100 88 Q135 112 170 38" stroke="rgba(59,170,191,.7)" stroke-width="1.2" fill="none"/>
+        <circle cx="100" cy="88" r="4" fill="rgba(59,170,191,.95)"/>
+      </svg>`,
+      'gi-6': `<svg viewBox="0 0 200 180" aria-hidden="true">
+        <circle cx="100" cy="80" r="36" fill="none" stroke="rgba(29,184,132,.55)" stroke-width=".8"/>
+        <path d="M64 110 Q80 130 100 125 Q120 130 136 110" fill="none" stroke="rgba(29,184,132,.6)" stroke-width="1"/>
+        <circle cx="100" cy="80" r="4" fill="rgba(29,184,132,.9)"/>
+      </svg>`,
+    };
+
+    const galleryCards = items.map((item, i) => {
+      const delay = ['','delay-1','delay-2','delay-3','delay-4','delay-5'][Math.min(i,5)];
+      return `
+        <div class="gallery-item${item.span ? ' g-span-2' : ''} reveal ${delay}">
+          <div class="gallery-item-inner ${item.bg}">
+            <div class="gallery-svg">${svgByBg[item.bg] || ''}</div>
+            <div class="gallery-overlay"></div>
+            <div class="gallery-label">
+              <div class="gallery-label-title">${item.title}</div>
+              <div class="gallery-label-sub">${item.sub}</div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    const newsItems = news.map((n, i) => {
+      const delay = ['','delay-1','delay-2','delay-3'][Math.min(i%4,3)];
+      return `
+        <div class="timeline-item reveal ${delay}">
+          <div class="timeline-dot${n.hot?' hot':''}"></div>
+          <div class="timeline-date">${n.date}</div>
+          <p class="timeline-text">${n.html}</p>
+          <span class="timeline-tag">${n.tag}</span>
+        </div>`;
+    }).join('');
 
     return `
-      <article class="dataset-card reveal ${delay}">
-        <div class="ds-header">
-          <span class="ds-badge badge-active">
-            <span class="badge-dot"></span>${d.status === 'public' ? 'Público' : 'Restringido'}
-          </span>
-          <div class="ds-format">${d.format} · ${d.size}</div>
+      ${this._pageHeroHTML({
+        label:     'Registro visual',
+        title:     'Galería',
+        desc:      'Momentos del trabajo en terreno, seminarios, colaboraciones y vida del grupo NIM-ACh desde el fin del mundo.',
+        accent:    'purple',
+        backHref:  '../index.html#galeria',
+        backLabel: 'Volver a inicio',
+      })}
+
+      <!-- Gallery grid -->
+      <section class="page-section light-section" style="background:#f6f8fc;">
+        <div class="container">
+          <span class="label reveal">Fotografías y eventos</span>
+          <div class="gallery-grid" style="margin-top:16px;">${galleryCards}</div>
         </div>
-        <h3 class="ds-title">${d.title}</h3>
-        <p class="ds-desc">${d.desc}</p>
-        <div class="ds-meta">
-          <span><strong>n=</strong>${d.n}</span>
-          <span><strong>Licencia:</strong> ${d.license}</span>
+      </section>
+
+      <!-- Timeline de noticias -->
+      <section class="page-section light-section" style="background:#fff;">
+        <div class="container">
+          <div class="reveal">
+            <span class="label">Actividad del grupo</span>
+            <h2 class="section-title" style="margin-bottom:24px;">Noticias y hitos</h2>
+          </div>
+          <div class="timeline">${newsItems}</div>
         </div>
-        <div class="ds-vars">${varsHTML}</div>
-        <div class="ds-vars" style="margin-top:4px;">${tagsHTML}</div>
-        <div class="ds-actions">
-          ${d.zenodo ? `<a href="${d.zenodo}" target="_blank" rel="noopener" class="ds-btn ds-btn-primary">↓ Zenodo</a>` : ''}
-          ${d.github ? `<a href="${d.github}" target="_blank" rel="noopener" class="ds-btn ds-btn-ghost">GitHub →</a>` : ''}
-          ${d.doi    ? `<button class="ds-btn ds-btn-ghost" data-doi="${d.doi}" style="cursor:pointer;">Copiar DOI</button>` : ''}
-        </div>
-      </article>`;
+      </section>`;
   }
 
   /* ══════════════════════════════════
      POST-RENDER INIT
   ══════════════════════════════════ */
   static _afterRender(pageId) {
+    // Reading progress bar (en todas las páginas interiores)
+    const bar = document.createElement('div');
+    bar.id = 'reading-progress';
+    document.body.prepend(bar);
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const pct = (window.scrollY / (h.scrollHeight - h.clientHeight)) * 100;
+      bar.style.width = Math.min(pct, 100) + '%';
+    }, { passive: true });
+    
     // Re-bind theme toggle (inyectado en el nav)
     const themeBtn = document.getElementById('theme-toggle');
     if (themeBtn && window.ThemeManager) {
@@ -563,9 +761,9 @@ class NIMPage {
     }
 
     switch (pageId) {
-      case 'publicaciones': this._afterPublicaciones(); break;
-      case 'personas':      this._afterPersonas();      break;
-      case 'datasets':      this._afterDatasets();      break;
+      case 'publicaciones':  this._afterPublicaciones(); break;
+      case 'personas':       this._afterPersonas();      break;
+      case 'proyectos':      this._afterProyectos();     break;
     }
   }
 
@@ -644,18 +842,18 @@ class NIMPage {
       });
     });
   }
-
-  static _afterDatasets() {
-    // Copiar DOI al portapapeles
-    document.querySelectorAll('[data-doi]').forEach(el => {
-      el.addEventListener('click', () => {
-        navigator.clipboard.writeText(el.dataset.doi).then(() => {
-          const orig = el.textContent;
-          el.textContent = '¡Copiado!';
-          setTimeout(() => { el.textContent = orig; }, 1800);
+  
+  static _afterProyectos() {
+    // Activa las barras de progreso (reutiliza ProgressBars de scroll.js)
+    if (window.ProgressBars) new ProgressBars();
+    else {
+      // Fallback inline
+      setTimeout(() => {
+        document.querySelectorAll('.progress-fill').forEach(el => {
+          el.style.width = (el.dataset.width || 0) + '%';
         });
-      });
-    });
+      }, 200);
+    }
   }
 }
 

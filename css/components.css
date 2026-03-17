@@ -737,120 +737,64 @@ body.dark-mode .collab-map-wrap {
   .metrics-strip { grid-template-columns: 1fr; }
 }
 
-/* ─────────────────────────────────────────
-   OPEN DATASETS
-───────────────────────────────────────── */
-.datasets-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
+/* ── Globe 3D ── */
+.globe-wrap { padding: 24px; }
 
-.dataset-card {
-  background: #fff;
-  border: 0.5px solid rgba(0,0,0,.07);
-  border-radius: var(--r-lg);
-  padding: 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.globe-stage {
   position: relative;
-  overflow: hidden;
-  transition: transform var(--dur-mid) var(--ease-out),
-              box-shadow var(--dur-mid);
-}
-
-.dataset-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-card);
-}
-
-.dataset-card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--c-teal), var(--c-blue));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--dur-mid) var(--ease-out);
-}
-
-.dataset-card:hover::before { transform: scaleX(1); }
-
-.ds-header {
   display: flex;
-  justify-content: space-between;
+  gap: 32px;
   align-items: center;
 }
 
-.ds-badge { /* reutiliza .badge-active */ }
-
-.ds-format {
-  font-size: 9px;
-  color: var(--s-text-3, #8aa0b8);
-  letter-spacing: .06em;
-  text-transform: uppercase;
+#globe-canvas {
+  width: 340px;
+  height: 340px;
+  flex-shrink: 0;
+  cursor: grab;
+  border-radius: 50%;
+  /* Halo exterior */
+  box-shadow:
+    0 0 0 1px rgba(59,122,191,.12),
+    0 0 60px rgba(59,122,191,.12),
+    0 0 120px rgba(59,122,191,.06);
 }
 
-.ds-title {
-  font-size: 13.5px;
-  font-weight: 500;
-  color: var(--s-text, #0d1d35);
-  line-height: 1.45;
+#globe-canvas:active { cursor: grabbing; }
+
+.globe-points-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
 }
 
-.ds-desc {
+.globe-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 12px;
   color: var(--s-text-2, #4a6280);
-  line-height: 1.7;
+  transition: color var(--dur-fast);
 }
 
-.ds-meta {
-  display: flex;
-  gap: 16px;
-  font-size: 11px;
-  color: var(--s-text-2, #4a6280);
+.globe-legend-item:hover { color: var(--s-text, #0d1d35); }
+
+.globe-legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
-.ds-meta strong { color: var(--s-text, #0d1d35); }
-
-.ds-vars {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+.globe-legend-home {
+  width: 10px; height: 10px;
+  box-shadow: 0 0 8px currentColor;
 }
 
-.ds-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.ds-btn {
-  font-size: 11px;
-  padding: 7px 14px;
-  border-radius: var(--r-sm);
-  text-decoration: none;
-  font-weight: 500;
-  transition: transform var(--dur-fast) var(--ease-spring),
-              opacity var(--dur-fast);
-}
-
-.ds-btn-primary {
-  background: linear-gradient(135deg, var(--c-teal), #1a9870);
-  color: #fff;
-}
-
-.ds-btn-ghost {
-  background: rgba(29,184,132,.08);
-  color: var(--c-teal);
-  border: 0.5px solid rgba(29,184,132,.2);
-}
-
-.ds-btn:hover { opacity: .82; transform: translateY(-1px); }
-
-@media (max-width: 900px) {
-  .datasets-grid { grid-template-columns: 1fr; }
+@media (max-width: 820px) {
+  .globe-stage     { flex-direction: column; align-items: center; }
+  #globe-canvas    { width: 280px; height: 280px; }
+  .globe-points-legend { flex-direction: row; flex-wrap: wrap; justify-content: center; }
 }
 
 /* ─────────────────────────────────────────

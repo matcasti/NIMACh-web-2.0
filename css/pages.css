@@ -486,3 +486,178 @@ body.dark-mode .cite-note { color: var(--t-muted); }
   .datasets-page-grid { grid-template-columns: 1fr; }
   .page-hero { padding: 100px 0 48px; }
 }
+
+/* ─────────────────────────────────────────
+   INVESTIGACIÓN — Research Lines page
+───────────────────────────────────────── */
+.rl-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.rl-card {
+  background: #fff;
+  border: 0.5px solid rgba(0,0,0,.07);
+  border-radius: var(--r-xl);
+  padding: 32px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--dur-mid) var(--ease-out), box-shadow var(--dur-mid);
+}
+
+.rl-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,.09);
+}
+
+.rl-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+}
+
+.rl-card.rc-blue::before  { background: var(--c-blue); }
+.rl-card.rc-coral::before { background: var(--c-coral); }
+.rl-card.rc-teal::before  { background: var(--c-teal); }
+
+body.dark-mode .rl-card {
+  background: var(--c-navy-3);
+  border-color: var(--glass-border);
+}
+
+.rl-card-header {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.rl-card-title {
+  font-size: clamp(17px, 2vw, 21px);
+  font-weight: 500;
+  color: var(--s-text, #0d1d35);
+  line-height: 1.3;
+}
+
+body.dark-mode .rl-card-title { color: var(--t-hero); }
+
+.rl-card-desc {
+  font-size: 14px;
+  color: var(--s-text-2, #4a6280);
+  line-height: 1.8;
+  max-width: 720px;
+}
+
+body.dark-mode .rl-card-desc { color: var(--t-muted); }
+
+.rl-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.rl-pubs {
+  border-top: 0.5px solid rgba(0,0,0,.07);
+  padding-top: 16px;
+}
+
+body.dark-mode .rl-pubs { border-top-color: var(--glass-border); }
+
+.rl-pubs-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--s-text-3, #8aa0b8);
+  margin-bottom: 10px;
+}
+
+.rl-pub-item {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.rl-pub-year {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--c-blue);
+  background: rgba(59,122,191,.08);
+  padding: 1px 7px;
+  border-radius: var(--r-sm);
+  flex-shrink: 0;
+}
+
+.rl-pub-title {
+  font-size: 12px;
+  color: var(--s-text-2, #4a6280);
+  line-height: 1.55;
+}
+
+body.dark-mode .rl-pub-title { color: var(--t-muted); }
+
+.rl-network {
+  padding: 32px;
+  background: #fff;
+  border: 0.5px solid rgba(0,0,0,.07);
+  border-radius: var(--r-xl);
+}
+
+body.dark-mode .rl-network {
+  background: var(--c-navy-3);
+  border-color: var(--glass-border);
+}
+
+/* ─────────────────────────────────────────
+   PROYECTOS page
+───────────────────────────────────────── */
+.proj-page-grid {
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+.proj-section-title { margin-bottom: 20px; }
+
+/* ─────────────────────────────────────────
+   GALERÍA page
+───────────────────────────────────────── */
+/* Reutiliza .gallery-grid y .gallery-item de components.css */
+/* Las SVGs se inyectan directamente como innerHTML */
+.gallery-svg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+
+.gallery-svg svg {
+  width: 100%; height: 100%;
+  max-width: 200px;
+}
+
+/* Timeline ampliada para galería */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  padding-left: 24px;
+}
+
+@media (max-width: 768px) {
+  .rl-card { padding: 22px; }
+  .rl-card-header { flex-direction: column; gap: 10px; }
+  .proj-page-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Reading progress bar ── */
+#reading-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--c-blue), var(--c-coral));
+  z-index: 9999;
+  transition: width .1s linear;
+  pointer-events: none;
+}

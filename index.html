@@ -690,24 +690,16 @@
       </div>
     </div>
 
-    <!-- Mapa de colaboraciones -->
-    <div class="collab-map-wrap reveal delay-2">
+    <!-- Globo 3D de colaboraciones -->
+    <div class="collab-map-wrap globe-wrap reveal delay-2">
       <div class="collab-map-header">
         <span class="label">Red internacional</span>
-        <span class="collab-map-note">Colaboraciones activas 2024–2025</span>
+        <span class="collab-map-note">Arrastra para rotar · Colaboraciones activas 2024–2025</span>
       </div>
-      <div class="collab-map-container">
-        <canvas id="collab-map-canvas" aria-label="Mapa de colaboraciones internacionales"></canvas>
-        <div class="collab-map-legend">
-          <span class="collab-legend-item">
-            <span class="collab-legend-dot" style="background:var(--c-coral)"></span>Sede (Punta Arenas)
-          </span>
-          <span class="collab-legend-item">
-            <span class="collab-legend-dot" style="background:var(--c-blue-light)"></span>Colaboradores activos
-          </span>
-          <span class="collab-legend-item">
-            <span class="collab-legend-dot" style="background:rgba(127,179,232,.4)"></span>Red RIES-LAC
-          </span>
+      <div class="globe-stage">
+        <canvas id="globe-canvas" aria-label="Globo de colaboraciones internacionales"></canvas>
+        <div class="globe-points-legend">
+          <!-- Generado desde NIMACH_DATA.globePoints en main.js -->
         </div>
       </div>
     </div>
@@ -818,98 +810,6 @@
     </div>
   </div>
 </section>
-
-
-<!-- ══════════════════════════════════
-     DATASETS ABIERTOS
-══════════════════════════════════ -->
-<section class="section-pad light-section" id="datasets" style="background:#f6f8fc;">
-  <div class="container">
-    <div class="section-header reveal">
-      <div class="section-header-left">
-        <span class="label">Ciencia abierta</span>
-        <h2 class="section-title">Datasets disponibles</h2>
-        <p class="section-desc">Compartimos nuestros datos con la comunidad científica bajo licencias abiertas. Cita el dataset si lo usas en tu investigación.</p>
-      </div>
-      <a href="pages/datasets.html" class="see-all">Ver todos →</a>
-    </div>
-
-    <div class="datasets-grid">
-
-      <!-- Los cards se generan dinámicamente por renderDatasets() en main.js -->
-      <!-- Placeholder mientras carga JS -->
-      <article class="dataset-card reveal delay-1" data-ds="ds-hrv-cold-2024">
-        <div class="ds-header">
-          <span class="ds-badge badge-active"><span class="badge-dot"></span>Público</span>
-          <div class="ds-format">CSV + JSON · 14 MB</div>
-        </div>
-        <h3 class="ds-title">HRV Cold-Water Swimmers · Magallanes 2024</h3>
-        <p class="ds-desc">Registros RR interval (Polar H10) de 28 nadadores en 3 condiciones: pre-inmersión, post-inmersión y recuperación.</p>
-        <div class="ds-meta">
-          <span><strong>n=</strong>28</span>
-          <span><strong>Licencia:</strong> CC BY 4.0</span>
-        </div>
-        <div class="ds-vars">
-          <span class="tag">RR intervals</span>
-          <span class="tag">RMSSD</span>
-          <span class="tag">LF/HF</span>
-          <span class="tag">Temperatura</span>
-        </div>
-        <div class="ds-actions">
-          <a href="#" class="ds-btn ds-btn-primary">↓ Descargar (Zenodo)</a>
-          <a href="#" class="ds-btn ds-btn-ghost">GitHub →</a>
-        </div>
-      </article>
-
-      <article class="dataset-card reveal delay-2" data-ds="ds-mindfulness-elderly-2023">
-        <div class="ds-header">
-          <span class="ds-badge badge-active"><span class="badge-dot"></span>Público</span>
-          <div class="ds-format">SPSS + CSV · 8 MB</div>
-        </div>
-        <h3 class="ds-title">Mindfulness & Aging · UMAG 2023</h3>
-        <p class="ds-desc">Datos pre/post intervención mindfulness 8 semanas. HRV, test cognitivos MMSE/MoCA y escalas de bienestar.</p>
-        <div class="ds-meta">
-          <span><strong>n=</strong>42</span>
-          <span><strong>Licencia:</strong> CC BY-NC 4.0</span>
-        </div>
-        <div class="ds-vars">
-          <span class="tag">HRV</span>
-          <span class="tag">MMSE</span>
-          <span class="tag">MoCA</span>
-          <span class="tag">STAI</span>
-        </div>
-        <div class="ds-actions">
-          <a href="#" class="ds-btn ds-btn-primary">↓ Descargar (Zenodo)</a>
-        </div>
-      </article>
-
-      <article class="dataset-card reveal delay-3" data-ds="ds-seasonal-light-2022">
-        <div class="ds-header">
-          <span class="ds-badge badge-active"><span class="badge-dot"></span>Público</span>
-          <div class="ds-format">CSV · 6 MB</div>
-        </div>
-        <h3 class="ds-title">Seasonal Light & ANS · High Latitude 2022</h3>
-        <p class="ds-desc">Mediciones autonómicas y de exposición lumínica en adultos mayores a lo largo de las 4 estaciones en Punta Arenas.</p>
-        <div class="ds-meta">
-          <span><strong>n=</strong>35</span>
-          <span><strong>Licencia:</strong> CC BY 4.0</span>
-        </div>
-        <div class="ds-vars">
-          <span class="tag">HRV</span>
-          <span class="tag">Lux</span>
-          <span class="tag">Melatonin</span>
-          <span class="tag">Sleep</span>
-        </div>
-        <div class="ds-actions">
-          <a href="#" class="ds-btn ds-btn-primary">↓ Descargar (Zenodo)</a>
-          <a href="#" class="ds-btn ds-btn-ghost">GitHub →</a>
-        </div>
-      </article>
-
-    </div>
-  </div>
-</section>
-
 
 <!-- ══════════════════════════════════
      DEI
@@ -1050,6 +950,7 @@
 <script src="js/theme.js"></script>
 <script src="js/publications.js"></script>
 <script src="js/brain3d.js"></script>
+<script src="js/globe.js"></script>
 <script src="js/bibtex.js"></script>
 <script src="js/main.js"></script>
 
