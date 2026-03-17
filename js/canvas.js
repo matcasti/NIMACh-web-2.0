@@ -17,9 +17,9 @@ class NeuralCanvas {
     this.animId = null;
 
     // Config
-    this.NODE_COUNT = 70;
+    this.NODE_COUNT = 100;
     this.MAX_DIST   = 145;
-    this.HEART_RATIO = 0.18; // fraction of orange "cardiac" nodes
+    this.HEART_RATIO = 0.20; // fraction of orange "cardiac" nodes
 
     this.bindEvents();
     this.draw();
@@ -183,8 +183,8 @@ class ParticleField {
     this.pts = Array.from({ length: 30 }, () => ({
       x:  Math.random() * this.W,
       y:  Math.random() * this.H,
-      vx: (Math.random() - .5) * .16,
-      vy: (Math.random() - .5) * .16,
+      vx: (Math.random() - .5) * .26,
+      vy: (Math.random() - .5) * .26,
     }));
   }
 

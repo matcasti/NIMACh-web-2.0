@@ -39,7 +39,7 @@
   position: relative;
   z-index: var(--z-above);
   padding: 0 64px;
-  max-width: 620px;
+  max-width: 800px;
 }
 
 /* ── Eyebrow ── */
