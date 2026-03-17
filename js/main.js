@@ -41,6 +41,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── Page entrance ──
   document.body.classList.add('page-enter');
+  
+  // ── Back to top ──
+  const btt = document.getElementById('back-to-top');
+  if (btt) {
+    window.addEventListener('scroll', () => {
+      const show = window.scrollY > 400;
+      btt.style.opacity = show ? '1' : '0';
+      btt.style.transform = show ? 'translateY(0)' : 'translateY(8px)';
+      btt.style.pointerEvents = show ? 'all' : 'none';
+    }, { passive: true });
+    btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  }
 });
 
 /* ── Publications: live filter by year / topic ── */
@@ -156,7 +168,6 @@ function initAnchorScroll() {
   });
 }
 
-/* ── Contact form ── */
 /* ── Contact form (EmailJS multi-destinatario) ──
  *
  * Configuración en emailjs.com:
@@ -164,8 +175,7 @@ function initAnchorScroll() {
  *   2. Crea un Email Template con las variables:
  *        {{from_name}}, {{from_inst}}, {{reply_to}},
  *        {{subject}}, {{message}}, {{sent_at}}
- *   3. En el template, agrega múltiples "To emails" separados por coma:
- *        cristian.nunez@umag.cl, it-support@umag.cl
+ *   3. En el template, agrega múltiples "To emails" separados por coma
  *   4. Reemplaza SERVICE_ID y TEMPLATE_ID abajo con los tuyos.
  */
 function initContactForm() {
