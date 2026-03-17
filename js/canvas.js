@@ -19,7 +19,7 @@ class NeuralCanvas {
     // Config
     this.NODE_COUNT = 100;
     this.MAX_DIST   = 145;
-    this.HEART_RATIO = 0.20; // fraction of orange "cardiac" nodes
+    this.HEART_RATIO = 0.15; // fraction of orange "cardiac" nodes
 
     this.bindEvents();
     this.draw();
@@ -35,8 +35,8 @@ class NeuralCanvas {
     this.nodes = Array.from({ length: this.NODE_COUNT }, () => ({
       x:      Math.random() * this.W,
       y:      Math.random() * this.H,
-      vx:     (Math.random() - .5) * .42,
-      vy:     (Math.random() - .5) * .42,
+      vx:     (Math.random() - .5) * 50,
+      vy:     (Math.random() - .5) * 50,
       r:       Math.random() * 2.2 + 1.2,
       heart:   Math.random() < this.HEART_RATIO,
       pulse:   Math.random() * Math.PI * 2,
@@ -64,13 +64,13 @@ class NeuralCanvas {
       const d2 = dx * dx + dy * dy;
       if (d2 < 30000 && d2 > 0) {
         const d = Math.sqrt(d2);
-        n.vx += (dx / d) * .016;
-        n.vy += (dy / d) * .016;
+        n.vx += (dx / d) * .16;
+        n.vy += (dy / d) * .16;
       }
 
       // cap speed
       const spd = Math.sqrt(n.vx * n.vx + n.vy * n.vy);
-      if (spd > .9) { n.vx /= spd * 1.1; n.vy /= spd * 1.1; }
+      if (spd > 1.9) { n.vx /= spd * 1.3; n.vy /= spd * 1.3; }
     });
   }
 
@@ -107,7 +107,7 @@ class NeuralCanvas {
       if (n.heart) {
         // radial glow
         const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 5);
-        g.addColorStop(0, `rgba(232,112,64,${.14 * p})`);
+        g.addColorStop(0, `rgba(232,112,64,${.2 * p})`);
         g.addColorStop(1, 'rgba(232,112,64,0)');
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.r * 5, 0, Math.PI * 2);
@@ -121,7 +121,7 @@ class NeuralCanvas {
       } else {
         if (n.layer === 2) {
           const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 3);
-          g.addColorStop(0, `rgba(127,179,232,${.12 * p})`);
+          g.addColorStop(0, `rgba(127,179,232,${.2 * p})`);
           g.addColorStop(1, 'rgba(127,179,232,0)');
           ctx.beginPath();
           ctx.arc(n.x, n.y, n.r * 3, 0, Math.PI * 2);
