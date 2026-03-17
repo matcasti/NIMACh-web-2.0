@@ -126,7 +126,7 @@
   gap: 10px;
   margin-bottom: 28px;
   padding: 18px;
-  background: #fff;
+  background: var(--c-navy);
   border: 0.5px solid rgba(0,0,0,.07);
   border-radius: var(--r-lg);
 }
@@ -264,7 +264,7 @@ body.dark-mode .bib-note-desc  { color: var(--t-muted); }
   padding: 8px 16px;
   border-radius: var(--r-md);
   border: 0.5px solid rgba(0,0,0,.09);
-  background: #fff;
+  background: var(--c-navy);
   color: var(--s-text-2, #4a6280);
   cursor: pointer;
   font-family: var(--font-sans);
@@ -309,7 +309,7 @@ body.dark-mode .people-tab.active {
 }
 
 .person-page-card {
-  background: #fff;
+  background: var(--c-navy);
   border: 0.5px solid rgba(0,0,0,.07);
   border-radius: var(--r-lg);
   padding: 24px;
@@ -419,63 +419,6 @@ body.dark-mode .contribute-callout {
   background: rgba(255,255,255,.03);
 }
 
-/* ── Datasets page ── */
-.datasets-page-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
-  margin-bottom: 36px;
-}
-
-.cite-guide {
-  background: #fff;
-  border: 0.5px solid rgba(0,0,0,.07);
-  border-radius: var(--r-lg);
-  padding: 28px;
-}
-
-body.dark-mode .cite-guide {
-  background: var(--c-navy-3);
-  border-color: var(--glass-border);
-}
-
-.cite-guide-title {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--s-text, #0d1d35);
-  margin-bottom: 14px;
-}
-
-body.dark-mode .cite-guide-title { color: var(--t-hero); }
-
-.cite-example {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  background: #f6f8fc;
-  border: 0.5px solid rgba(0,0,0,.07);
-  border-radius: var(--r-md);
-  padding: 14px 18px;
-  line-height: 1.7;
-  color: var(--s-text, #0d1d35);
-  margin-bottom: 14px;
-  white-space: pre-wrap;
-}
-
-body.dark-mode .cite-example {
-  background: var(--c-navy-2);
-  border-color: var(--glass-border);
-  color: var(--t-muted);
-}
-
-.cite-note {
-  font-size: 12px;
-  color: var(--s-text-2, #4a6280);
-  line-height: 1.7;
-}
-
-body.dark-mode .cite-note { color: var(--t-muted); }
-
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .pub-stat-strip { flex-wrap: wrap; }
@@ -483,7 +426,6 @@ body.dark-mode .cite-note { color: var(--t-muted); }
     border-bottom: 0.5px solid rgba(255,255,255,.07); }
   .people-page-grid { grid-template-columns: 1fr; }
   .tools-page-grid  { grid-template-columns: 1fr; }
-  .datasets-page-grid { grid-template-columns: 1fr; }
   .page-hero { padding: 100px 0 48px; }
 }
 
@@ -498,7 +440,7 @@ body.dark-mode .cite-note { color: var(--t-muted); }
 }
 
 .rl-card {
-  background: #fff;
+  background: var(--c-navy);
   border: 0.5px solid rgba(0,0,0,.07);
   border-radius: var(--r-xl);
   padding: 32px;
@@ -599,7 +541,7 @@ body.dark-mode .rl-pub-title { color: var(--t-muted); }
 
 .rl-network {
   padding: 32px;
-  background: #fff;
+  background: var(--c-navy);
   border: 0.5px solid rgba(0,0,0,.07);
   border-radius: var(--r-xl);
 }
