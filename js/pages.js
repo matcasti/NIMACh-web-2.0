@@ -350,7 +350,7 @@ class NIMPage {
         data-cat="${p.role_category}">
         <div class="person-page-top">
           <div class="avatar-wrap">
-            ${Pages._avatarInnerHTML(p)}
+            ${NIMPage._avatarInnerHTML(p)}
             <div class="avatar-ring" style="color:${p.ringColor};"></div>
           </div>
           <div class="person-page-meta">
@@ -370,7 +370,7 @@ class NIMPage {
     const owner = (window.NIMACH_DATA.people || []).find(p => p.id === pet.owner);
     const ownerHTML = owner ? `
       <div class="pet-owner">
-        ${Pages._avatarInnerHTML(owner, 22)}
+        ${NIMPage._avatarInnerHTML(owner, 22)}
         <span>Compañero de ${owner.name.split(' ')[0]}</span>
       </div>` : '';
 
@@ -404,7 +404,7 @@ class NIMPage {
     return `
       <article class="alumni-card reveal ${delay}">
         <div class="alumni-avatar-wrap">
-          ${Pages._avatarInnerHTML(a, 38)}
+          ${NIMPage._avatarInnerHTML(a, 38)}
         </div>
         <div class="alumni-body">
           <div class="alumni-header">
