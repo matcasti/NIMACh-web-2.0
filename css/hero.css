@@ -100,7 +100,7 @@
 .hero-btns {
   display: flex;
   gap: 12px;
-  margin-bottom: 44px;
+  margin-bottom: 20px;
   opacity: 0;
   animation: fade-in .8s .46s forwards;
 }
@@ -142,42 +142,56 @@
   transform: translateY(-2px);
 }
 
-.btn-3d {
-  font-size: 13px;
-  font-weight: 500;
-  padding: 12px 20px;
-  background: rgba(29,184,132,.1);
-  color: var(--c-teal);
-  border: 0.5px solid rgba(29,184,132,.25);
-  border-radius: var(--r-md);
-  cursor: pointer;
+/* ── 3D viewer trigger (texto sutil, no CTA primario) ── */
+.btn-3d-link {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  transition: background var(--dur-fast),
-              transform var(--dur-fast) var(--ease-spring),
-              box-shadow var(--dur-fast);
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--t-muted);
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: 32px;
+  cursor: pointer;
   font-family: var(--font-sans);
+  opacity: 0;
+  animation: fade-in .8s .52s forwards;
+  transition: color var(--dur-fast);
 }
 
-.btn-3d:hover {
-  background: rgba(29,184,132,.18);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(29,184,132,.2);
+.btn-3d-link:hover {
+  color: var(--c-teal);
 }
 
-.btn-3d-icon {
-  font-size: 16px;
-  animation: spin-slow 8s linear infinite;
+.btn-3d-link:hover .btn-3d-link-arrow {
+  transform: translateX(4px);
+}
+
+.btn-3d-link-icon {
+  font-size: 13px;
+  color: var(--c-teal);
+  opacity: .7;
+  animation: spin-slow 10s linear infinite;
+}
+
+.btn-3d-link-arrow {
+  font-size: 12px;
+  transition: transform var(--dur-fast) var(--ease-spring);
+  color: var(--c-teal);
+  opacity: .7;
 }
 
 /* ── Stats ── */
 .hero-stats {
   display: flex;
-  gap: 28px;
+  gap: 24px;
   flex-wrap: wrap;
   opacity: 0;
-  animation: fade-in .8s .56s forwards;
+  animation: fade-in .8s .60s forwards;
+  padding-top: 20px;
+  border-top: 0.5px solid var(--glass-border);
 }
 
 .stat-ring-wrap {

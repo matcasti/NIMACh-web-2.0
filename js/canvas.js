@@ -21,7 +21,6 @@ class NeuralCanvas {
     this.MAX_DIST   = 145;
     this.HEART_RATIO = 0.18; // fraction of orange "cardiac" nodes
 
-    this.init();
     this.bindEvents();
     this.draw();
   }
