@@ -13,10 +13,14 @@ class PublicationsEnricher {
   }
 
   async enrich() {
+    // Siempre actualizar los contadores síncronos (total, Q1)
+    // independientemente de si hay DOIs válidos.
+    this.renderMetrics();
+
     const pubs = window.NIMACH_DATA.publications.filter(
       p => p.doi && !this.SKIP.test(p.doi)
     );
-    if (!pubs.length) return;
+    if (!pubs.length) return; // sin DOIs reales → citas y h-index quedan en 0
 
     const results = await Promise.allSettled(pubs.map(p => this.fetch(p.doi)));
 
@@ -32,9 +36,10 @@ class PublicationsEnricher {
       this.updateCard(pub);
     });
 
+    // Segunda pasada con citas reales ya asignadas
     this.renderMetrics();
   }
-
+  
   async fetch(doi) {
     const key    = `oa:${doi}`;
     const cached = sessionStorage.getItem(key);

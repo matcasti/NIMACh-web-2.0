@@ -190,6 +190,11 @@ class BibTeXParser {
     } else {
       list.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
     }
+
+    // Actualizar estadísticos ahora que el store tiene todos los papers del .bib
+    if (window.PublicationsEnricher) {
+      new PublicationsEnricher();
+    }
   }
 }
 
