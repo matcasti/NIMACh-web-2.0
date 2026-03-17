@@ -584,7 +584,7 @@
           <a href="pages/publicaciones.html" class="see-all">Ver todas →</a>
         </div>
 
-        <div class="pub-list">
+        <div class="pub-list" data-limit="5">
           <!-- Publicaciones cargadas dinámicamente desde data/publications.bib -->
           <div class="pub-list-loading" style="
             text-align:center;padding:32px;
@@ -698,7 +698,6 @@
       </div>
       <div class="globe-stage">
         <canvas id="globe-canvas" aria-label="Globo de colaboraciones internacionales"></canvas>
-        <div class="globe-interact-hint">Arrastra · Scroll</div>
         <div class="globe-points-legend">
           <!-- Generado desde NIMACH_DATA.globePoints en main.js -->
         </div>
@@ -943,15 +942,6 @@
   <div class="footer-copy">CADI · Universidad de Magallanes · Punta Arenas</div>
 </footer>
 
-<button id="back-to-top" aria-label="Volver al inicio" style="
-  position:fixed;bottom:24px;right:24px;z-index:300;
-  width:40px;height:40px;border-radius:50%;
-  background:var(--c-navy-2);border:0.5px solid var(--glass-border);
-  color:var(--t-muted);font-size:16px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;transform:translateY(8px);
-  transition:opacity .25s,transform .25s var(--ease-spring),background .2s;
-  box-shadow:0 4px 16px rgba(0,0,0,.25);">↑</button>
 
 <!-- Scripts (order matters) -->
 <script src="js/data.js"></script>

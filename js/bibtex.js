@@ -146,9 +146,11 @@ class BibTeXParser {
     const list = document.querySelector('.pub-list');
     if (!list) return;
 
-    // Ordena por año desc
-    const all = [...window.NIMACH_DATA.publications]
-      .sort((a, b) => b.year - a.year);
+    // Ordena por año desc y aplica límite si el contenedor lo declara
+    const limit = parseInt(list.dataset.limit, 10) || Infinity;
+    const all   = [...window.NIMACH_DATA.publications]
+      .sort((a, b) => b.year - a.year)
+      .slice(0, limit);
 
     list.innerHTML = all.map((p, i) => {
       const delay  = ['', 'delay-1', 'delay-2', 'delay-3', 'delay-4', 'delay-5'][Math.min(i, 5)];
