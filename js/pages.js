@@ -143,7 +143,7 @@ class NIMPage {
 
     const pubCount  = pubs.length;
     const q1Count   = pubs.filter(p => p.quartile === 'Q1').length;
-    const yearRange = years.length > 1 ? `${years[years.length-1]}–${years[0]}` : years[0] || '—';
+    const yearRange = years.length > 1 ? `${years[years.length-1]} – ${years[0]}` : years[0] || ' — ';
 
     return `
       ${this._pageHeroHTML({
@@ -209,17 +209,6 @@ class NIMPage {
           <!-- Cards -->
           <div class="pub-list" id="pub-page-list">
             ${pubs.map((p, i) => this._pubCardHTML(p, i)).join('')}
-          </div>
-
-          <!-- BibTeX callout -->
-          <div class="pub-bib-note reveal">
-            <div class="bib-note-icon">📄</div>
-            <div>
-              <div class="bib-note-title">Añadir publicaciones</div>
-              <div class="bib-note-desc">Agrega entradas al archivo
-                <code>data/publications.bib</code> y aparecerán automáticamente aquí,
-                con enriquecimiento de citas vía OpenAlex.</div>
-            </div>
           </div>
 
         </div>

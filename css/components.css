@@ -875,10 +875,7 @@ body:not(.dark-mode) .globe-points-legend .globe-legend-item {
 /* Modo claro: fondo del stage visible, no todo oscuro */
 body:not(.dark-mode) .globe-stage {
   background: radial-gradient(
-    ellipse 55% 90% at 28% 50%,
-    rgba(4,14,30,0.92) 0%,
-    rgba(4,14,30,0.65) 50%,
-    rgba(4,14,30,0.15) 100%
+    ellipse 55% 90% at 28% 50%, rgba(10,24,40)
   );
 }
 
