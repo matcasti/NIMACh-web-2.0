@@ -1101,7 +1101,7 @@ class NIMPage {
   }
 
   static _initPeopleLazyLoad() {
-    const BATCH    = 6;
+    const BATCH    = 3;
     const grid     = document.getElementById('people-page-grid');
     const sentinel = document.getElementById('people-sentinel');
     if (!grid || !sentinel) return;
@@ -1129,13 +1129,19 @@ class NIMPage {
 
       grid.appendChild(frag);
       loaded += batch.length;
+      // Cards inyectados ya están en viewport — forzar reveal en el siguiente frame
+      requestAnimationFrame(() => {
+        grid.querySelectorAll('.person-page-card.reveal:not(.visible)').forEach(c => {
+          c.classList.add('visible');
+        });
+      });
 
       if (loaded >= people.length) { sentinel.remove(); observer.disconnect(); }
     };
 
     const observer = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) loadNext();
-    }, { rootMargin: '200px' }); // empieza a cargar 200px antes de llegar al final
+    }, { rootMargin: '-100px' }); // empieza a cargar 100px despues de llegar al final
 
     observer.observe(sentinel);
   }
