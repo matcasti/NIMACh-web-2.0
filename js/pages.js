@@ -250,7 +250,8 @@ class NIMPage {
     const pets    = window.NIMACH_DATA.pets      || [];
 
     // Contar por categoría (solo activos)
-    const count = cat => people.filter(p => p.role_category === cat).length;
+    const cats  = p => Array.isArray(p.role_category) ? p.role_category : [p.role_category];
+    const count = cat => people.filter(p => cats(p).includes(cat)).length;
 
     return `
       ${this._pageHeroHTML({
@@ -270,15 +271,12 @@ class NIMPage {
             <button class="people-tab active" data-cat="all">
               Todos <span class="tab-count">${people.length}</span>
             </button>
-            <button class="people-tab" data-cat="pi">
-              Investigadores Principales <span class="tab-count">${count('pi')}</span>
-            </button>
-            <button class="people-tab" data-cat="researcher">
-              Investigadores <span class="tab-count">${count('researcher')}</span>
-            </button>
-            <button class="people-tab" data-cat="doctoral">
-              Doctorales <span class="tab-count">${count('doctoral')}</span>
-            </button>
+            ${(NIMACH_DATA.people_categories || [])
+              .filter(cat => people.some(p => p.role_category === cat.key))
+              .map(cat => `
+            <button class="people-tab" data-cat="${cat.key}">
+              ${cat.label} <span class="tab-count">${count(cat.key)}</span>
+            </button>`).join('')}
           </div>
 
           <div class="people-page-grid" id="people-page-grid">
@@ -347,7 +345,7 @@ class NIMPage {
 
     return `
       <article class="person-page-card reveal ${delay}"
-        data-cat="${p.role_category}">
+        data-cat="${(Array.isArray(p.role_category) ? p.role_category : [p.role_category]).join(' ')}">
         <div class="person-page-top">
           <div class="avatar-wrap">
             ${NIMPage._avatarInnerHTML(p)}
@@ -1087,7 +1085,7 @@ class NIMPage {
         tab.classList.add('active');
         const cat = tab.dataset.cat;
         document.querySelectorAll('.person-page-card').forEach(card => {
-          const match = cat === 'all' || card.dataset.cat === cat;
+          const match = cat === 'all' || card.dataset.cat.split(' ').includes(cat);
           card.style.display = match ? '' : 'none';
         });
       });
