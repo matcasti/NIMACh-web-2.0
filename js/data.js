@@ -31,6 +31,7 @@ const NIMACH_DATA = {
       role:          'Investigador · Desarrollador de herramientas',
       role_category: 'researcher',
       avatar:        'av2',
+      photo:         'assets/images/team/matias-castillo.jpeg', 
       featured_home: true,
       ringColor:     '#e87040',
       bio:           'Kinesiólogo e investigador con especialización en análisis de señales fisiológicas y desarrollo de software científico. Creador del HRV Analyzer para Polar H10. Candidato a Doctor en Ciencias de la Salud.',
