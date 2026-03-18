@@ -272,7 +272,10 @@ class NIMPage {
               Todos <span class="tab-count">${people.length}</span>
             </button>
             ${(NIMACH_DATA.people_categories || [])
-              .filter(cat => people.some(p => p.role_category === cat.key))
+              .filter(cat => people.some(p => {
+                const cats = Array.isArray(p.role_category) ? p.role_category : [p.role_category];
+                return cats.includes(cat.key);
+              }))
               .map(cat => `
             <button class="people-tab" data-cat="${cat.key}">
               ${cat.label} <span class="tab-count">${count(cat.key)}</span>
@@ -280,8 +283,9 @@ class NIMPage {
           </div>
 
           <div class="people-page-grid" id="people-page-grid">
-            ${people.map((p, i) => this._personCardHTML(p, i)).join('')}
+            ${people.slice(0, 6).map((p, i) => this._personCardHTML(p, i)).join('')}
           </div>
+          <div id="people-sentinel" style="height:1px;"></div>
 
         </div>
       </section>
@@ -1079,6 +1083,7 @@ class NIMPage {
   }
 
   static _afterPersonas() {
+    // ── Filter tabs ──
     document.querySelectorAll('.people-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.people-tab').forEach(t => t.classList.remove('active'));
@@ -1090,6 +1095,49 @@ class NIMPage {
         });
       });
     });
+
+    // ── Carga incremental por lotes ──
+    NIMPage._initPeopleLazyLoad();
+  }
+
+  static _initPeopleLazyLoad() {
+    const BATCH    = 6;
+    const grid     = document.getElementById('people-page-grid');
+    const sentinel = document.getElementById('people-sentinel');
+    if (!grid || !sentinel) return;
+
+    const people = (window.NIMACH_DATA.people || []).filter(p => p.active !== false);
+    let loaded = grid.querySelectorAll('.person-page-card').length; // ya renderizados
+    if (loaded >= people.length) { sentinel.remove(); return; }
+
+    const revealObs = window._scrollRevealObserver; // reusar el observer global de scroll.js
+
+    const loadNext = () => {
+      const batch = people.slice(loaded, loaded + BATCH);
+      if (!batch.length) { sentinel.remove(); observer.disconnect(); return; }
+
+      // Crear fragment para insertar de golpe (un solo reflow)
+      const frag = document.createDocumentFragment();
+      batch.forEach((p, i) => {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = NIMPage._personCardHTML(p, loaded + i);
+        const card = tmp.firstElementChild;
+        frag.appendChild(card);
+        // Registrar con ScrollReveal si está disponible
+        if (revealObs) revealObs.observe(card);
+      });
+
+      grid.appendChild(frag);
+      loaded += batch.length;
+
+      if (loaded >= people.length) { sentinel.remove(); observer.disconnect(); }
+    };
+
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) loadNext();
+    }, { rootMargin: '200px' }); // empieza a cargar 200px antes de llegar al final
+
+    observer.observe(sentinel);
   }
   
   static _afterProyectos() {

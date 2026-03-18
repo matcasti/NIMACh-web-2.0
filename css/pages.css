@@ -365,9 +365,10 @@ body.dark-mode .person-bio { color: var(--t-muted); }
 
 .person-links {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 2px;
+  margin-top: auto;
 }
 
 .person-link-btn {
