@@ -182,7 +182,7 @@
 .person-name { font-size: 13px; font-weight: 600; color: #0d1d35; margin-bottom: 4px; }
 .person-role { font-size: 11.5px; color: #4a6280; margin-bottom: 13px; line-height: 1.5; }
 
-.person-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+.person-chips { display: flex; flex-wrap: wrap; gap: 4px; }
 .person-chip {
   font-size: 9px; padding: 3px 8px;
   border-radius: var(--r-full);
