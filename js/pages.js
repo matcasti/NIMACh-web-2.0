@@ -381,14 +381,18 @@ class NIMPage {
 
     return `
       <article class="pet-card reveal ${delay}">
-        <div class="pet-emoji">${pet.emoji}</div>
+        ${pet.photo
+          ? `<div class="pet-avatar">
+               <img src="../${pet.photo}" alt="${pet.name}" loading="lazy">
+             </div>`
+          : `<div class="pet-emoji">${pet.emoji}</div>`
+        }
         <div class="pet-body">
           <div class="pet-header">
             <h3 class="pet-name">${pet.name}</h3>
             <span class="pet-species">${pet.species} · ${pet.breed}</span>
           </div>
           <p class="pet-bio">${pet.bio}</p>
-          <div class="person-chips" style="margin-top:8px;">${chipsHTML}</div>
           ${ownerHTML}
         </div>
       </article>`;
