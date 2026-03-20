@@ -1,5 +1,5 @@
 /**
- * NIM-ACh — Pages Engine
+ * NIMACh — Pages Engine
  * Construye dinámicamente las páginas interiores desde NIMACH_DATA.
  * Las páginas HTML son shells mínimos; todo el contenido sale de aquí.
  *
@@ -40,17 +40,11 @@ class NIMPage {
 
     return `
       <a href="../index.html" class="nav-logo">
-        <div class="nav-logo-mark">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="8" r="3.5" stroke="#fff" stroke-width="1.5"/>
-            <path d="M5 19Q8 13 12 13Q16 13 19 19"
-              stroke="#f5a472" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <path d="M2 11Q5.5 8 9 11Q12 14 15 11Q18 8 22 11"
-              stroke="rgba(255,255,255,.45)" stroke-width="1" stroke-linecap="round" fill="none"/>
-          </svg>
+        <div class="nav-logo-mark nav-logo-mark--img">
+          <img src="../assets/images/logo.png" alt="NIMACh" class="nav-logo-img">
         </div>
         <div class="nav-brand">
-          <span class="nav-name">NIM-ACh</span>
+          <span class="nav-name">NIMACh</span>
           <span class="nav-sub">Neurofisiología · UMAG</span>
         </div>
       </a>
@@ -75,14 +69,10 @@ class NIMPage {
     const chips = ['MEDIANTAR','HABITAT','CIES','RIES-LAC','FONDECYT'];
     return `
       <div class="footer-left">
-        <div class="nav-logo-mark" style="width:28px;height:28px;border-radius:7px;flex-shrink:0;">
-          <svg viewBox="0 0 24 24" fill="none" style="width:17px;height:17px;" aria-hidden="true">
-            <circle cx="12" cy="8" r="3.5" stroke="#fff" stroke-width="1.5"/>
-            <path d="M5 19Q8 13 12 13Q16 13 19 19"
-              stroke="#f5a472" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-          </svg>
+        <div class="nav-logo-mark nav-logo-mark--img" style="width:28px;height:28px;border-radius:7px;flex-shrink:0;">
+          <img src="../assets/images/logo.png" alt="NIMACh" class="nav-logo-img">
         </div>
-        <span class="footer-brand">NIM-ACh Group</span>
+        <span class="footer-brand">NIMACh Group</span>
         <span class="footer-copy">© 2025</span>
       </div>
       <div class="footer-chips">
@@ -149,7 +139,7 @@ class NIMPage {
       ${this._pageHeroHTML({
         label:     'Output científico',
         title:     'Publicaciones',
-        desc:      'Todas las publicaciones del grupo NIM-ACh. Cargadas desde BibTeX y enriquecidas con métricas de citas en tiempo real vía OpenAlex.',
+        desc:      'Todas las publicaciones del grupo NIMACh. Cargadas desde BibTeX y enriquecidas con métricas de citas en tiempo real vía OpenAlex.',
         accent:    'blue',
         backHref:  '../index.html#publicaciones',
         backLabel: 'Volver a inicio',
@@ -257,7 +247,7 @@ class NIMPage {
       ${this._pageHeroHTML({
         label:     'Nuestro equipo',
         title:     'Personas',
-        desc:      'Investigadores, doctorandos y colaboradores que conforman el NIM-ACh. Unidos por la curiosidad sobre el eje cerebro-corazón desde la Patagonia.',
+        desc:      'Investigadores, doctorandos y colaboradores que conforman el NIMACh. Unidos por la curiosidad sobre el eje cerebro-corazón desde la Patagonia.',
         accent:    'teal',
         backHref:  '../index.html#personas',
         backLabel: 'Volver a inicio',
@@ -312,7 +302,7 @@ class NIMPage {
           <div class="reveal" style="margin-bottom:28px;">
             <span class="label">Parte de nuestra historia</span>
             <h2 class="section-title" style="font-size:18px;">Alumni</h2>
-            <p class="section-desc">Exmiembros que formaron parte del grupo y siguen siendo parte de la red NIM-ACh.</p>
+            <p class="section-desc">Exmiembros que formaron parte del grupo y siguen siendo parte de la red NIMACh.</p>
           </div>
           <div class="alumni-grid">
             ${alumni.map((a, i) => this._alumniCardHTML(a, i)).join('')}
@@ -454,6 +444,31 @@ class NIMPage {
         <div class="person-social">${linksHTML}</div>
       </article>`;
   }
+  
+  static initHomeTools() {
+    const grid = document.getElementById('home-tools-grid');
+    if (!grid || !window.NIMACH_DATA) return;
+
+    const tools    = window.NIMACH_DATA.tools || [];
+    const featured = tools.find(t => t.featured_home);
+    const rest     = tools.filter(t => t !== featured);
+
+    grid.innerHTML = `
+      ${featured ? this._featuredToolHTML(featured) : ''}
+      ${rest.length
+        ? `<div class="tools-side">
+             ${rest.map((t, i) => this._toolCardHTML(t, i)).join('')}
+           </div>`
+        : ''}
+    `;
+
+    // Re-registrar elementos .reveal con el observer global
+    if (window._scrollRevealObserver) {
+      grid.querySelectorAll('.reveal').forEach(el =>
+        window._scrollRevealObserver.observe(el)
+      );
+    }
+  }
 
   static initHomePeople() {
     const grid = document.getElementById('home-people-grid');
@@ -468,8 +483,8 @@ class NIMPage {
   ══════════════════════════════════ */
   static _herramientasHTML() {
     const tools = window.NIMACH_DATA.tools || [];
-    const featured = tools.find(t => t.status === 'active');
-    const rest     = tools.filter(t => t !== featured);
+    const featuredTools = tools.filter(t => t.featured_page);
+    const rest          = tools.filter(t => !t.featured_page);
 
     return `
       ${this._pageHeroHTML({
@@ -484,7 +499,7 @@ class NIMPage {
       <section class="page-section light-section" >
         <div class="container">
 
-          ${featured ? this._featuredToolHTML(featured) : ''}
+          ${featuredTools.map(t => this._featuredToolHTML(t)).join('')}
 
           <div class="tools-page-grid">
             ${rest.map((t, i) => this._toolCardHTML(t, i)).join('')}
@@ -496,7 +511,7 @@ class NIMPage {
             <div class="contribute-body">
               <div class="contribute-title">¿Quieres contribuir?</div>
               <p class="contribute-desc">
-                NIM-ACh desarrolla todas sus herramientas con licencia MIT o Apache 2.0.
+                NIMACh desarrolla todas sus herramientas con licencia MIT o Apache 2.0.
                 Si eres desarrollador/a y quieres colaborar, escríbenos o abre un issue en GitHub.
               </p>
               <a href="../index.html#contacto" class="tool-btn tool-btn-primary">Contáctanos →</a>
@@ -514,7 +529,7 @@ class NIMPage {
 
     const authorHTML = authorData ? `
       <div class="tool-author">
-        <div class="avatar ${authorData.avatar}" style="width:28px;height:28px;font-size:11px;">
+        <div class="avatar ${authorData.avatar}" style="width:28px;height:28px;font-size:8px;">
           ${authorData.initials}
         </div>
         <span>Desarrollado por ${authorData.name}</span>
@@ -912,7 +927,7 @@ class NIMPage {
       ${this._pageHeroHTML({
         label:     'Registro visual',
         title:     'Galería',
-        desc:      'Momentos del trabajo en terreno, seminarios, colaboraciones y vida del grupo NIM-ACh desde el fin del mundo.',
+        desc:      'Momentos del trabajo en terreno, seminarios, colaboraciones y vida del grupo NIMACh desde el fin del mundo.',
         accent:    'purple',
         backHref:  '../index.html#galeria',
         backLabel: 'Volver a inicio',
