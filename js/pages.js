@@ -1197,7 +1197,7 @@ class NIMPage {
       <text x="${pL + 71}" y="9" font-size="8" fill="var(--s-text-3,#8aa0b8)">resto</text>
       <line x1="${pL + 118}" y1="5" x2="${pL + 133}" y2="5"
         stroke="#1db884" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.65"/>
-      <text x="${pL + 136}" y="9" font-size="8" fill="var(--s-text-3,#8aa0b8)">h-index</text>`;
+      <text x="${pL + 136}" y="9" font-size="10" fill="var(--s-text-3,#8aa0b8)">h-index</text>`;
 
     el.innerHTML = `
       <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;">
