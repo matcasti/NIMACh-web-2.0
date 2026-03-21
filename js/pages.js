@@ -154,11 +154,7 @@ class NIMPage {
               <div class="pub-stat-lbl">Publicaciones</div>
             </div>
             <div class="pub-stat">
-              <div class="pub-stat-val" id="ps-q1" style="color:var(--c-coral);">${q1Count}</div>
-              <div class="pub-stat-lbl">Revistas Q1</div>
-            </div>
-            <div class="pub-stat">
-              <div class="pub-stat-val" id="ps-cites">—</div>
+              <div class="pub-stat-val" id="ps-cites" style="color:var(--c-coral);">—</div>
               <div class="pub-stat-lbl">Citas totales</div>
             </div>
             <div class="pub-stat">
@@ -166,7 +162,11 @@ class NIMPage {
               <div class="pub-stat-lbl">h-index</div>
             </div>
             <div class="pub-stat">
-              <div class="pub-stat-val" id="ps-period" style="color:var(--c-teal);">${yearRange}</div>
+              <div class="pub-stat-val" id="ps-oa" style="color:var(--c-teal);">—</div>
+              <div class="pub-stat-lbl">Open Access</div>
+            </div>
+            <div class="pub-stat">
+              <div class="pub-stat-val" id="ps-period" style="font-size:18px;">${yearRange}</div>
               <div class="pub-stat-lbl">Período</div>
             </div>
           </div>
@@ -176,6 +176,23 @@ class NIMPage {
       <!-- Filter + list -->
       <section class="page-section light-section" >
         <div class="container">
+        
+          <!-- Bibliometric charts (populated after BibTeX + OpenAlex load) -->
+          <div class="biblio-charts reveal" id="biblio-charts">
+            <div class="biblio-chart-card">
+              <span class="label" style="margin-bottom:8px;display:block;">Publicaciones por año</span>
+              <div id="chart-pubs-year" style="min-height:110px;"></div>
+            </div>
+            <div class="biblio-chart-card">
+              <span class="label" style="margin-bottom:8px;display:block;">Perfil de citas · h-index</span>
+              <div id="chart-citations" style="min-height:110px;display:flex;align-items:center;justify-content:center;">
+                <span style="font-size:11px;color:var(--s-text-3,#8aa0b8);">Cargando OpenAlex…</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Toolbar -->
+          <div class="pub-toolbar reveal">
 
           <!-- Toolbar -->
           <div class="pub-toolbar reveal">
@@ -311,15 +328,14 @@ class NIMPage {
       </section>` : ''}`;
   }
   
-  // ─── INSERT inside class Pages, before _personCardHTML ───
-  static _avatarInnerHTML(person, size = null) {
+  static _avatarInnerHTML(person, size = null, basePath = '../') {
     const sizeStyle = size ? `width:${size}px;height:${size}px;font-size:${Math.round(size*0.35)}px;` : '';
     if (person.photo) {
-      return `<div class="avatar ${person.avatar} avatar--photo" style="${sizeStyle}">
-        <img src="../${person.photo}" alt="${person.name}" loading="lazy">
+      return `<div class="avatar ${person.avatar || ''} avatar--photo" style="${sizeStyle}">
+        <img src="${basePath}${person.photo}" alt="${person.name}" loading="lazy">
       </div>`;
     }
-    return `<div class="avatar ${person.avatar}" style="${sizeStyle}">${person.initials}</div>`;
+    return `<div class="avatar ${person.avatar || ''}" style="${sizeStyle}">${person.initials || ''}</div>`;
   }
   
   static _personCardHTML(p, i) {
@@ -435,7 +451,7 @@ class NIMPage {
     return `
       <article class="person-card reveal ${delay}">
         <div class="avatar-wrap">
-          ${NIMPage._avatarInnerHTML(p)}
+          ${NIMPage._avatarInnerHTML(p, null, '')}
           <div class="avatar-ring" style="color:${p.ringColor};"></div>
         </div>
         <h3 class="person-name">${p.name}</h3>
@@ -486,13 +502,18 @@ class NIMPage {
     };
   }
 
-  static _galleryItemHTML(item, i) {
-    const delay  = ['','delay-1','delay-2','delay-3','delay-4','delay-5'][Math.min(i, 5)];
-    const svgMap = this._svgByBg();
+  static _galleryItemHTML(item, i, basePath = '../') {
+    const delay   = ['','delay-1','delay-2','delay-3','delay-4','delay-5'][Math.min(i, 5)];
+    const svgMap  = this._svgByBg();
+    const media   = item.photo
+      ? `<img src="${basePath}${item.photo}" alt="${item.title}"
+             style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">`
+      : `<div class="gallery-svg">${svgMap[item.bg] || ''}</div>`;
+
     return `
       <div class="gallery-item${item.span ? ' g-span-2' : ''} reveal ${delay}">
-        <div class="gallery-item-inner ${item.bg}">
-          <div class="gallery-svg">${svgMap[item.bg] || ''}</div>
+        <div class="gallery-item-inner ${item.photo ? '' : item.bg}">
+          ${media}
           <div class="gallery-overlay"></div>
           <div class="gallery-label">
             <div class="gallery-label-title">${item.title}</div>
@@ -524,11 +545,13 @@ class NIMPage {
       .map((n, i) => NIMPage._newsItemHTML(n, i))
       .join('');
 
-    if (window._scrollRevealObserver) {
-      wrap.querySelectorAll('.reveal').forEach(el =>
-        window._scrollRevealObserver.observe(el)
-      );
-    }
+    // Defer so scroll.js DOMContentLoaded (#3) has registered its observer first
+    requestAnimationFrame(() => {
+      wrap.querySelectorAll('.reveal').forEach(el => {
+        if (window._scrollRevealObserver) window._scrollRevealObserver.observe(el);
+        else el.classList.add('visible');
+      });
+    });
   }
 
   static initHomeGallery() {
@@ -539,14 +562,15 @@ class NIMPage {
       .filter(g => g.featured_home);
 
     grid.innerHTML = items
-      .map((item, i) => NIMPage._galleryItemHTML(item, i))
+      .map((item, i) => NIMPage._galleryItemHTML(item, i, ''))
       .join('');
 
-    if (window._scrollRevealObserver) {
-      grid.querySelectorAll('.reveal').forEach(el =>
-        window._scrollRevealObserver.observe(el)
-      );
-    }
+    requestAnimationFrame(() => {
+      grid.querySelectorAll('.reveal').forEach(el => {
+        if (window._scrollRevealObserver) window._scrollRevealObserver.observe(el);
+        else el.classList.add('visible');
+      });
+    });
   }
   
   static _projectCardHTML(p, i) {
@@ -992,7 +1016,7 @@ class NIMPage {
     const items = window.NIMACH_DATA.gallery || [];
     const news  = window.NIMACH_DATA.news    || [];
 
-    const galleryCards = items.map((item, i) => this._galleryItemHTML(item, i)).join('');
+    const galleryCards = items.map((item, i) => this._galleryItemHTML(item, i, '../')).join('');
     const newsItems    = news.map((n, i)    => this._newsItemHTML(n, i)).join('');
 
     return `
@@ -1053,10 +1077,141 @@ class NIMPage {
       case 'proyectos':      this._afterProyectos();     break;
     }
   }
+  
+  /* ══════════════════════════════════
+     BIBLIOMETRIC CHARTS (SVG, no deps)
+  ══════════════════════════════════ */
+
+  /** Bar chart: publications per year. Called after BibTeX populates. */
+  static _renderPubsByYearChart() {
+    const el = document.getElementById('chart-pubs-year');
+    if (!el) return;
+    const pubs = window.NIMACH_DATA?.publications || [];
+    if (!pubs.length) return;
+
+    const yearCounts = {};
+    pubs.forEach(p => { yearCounts[p.year] = (yearCounts[p.year] || 0) + 1; });
+    const years   = Object.keys(yearCounts).map(Number).sort((a, b) => a - b);
+    if (!years.length) return;
+    const counts   = years.map(y => yearCounts[y]);
+    const maxCount = Math.max(...counts, 1);
+    const nowY     = new Date().getFullYear();
+
+    const W = 500, H = 110;
+    const pL = 24, pR = 8, pT = 14, pB = 26;
+    const cW = W - pL - pR, cH = H - pT - pB;
+    const gap  = cW / years.length;
+    const barW = Math.max(5, gap * 0.6);
+
+    const bars = years.map((y, i) => {
+      const bh   = Math.max(1, (counts[i] / maxCount) * cH);
+      const x    = (pL + i * gap + gap / 2 - barW / 2).toFixed(1);
+      const yy   = (pT + cH - bh).toFixed(1);
+      const isNew = y >= nowY - 2;
+      const showLbl = years.length <= 14 || i % 2 === 0 || i === years.length - 1;
+      const isMax  = counts[i] === maxCount;
+      return `
+        <rect x="${x}" y="${yy}" width="${barW.toFixed(1)}" height="${bh.toFixed(1)}"
+          rx="2" fill="${isNew ? '#e87040' : '#3b7abf'}" opacity="${isNew ? 0.88 : 0.52}">
+          <title>${y}: ${counts[i]}</title></rect>
+        ${showLbl ? `<text x="${(+x + barW / 2).toFixed(1)}" y="${(H - pB + 14).toFixed(1)}"
+          text-anchor="middle" font-size="7.5" fill="var(--s-text-3,#8aa0b8)">${y}</text>` : ''}
+        ${isMax ? `<text x="${(+x + barW / 2).toFixed(1)}" y="${(+yy - 3).toFixed(1)}"
+          text-anchor="middle" font-size="8" fill="var(--s-text-2,#4a6280)">${counts[i]}</text>` : ''}`;
+    }).join('');
+
+    // Legend dots
+    const legend = `
+      <rect x="${pL}" y="2" width="10" height="6" rx="1.5" fill="#3b7abf" opacity="0.52"/>
+      <text x="${pL + 13}" y="9" font-size="8" fill="var(--s-text-3,#8aa0b8)">anterior</text>
+      <rect x="${pL + 60}" y="2" width="10" height="6" rx="1.5" fill="#e87040" opacity="0.88"/>
+      <text x="${pL + 73}" y="9" font-size="8" fill="var(--s-text-3,#8aa0b8)">últimos 3 años</text>`;
+
+    el.innerHTML = `
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;">
+        <line x1="${pL}" y1="${pT + cH}" x2="${W - pR}" y2="${pT + cH}"
+          stroke="rgba(0,0,0,0.07)" stroke-width="0.5"/>
+        ${bars}
+        ${legend}
+      </svg>`;
+  }
+
+  /** Ranked bar chart: citations per paper with h-index crosshair. Called after OpenAlex. */
+  static _renderCitationsChart() {
+    const el = document.getElementById('chart-citations');
+    if (!el) return;
+    const pubs     = window.NIMACH_DATA?.publications || [];
+    const hasCites = pubs.some(p => (p.citations || 0) > 0);
+
+    if (!hasCites) {
+      el.innerHTML = `<span style="font-size:11px;color:var(--s-text-3,#8aa0b8);">Sin datos aún…</span>`;
+      return;
+    }
+
+    const sorted   = pubs.map(p => p.citations || 0).sort((a, b) => b - a);
+    const maxCites = Math.max(...sorted, 1);
+    const h        = window.NIMACH_DATA?.metrics?.h || 0;
+    const n        = sorted.length;
+
+    const W = 600, H = 110;
+    const pL = 30, pR = 10, pT = 12, pB = 18;
+    const cW = W - pL - pR, cH = H - pT - pB;
+    const gap  = cW / n;
+    const barW = Math.max(1.5, gap * 0.72);
+
+    const bars = sorted.map((c, i) => {
+      const bh = Math.max(0.5, (c / maxCites) * cH);
+      const x  = (pL + i * gap + gap / 2 - barW / 2).toFixed(1);
+      const yy = (pT + cH - bh).toFixed(1);
+      return `<rect x="${x}" y="${yy}" width="${barW.toFixed(1)}" height="${bh.toFixed(1)}"
+        rx="1" fill="${i < h ? '#e87040' : '#3b7abf'}" opacity="${i < h ? 0.85 : 0.4}">
+        <title>Rank ${i + 1}: ${c} citas</title></rect>`;
+    }).join('');
+
+    // h-index crosshair
+    const hLine = (h > 0 && h <= n) ? (() => {
+      const hx = (pL + (h - 0.5) * gap).toFixed(1);
+      const hy = (pT + cH - (h / maxCites) * cH).toFixed(1);
+      return `
+        <line x1="${pL}" y1="${hy}" x2="${W - pR}" y2="${hy}"
+          stroke="#1db884" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.65"/>
+        <line x1="${hx}" y1="${pT}" x2="${hx}" y2="${pT + cH}"
+          stroke="#1db884" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.65"/>
+        <text x="${(+hx + 3).toFixed(1)}" y="${(+hy - 3).toFixed(1)}"
+          font-size="9" fill="#1db884" font-weight="500">h=${h}</text>`;
+    })() : '';
+
+    // Y axis ticks
+    const ticks = [0, Math.round(maxCites / 2), maxCites].map(v => {
+      const ty = (pT + cH - (v / maxCites) * cH + 3).toFixed(1);
+      return `<text x="${pL - 3}" y="${ty}" text-anchor="end"
+        font-size="8" fill="var(--s-text-3,#8aa0b8)">${v}</text>`;
+    }).join('');
+
+    // Legend
+    const legend = `
+      <rect x="${W - 100}" y="3" width="8" height="6" rx="1.5" fill="#e87040" opacity="0.85"/>
+      <text x="${W - 88}" y="10" font-size="8" fill="var(--s-text-3,#8aa0b8)">h-core</text>
+      <rect x="${W - 50}" y="3" width="8" height="6" rx="1.5" fill="#3b7abf" opacity="0.4"/>
+      <text x="${W - 38}" y="10" font-size="8" fill="var(--s-text-3,#8aa0b8)">resto</text>`;
+
+    el.innerHTML = `
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;">
+        <line x1="${pL}" y1="${pT}" x2="${pL}" y2="${pT + cH}"
+          stroke="rgba(0,0,0,0.07)" stroke-width="0.5"/>
+        <line x1="${pL}" y1="${pT + cH}" x2="${W - pR}" y2="${pT + cH}"
+          stroke="rgba(0,0,0,0.07)" stroke-width="0.5"/>
+        ${ticks}
+        ${hLine}
+        ${bars}
+        ${legend}
+      </svg>`;
+  }
 
   static _afterPublicaciones() {
-    // Filtro de publicaciones (reutilizado por bibtex.js también)
     NIMPage._initPubFilter();
+    // Deferred so layout is complete and chart container has width
+    setTimeout(() => NIMPage._renderPubsByYearChart(), 150);
 
     // Búsqueda de texto
     const searchEl = document.getElementById('pub-search');
@@ -1147,6 +1302,9 @@ class NIMPage {
 
     // ── Re-enlazar listeners (los nodos fueron recreados) ──
     NIMPage._initPubFilter();
+
+    // Re-render year chart now that BibTeX data is available
+    NIMPage._renderPubsByYearChart();
   }
 
   static _applyPubFilters() {

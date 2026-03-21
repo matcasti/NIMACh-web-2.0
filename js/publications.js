@@ -118,6 +118,16 @@ class PublicationsEnricher {
       if (el) this.animateCount(el, val);
     });
 
+    // Open-access count (derived from OpenAlex enrichment)
+    const oaCount = pubs.filter(p => p.oa_url).length;
+    const oaEl = document.getElementById('ps-oa');
+    if (oaEl) this.animateCount(oaEl, oaCount);
+
+    // Trigger citations h-index chart now that OpenAlex data is ready
+    if (window.NIMPage && typeof NIMPage._renderCitationsChart === 'function') {
+      NIMPage._renderCitationsChart();
+    }
+
     // También forzar actualización del StatAnimator (hero rings)
     // si ya se triggereó (el observer desconectó), re-run con datos frescos
     if (window._nimachStatAnimator?.triggered) {
