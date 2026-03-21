@@ -445,6 +445,180 @@ class NIMPage {
       </article>`;
   }
   
+  static _svgByBg() {
+    return {
+      'gi-1': `<svg viewBox="0 0 200 360" aria-hidden="true">
+        <circle cx="100" cy="130" r="55" fill="none" stroke="rgba(127,179,232,.5)" stroke-width=".8"/>
+        <circle cx="100" cy="130" r="6" fill="rgba(127,179,232,.85)"/>
+        <line x1="100" y1="130" x2="58"  y2="96"  stroke="rgba(127,179,232,.4)" stroke-width=".7"/>
+        <line x1="100" y1="130" x2="142" y2="96"  stroke="rgba(127,179,232,.4)" stroke-width=".7"/>
+        <circle cx="58"  cy="96"  r="4" fill="rgba(232,112,64,.75)"/>
+        <circle cx="142" cy="96"  r="4" fill="rgba(232,112,64,.75)"/>
+        <path d="M10 270 L44 270 L48 252 L52 280 L56 236 L60 286 L64 270 L110 270 L114 250 L118 278 L122 232 L128 282 L132 270 L190 270"
+          stroke="rgba(232,112,64,.7)" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+      </svg>`,
+      'gi-2': `<svg viewBox="0 0 200 180" aria-hidden="true">
+        <path d="M20 90 Q60 40 100 90 Q140 140 180 90" stroke="rgba(127,179,232,.7)" stroke-width="1.2" fill="none"/>
+        <circle cx="20"  cy="90" r="4" fill="rgba(232,112,64,.9)"/>
+        <circle cx="100" cy="90" r="5" fill="rgba(29,184,132,.9)"/>
+        <circle cx="180" cy="90" r="4" fill="rgba(127,179,232,.9)"/>
+      </svg>`,
+      'gi-3': `<svg viewBox="0 0 200 180" aria-hidden="true">
+        <rect x="30" y="40" width="140" height="90" rx="4" fill="none" stroke="rgba(127,179,232,.4)" stroke-width=".8"/>
+        <line x1="30" y1="60" x2="170" y2="60" stroke="rgba(127,179,232,.3)" stroke-width=".6"/>
+        <circle cx="100" cy="100" r="20" fill="none" stroke="rgba(232,112,64,.6)" stroke-width="1"/>
+        <circle cx="100" cy="100" r="4" fill="rgba(232,112,64,.9)"/>
+      </svg>`,
+      'gi-4': `<svg viewBox="0 0 200 180" aria-hidden="true">
+        <circle cx="100" cy="90" r="48" fill="none" stroke="rgba(123,82,212,.65)" stroke-width=".9"/>
+        <circle cx="100" cy="90" r="24" fill="none" stroke="rgba(123,82,212,.4)" stroke-width=".6"/>
+        <circle cx="100" cy="90" r="4" fill="rgba(123,82,212,.9)"/>
+      </svg>`,
+      'gi-5': `<svg viewBox="0 0 200 180" aria-hidden="true">
+        <path d="M30 130 Q65 65 100 88 Q135 112 170 38" stroke="rgba(59,170,191,.7)" stroke-width="1.2" fill="none"/>
+        <circle cx="100" cy="88" r="4" fill="rgba(59,170,191,.95)"/>
+      </svg>`,
+      'gi-6': `<svg viewBox="0 0 200 180" aria-hidden="true">
+        <circle cx="100" cy="80" r="36" fill="none" stroke="rgba(29,184,132,.55)" stroke-width=".8"/>
+        <path d="M64 110 Q80 130 100 125 Q120 130 136 110" fill="none" stroke="rgba(29,184,132,.6)" stroke-width="1"/>
+        <circle cx="100" cy="80" r="4" fill="rgba(29,184,132,.9)"/>
+      </svg>`,
+    };
+  }
+
+  static _galleryItemHTML(item, i) {
+    const delay  = ['','delay-1','delay-2','delay-3','delay-4','delay-5'][Math.min(i, 5)];
+    const svgMap = this._svgByBg();
+    return `
+      <div class="gallery-item${item.span ? ' g-span-2' : ''} reveal ${delay}">
+        <div class="gallery-item-inner ${item.bg}">
+          <div class="gallery-svg">${svgMap[item.bg] || ''}</div>
+          <div class="gallery-overlay"></div>
+          <div class="gallery-label">
+            <div class="gallery-label-title">${item.title}</div>
+            <div class="gallery-label-sub">${item.sub}</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  static _newsItemHTML(n, i) {
+    const delay = ['','delay-1','delay-2','delay-3'][Math.min(i % 4, 3)];
+    return `
+      <div class="timeline-item reveal ${delay}">
+        <div class="timeline-dot${n.hot ? ' hot' : ''}"></div>
+        <div class="timeline-date">${n.date}</div>
+        <p class="timeline-text">${n.html}</p>
+        <span class="timeline-tag">${n.tag}</span>
+      </div>`;
+  }
+
+  static initHomeNews() {
+    const wrap = document.getElementById('home-news-timeline');
+    if (!wrap || !window.NIMACH_DATA) return;
+
+    const items = (window.NIMACH_DATA.news || [])
+      .filter(n => n.featured_home);
+
+    wrap.innerHTML = items
+      .map((n, i) => NIMPage._newsItemHTML(n, i))
+      .join('');
+
+    if (window._scrollRevealObserver) {
+      wrap.querySelectorAll('.reveal').forEach(el =>
+        window._scrollRevealObserver.observe(el)
+      );
+    }
+  }
+
+  static initHomeGallery() {
+    const grid = document.getElementById('home-gallery-grid');
+    if (!grid || !window.NIMACH_DATA) return;
+
+    const items = (window.NIMACH_DATA.gallery || [])
+      .filter(g => g.featured_home);
+
+    grid.innerHTML = items
+      .map((item, i) => NIMPage._galleryItemHTML(item, i))
+      .join('');
+
+    if (window._scrollRevealObserver) {
+      grid.querySelectorAll('.reveal').forEach(el =>
+        window._scrollRevealObserver.observe(el)
+      );
+    }
+  }
+  
+  static _projectCardHTML(p, i) {
+    const delay    = ['','delay-1','delay-2','delay-3'][Math.min(i, 3)];
+    const badge    = p.status === 'active'
+      ? `<span class="badge badge-active"><span class="badge-dot"></span>En curso</span>`
+      : `<span class="badge badge-complete">Finalizado</span>`;
+    const tagsHTML = (p.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+
+    return `
+      <article class="project-card reveal ${delay}">
+        <div class="project-top">
+          ${badge}
+          <div class="project-agency">${p.agency}<br>${p.code}</div>
+        </div>
+        <h3 class="project-title">${p.title}</h3>
+        <p class="project-pi">${p.pi}</p>
+        <div class="project-meta">
+          <div class="project-meta-item">
+            <span class="meta-label">Período</span>
+            <span class="meta-value">${p.period}</span>
+          </div>
+          <div class="project-meta-item">
+            <span class="meta-label">Financiamiento</span>
+            <span class="meta-value">${p.amount}</span>
+          </div>
+          <div class="project-meta-item">
+            <span class="meta-label">Tipo</span>
+            <span class="meta-value">${p.type}</span>
+          </div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-header">
+            <span>Progreso</span><span>${p.progress}%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill ${p.barColor}" data-width="${p.progress}"></div>
+          </div>
+        </div>
+        <div class="project-tags">${tagsHTML}</div>
+      </article>`;
+  }
+
+  static initHomeProjects() {
+    const grid = document.getElementById('home-projects-grid');
+    if (!grid || !window.NIMACH_DATA) return;
+
+    const projects = (window.NIMACH_DATA.projects || [])
+      .filter(p => p.featured_home);
+
+    grid.innerHTML = projects
+      .map((p, i) => NIMPage._projectCardHTML(p, i))
+      .join('');
+
+    // Activar barras de progreso
+    if (window.ProgressBars) new ProgressBars();
+    else {
+      setTimeout(() => {
+        grid.querySelectorAll('.progress-fill').forEach(el => {
+          el.style.width = (el.dataset.width || 0) + '%';
+        });
+      }, 200);
+    }
+
+    // Re-registrar .reveal
+    if (window._scrollRevealObserver) {
+      grid.querySelectorAll('.reveal').forEach(el =>
+        window._scrollRevealObserver.observe(el)
+      );
+    }
+  }
+  
   static initHomeTools() {
     const grid = document.getElementById('home-tools-grid');
     if (!grid || !window.NIMACH_DATA) return;
@@ -750,46 +924,7 @@ class NIMPage {
     const funding  = projects.reduce((s, p) => s + (p.amount?.includes('CLP')
       ? parseInt(p.amount.replace(/[^0-9]/g,'')) || 0 : 0), 0);
 
-    const _card = (p, i) => {
-      const delay = ['','delay-1','delay-2','delay-3'][Math.min(i,3)];
-      const badge = p.status === 'active'
-        ? `<span class="badge badge-active"><span class="badge-dot"></span>En curso</span>`
-        : `<span class="badge badge-complete">Finalizado</span>`;
-      const tagsHTML = (p.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
-
-      return `
-        <article class="project-card reveal ${delay}">
-          <div class="project-top">
-            ${badge}
-            <div class="project-agency">${p.agency}<br>${p.code}</div>
-          </div>
-          <h3 class="project-title">${p.title}</h3>
-          <p class="project-pi">${p.pi}</p>
-          <div class="project-meta">
-            <div class="project-meta-item">
-              <span class="meta-label">Período</span>
-              <span class="meta-value">${p.period}</span>
-            </div>
-            <div class="project-meta-item">
-              <span class="meta-label">Financiamiento</span>
-              <span class="meta-value">${p.amount}</span>
-            </div>
-            <div class="project-meta-item">
-              <span class="meta-label">Tipo</span>
-              <span class="meta-value">${p.type}</span>
-            </div>
-          </div>
-          <div class="progress-wrap">
-            <div class="progress-header">
-              <span>Progreso</span><span>${p.progress}%</span>
-            </div>
-            <div class="progress-track">
-              <div class="progress-fill ${p.barColor}" data-width="${p.progress}"></div>
-            </div>
-          </div>
-          <div class="project-tags">${tagsHTML}</div>
-        </article>`;
-    };
+    const _card = (p, i) => NIMPage._projectCardHTML(p, i);
 
     return `
       ${this._pageHeroHTML({
@@ -857,71 +992,8 @@ class NIMPage {
     const items = window.NIMACH_DATA.gallery || [];
     const news  = window.NIMACH_DATA.news    || [];
 
-    // SVGs representativos para cada bg class (reutiliza los del index)
-    const svgByBg = {
-      'gi-1': `<svg viewBox="0 0 200 360" aria-hidden="true">
-        <circle cx="100" cy="130" r="55" fill="none" stroke="rgba(127,179,232,.5)" stroke-width=".8"/>
-        <circle cx="100" cy="130" r="6" fill="rgba(127,179,232,.85)"/>
-        <line x1="100" y1="130" x2="58"  y2="96"  stroke="rgba(127,179,232,.4)" stroke-width=".7"/>
-        <line x1="100" y1="130" x2="142" y2="96"  stroke="rgba(127,179,232,.4)" stroke-width=".7"/>
-        <circle cx="58"  cy="96"  r="4" fill="rgba(232,112,64,.75)"/>
-        <circle cx="142" cy="96"  r="4" fill="rgba(232,112,64,.75)"/>
-        <path d="M10 270 L44 270 L48 252 L52 280 L56 236 L60 286 L64 270 L110 270 L114 250 L118 278 L122 232 L128 282 L132 270 L190 270"
-          stroke="rgba(232,112,64,.7)" stroke-width="1.3" fill="none" stroke-linecap="round"/>
-      </svg>`,
-      'gi-2': `<svg viewBox="0 0 200 180" aria-hidden="true">
-        <path d="M20 90 Q60 40 100 90 Q140 140 180 90" stroke="rgba(127,179,232,.7)" stroke-width="1.2" fill="none"/>
-        <circle cx="20"  cy="90" r="4" fill="rgba(232,112,64,.9)"/>
-        <circle cx="100" cy="90" r="5" fill="rgba(29,184,132,.9)"/>
-        <circle cx="180" cy="90" r="4" fill="rgba(127,179,232,.9)"/>
-      </svg>`,
-      'gi-3': `<svg viewBox="0 0 200 180" aria-hidden="true">
-        <rect x="30" y="40" width="140" height="90" rx="4" fill="none" stroke="rgba(127,179,232,.4)" stroke-width=".8"/>
-        <line x1="30" y1="60" x2="170" y2="60" stroke="rgba(127,179,232,.3)" stroke-width=".6"/>
-        <circle cx="100" cy="100" r="20" fill="none" stroke="rgba(232,112,64,.6)" stroke-width="1"/>
-        <circle cx="100" cy="100" r="4" fill="rgba(232,112,64,.9)"/>
-      </svg>`,
-      'gi-4': `<svg viewBox="0 0 200 180" aria-hidden="true">
-        <circle cx="100" cy="90" r="48" fill="none" stroke="rgba(123,82,212,.65)" stroke-width=".9"/>
-        <circle cx="100" cy="90" r="24" fill="none" stroke="rgba(123,82,212,.4)" stroke-width=".6"/>
-        <circle cx="100" cy="90" r="4" fill="rgba(123,82,212,.9)"/>
-      </svg>`,
-      'gi-5': `<svg viewBox="0 0 200 180" aria-hidden="true">
-        <path d="M30 130 Q65 65 100 88 Q135 112 170 38" stroke="rgba(59,170,191,.7)" stroke-width="1.2" fill="none"/>
-        <circle cx="100" cy="88" r="4" fill="rgba(59,170,191,.95)"/>
-      </svg>`,
-      'gi-6': `<svg viewBox="0 0 200 180" aria-hidden="true">
-        <circle cx="100" cy="80" r="36" fill="none" stroke="rgba(29,184,132,.55)" stroke-width=".8"/>
-        <path d="M64 110 Q80 130 100 125 Q120 130 136 110" fill="none" stroke="rgba(29,184,132,.6)" stroke-width="1"/>
-        <circle cx="100" cy="80" r="4" fill="rgba(29,184,132,.9)"/>
-      </svg>`,
-    };
-
-    const galleryCards = items.map((item, i) => {
-      const delay = ['','delay-1','delay-2','delay-3','delay-4','delay-5'][Math.min(i,5)];
-      return `
-        <div class="gallery-item${item.span ? ' g-span-2' : ''} reveal ${delay}">
-          <div class="gallery-item-inner ${item.bg}">
-            <div class="gallery-svg">${svgByBg[item.bg] || ''}</div>
-            <div class="gallery-overlay"></div>
-            <div class="gallery-label">
-              <div class="gallery-label-title">${item.title}</div>
-              <div class="gallery-label-sub">${item.sub}</div>
-            </div>
-          </div>
-        </div>`;
-    }).join('');
-
-    const newsItems = news.map((n, i) => {
-      const delay = ['','delay-1','delay-2','delay-3'][Math.min(i%4,3)];
-      return `
-        <div class="timeline-item reveal ${delay}">
-          <div class="timeline-dot${n.hot?' hot':''}"></div>
-          <div class="timeline-date">${n.date}</div>
-          <p class="timeline-text">${n.html}</p>
-          <span class="timeline-tag">${n.tag}</span>
-        </div>`;
-    }).join('');
+    const galleryCards = items.map((item, i) => this._galleryItemHTML(item, i)).join('');
+    const newsItems    = news.map((n, i)    => this._newsItemHTML(n, i)).join('');
 
     return `
       ${this._pageHeroHTML({
