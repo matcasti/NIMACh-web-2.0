@@ -299,7 +299,7 @@ class NIMPage {
 
       <!-- NIMAChinos -->
       ${pets.length ? `
-      <section class="page-section light-section" id="nimachinos" style="background:#fff;">
+      <section class="page-section light-section" id="nimachinos" >
         <div class="container">
           <div class="reveal" style="margin-bottom:28px;">
             <span class="label">Los que realmente mandan</span>
