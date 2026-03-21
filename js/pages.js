@@ -1097,7 +1097,7 @@ class NIMPage {
     const maxCount = Math.max(...counts, 1);
     const nowY     = new Date().getFullYear();
 
-    const W = 500, H = 110;
+    const W = 500, H = 130;
     const pL = 24, pR = 8, pT = 14, pB = 26;
     const cW = W - pL - pR, cH = H - pT - pB;
     const gap  = cW / years.length;
