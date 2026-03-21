@@ -315,10 +315,10 @@ const NIMACH_DATA = {
       id:       'pet-blanca',
       name:     'Blanca',
       species:  'Gato',
-      breed:    'Fiel compañera y coinvestigadora',
+      breed:    'Pelaje largo',
       photo:    'assets/images/pets/blanca.jpeg',
       owner:    'cristian-nunez',
-      bio:      'Descripcion',
+      bio:      'Fiel compañera y coinvestigadora.',
       joined:   '2026',
     },
     {
