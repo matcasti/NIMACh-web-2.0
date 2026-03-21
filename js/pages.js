@@ -271,7 +271,7 @@ class NIMPage {
       })}
 
       <!-- Miembros activos -->
-      <section class="page-section light-section" ">
+      <section class="page-section light-section" style="background:#f6f8fc;">
         <div class="container">
 
           <div class="people-filter-bar reveal">
@@ -299,7 +299,7 @@ class NIMPage {
 
       <!-- NIMAChinos -->
       ${pets.length ? `
-      <section class="page-section light-section" id="nimachinos" >
+      <section class="page-section light-section" id="nimachinos" style="background:#fff;">
         <div class="container">
           <div class="reveal" style="margin-bottom:28px;">
             <span class="label">Los que realmente mandan</span>
@@ -314,7 +314,7 @@ class NIMPage {
 
       <!-- Alumni -->
       ${alumni.length ? `
-      <section class="page-section light-section" id="alumni" ">
+      <section class="page-section light-section" id="alumni" style="background:#f6f8fc;">
         <div class="container">
           <div class="reveal" style="margin-bottom:28px;">
             <span class="label">Parte de nuestra historia</span>
@@ -1394,7 +1394,7 @@ class NIMPage {
 
     const observer = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) loadNext();
-    }, { rootMargin: '-100px' }); // empieza a cargar 100px despues de llegar al final
+    }, { rootMargin: '100px' }); // empieza a cargar 100px antes de llegar al final
 
     observer.observe(sentinel);
   }

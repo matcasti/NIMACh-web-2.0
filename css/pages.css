@@ -85,7 +85,7 @@
 }
 
 body.dark-mode .page-section {
-  background: var(--c-navy);
+  background: var(--c-navy) !important;
 }
 
 /* ── Publications stat strip ── */
