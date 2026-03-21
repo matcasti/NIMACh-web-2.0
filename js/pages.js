@@ -271,7 +271,7 @@ class NIMPage {
       })}
 
       <!-- Miembros activos -->
-      <section class="page-section light-section" style="background:#f6f8fc;">
+      <section class="page-section light-section" ">
         <div class="container">
 
           <div class="people-filter-bar reveal">
@@ -314,7 +314,7 @@ class NIMPage {
 
       <!-- Alumni -->
       ${alumni.length ? `
-      <section class="page-section light-section" id="alumni" style="background:#f6f8fc;">
+      <section class="page-section light-section" id="alumni" ">
         <div class="container">
           <div class="reveal" style="margin-bottom:28px;">
             <span class="label">Parte de nuestra historia</span>
