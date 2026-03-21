@@ -1153,11 +1153,12 @@ class NIMPage {
     const h        = window.NIMACH_DATA?.metrics?.h || 0;
     const n        = sorted.length;
 
-    const W = 600, H = 110;
+    // Same viewBox dimensions as _renderPubsByYearChart → identical rendered height
+    const W = 500, H = 110;
     const pL = 30, pR = 10, pT = 12, pB = 18;
     const cW = W - pL - pR, cH = H - pT - pB;
     const gap  = cW / n;
-    const barW = Math.max(1.5, gap * 0.72);
+    const barW = Math.max(1, gap * 0.72);
 
     const bars = sorted.map((c, i) => {
       const bh = Math.max(0.5, (c / maxCites) * cH);
@@ -1168,7 +1169,7 @@ class NIMPage {
         <title>Rank ${i + 1}: ${c} citas</title></rect>`;
     }).join('');
 
-    // h-index crosshair
+    // h-index crosshair — positioned at the h-th bar
     const hLine = (h > 0 && h <= n) ? (() => {
       const hx = (pL + (h - 0.5) * gap).toFixed(1);
       const hy = (pT + cH - (h / maxCites) * cH).toFixed(1);
@@ -1178,22 +1179,25 @@ class NIMPage {
         <line x1="${hx}" y1="${pT}" x2="${hx}" y2="${pT + cH}"
           stroke="#1db884" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.65"/>
         <text x="${(+hx + 3).toFixed(1)}" y="${(+hy - 3).toFixed(1)}"
-          font-size="9" fill="#1db884" font-weight="500">h=${h}</text>`;
+          font-size="8" fill="#1db884" font-weight="600">h = ${h}</text>`;
     })() : '';
 
-    // Y axis ticks
+    // Y-axis ticks (3 values: 0, mid, max)
     const ticks = [0, Math.round(maxCites / 2), maxCites].map(v => {
       const ty = (pT + cH - (v / maxCites) * cH + 3).toFixed(1);
       return `<text x="${pL - 3}" y="${ty}" text-anchor="end"
-        font-size="8" fill="var(--s-text-3,#8aa0b8)">${v}</text>`;
+        font-size="7.5" fill="var(--s-text-3,#8aa0b8)">${v}</text>`;
     }).join('');
 
-    // Legend
+    // Legend — mirrors year chart legend position (top-left area)
     const legend = `
-      <rect x="${W - 100}" y="3" width="8" height="6" rx="1.5" fill="#e87040" opacity="0.85"/>
-      <text x="${W - 88}" y="10" font-size="8" fill="var(--s-text-3,#8aa0b8)">h-core</text>
-      <rect x="${W - 50}" y="3" width="8" height="6" rx="1.5" fill="#3b7abf" opacity="0.4"/>
-      <text x="${W - 38}" y="10" font-size="8" fill="var(--s-text-3,#8aa0b8)">resto</text>`;
+      <rect x="${pL}" y="2" width="10" height="6" rx="1.5" fill="#e87040" opacity="0.85"/>
+      <text x="${pL + 13}" y="9" font-size="8" fill="var(--s-text-3,#8aa0b8)">h-core</text>
+      <rect x="${pL + 58}" y="2" width="10" height="6" rx="1.5" fill="#3b7abf" opacity="0.4"/>
+      <text x="${pL + 71}" y="9" font-size="8" fill="var(--s-text-3,#8aa0b8)">resto</text>
+      <line x1="${pL + 118}" y1="5" x2="${pL + 133}" y2="5"
+        stroke="#1db884" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.65"/>
+      <text x="${pL + 136}" y="9" font-size="8" fill="var(--s-text-3,#8aa0b8)">h-index</text>`;
 
     el.innerHTML = `
       <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;">
