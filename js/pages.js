@@ -1154,7 +1154,7 @@ class NIMPage {
     const n        = sorted.length;
 
     // Same viewBox dimensions as _renderPubsByYearChart → identical rendered height
-    const W = 500, H = 150;
+    const W = 500, H = 140;
     const pL = 30, pR = 10, pT = 12, pB = 18;
     const cW = W - pL - pR, cH = H - pT - pB;
     const gap  = cW / n;
