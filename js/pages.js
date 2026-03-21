@@ -289,9 +289,7 @@ class NIMPage {
             </button>`).join('')}
           </div>
 
-          <div class="people-page-grid" id="people-page-grid">
-            ${people.slice(0, 6).map((p, i) => this._personCardHTML(p, i)).join('')}
-          </div>
+          <div class="people-page-grid" id="people-page-grid"></div>
           <div id="people-sentinel" style="height:1px;"></div>
 
         </div>
@@ -1336,67 +1334,108 @@ class NIMPage {
   }
 
   static _afterPersonas() {
-    // ── Filter tabs ──
+    const allPeople = (window.NIMACH_DATA.people || []).filter(p => p.active !== false);
+    let loaderHandle = null;
+
+    const applyFilter = (cat) => {
+      const subset = cat === 'all'
+        ? allPeople
+        : allPeople.filter(p => {
+            const cats = Array.isArray(p.role_category) ? p.role_category : [p.role_category];
+            return cats.includes(cat);
+          });
+
+      // Teardown previous loader before touching the DOM
+      if (loaderHandle) loaderHandle.disconnect();
+
+      // Clear grid and restore sentinel for the new loader
+      const grid     = document.getElementById('people-page-grid');
+      const sentinel = document.getElementById('people-sentinel');
+      if (grid)     grid.innerHTML = '';
+      if (sentinel) sentinel.style.display = 'block';
+
+      loaderHandle = NIMPage._initPeopleLazyLoad(subset);
+    };
+
     document.querySelectorAll('.people-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.people-tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
-        const cat = tab.dataset.cat;
-        document.querySelectorAll('.person-page-card').forEach(card => {
-          const match = cat === 'all' || card.dataset.cat.split(' ').includes(cat);
-          card.style.display = match ? '' : 'none';
-        });
+        applyFilter(tab.dataset.cat);
       });
     });
 
-    // ── Carga incremental por lotes ──
-    NIMPage._initPeopleLazyLoad();
+    // Initial render — equivalent to 'all' tab
+    applyFilter('all');
   }
 
-  static _initPeopleLazyLoad() {
-    const BATCH    = 3;
+  // people: pre-filtered array to render. Returns { disconnect } so the caller
+  // can tear down this loader when a filter change clears the grid.
+  static _initPeopleLazyLoad(people) {
+    const BATCH    = 6;
     const grid     = document.getElementById('people-page-grid');
     const sentinel = document.getElementById('people-sentinel');
-    if (!grid || !sentinel) return;
+    const noop     = { disconnect: () => {} };
+    if (!grid || !sentinel) return noop;
 
-    const people = (window.NIMACH_DATA.people || []).filter(p => p.active !== false);
-    let loaded = grid.querySelectorAll('.person-page-card').length; // ya renderizados
-    if (loaded >= people.length) { sentinel.remove(); return; }
+    // Empty-state: show a message and leave the sentinel hidden
+    if (!people.length) {
+      grid.innerHTML = `
+        <p style="grid-column:1/-1;text-align:center;padding:40px 20px;
+          font-size:13px;color:var(--s-text-3,#8aa0b8);">
+          No hay miembros en esta categoría.</p>`;
+      sentinel.style.display = 'none';
+      return noop;
+    }
 
-    const revealObs = window._scrollRevealObserver; // reusar el observer global de scroll.js
+    let loaded = 0;
+    const revealObs = window._scrollRevealObserver;
 
     const loadNext = () => {
       const batch = people.slice(loaded, loaded + BATCH);
-      if (!batch.length) { sentinel.remove(); observer.disconnect(); return; }
+      if (!batch.length) {
+        sentinel.style.display = 'none';
+        observer.disconnect();
+        return;
+      }
 
-      // Crear fragment para insertar de golpe (un solo reflow)
       const frag = document.createDocumentFragment();
       batch.forEach((p, i) => {
         const tmp = document.createElement('div');
-        tmp.innerHTML = NIMPage._personCardHTML(p, loaded + i);
+        tmp.innerHTML = NIMPage._personCardHTML(p, i % 4); // i%4 keeps delay cycling clean
         const card = tmp.firstElementChild;
         frag.appendChild(card);
-        // Registrar con ScrollReveal si está disponible
         if (revealObs) revealObs.observe(card);
       });
 
       grid.appendChild(frag);
       loaded += batch.length;
-      // Cards inyectados ya están en viewport — forzar reveal en el siguiente frame
+
+      // Cards that landed in the viewport need an immediate reveal
       requestAnimationFrame(() => {
-        grid.querySelectorAll('.person-page-card.reveal:not(.visible)').forEach(c => {
-          c.classList.add('visible');
-        });
+        grid.querySelectorAll('.person-page-card.reveal:not(.visible)')
+          .forEach(c => c.classList.add('visible'));
       });
 
-      if (loaded >= people.length) { sentinel.remove(); observer.disconnect(); }
+      if (loaded >= people.length) {
+        sentinel.style.display = 'none';
+        observer.disconnect();
+      }
     };
 
-    const observer = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) loadNext();
-    }, { rootMargin: '100px' }); // empieza a cargar 100px antes de llegar al final
+    // rootMargin bottom lookahead: next batch starts loading before sentinel
+    // actually enters the viewport, so cards appear before the user reaches the bottom
+    const observer = new IntersectionObserver(
+      entries => { if (entries[0].isIntersecting) loadNext(); },
+      { rootMargin: '0px 0px 220px 0px' }
+    );
 
     observer.observe(sentinel);
+
+    // Fire first batch immediately — no scroll required
+    loadNext();
+
+    return { disconnect: () => observer.disconnect() };
   }
   
   static _afterProyectos() {
