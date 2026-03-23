@@ -111,20 +111,29 @@ function initGalleryLightbox() {
 
   items.forEach(item => {
     item.addEventListener('click', () => {
-      const inner = item.querySelector('.gallery-item-inner');
-      const title = item.querySelector('.gallery-label-title')?.textContent || '';
-      const sub   = item.querySelector('.gallery-label-sub')?.textContent   || '';
-      const bg    = window.getComputedStyle(inner).background;
+      const inner  = item.querySelector('.gallery-item-inner');
+      const title  = item.querySelector('.gallery-label-title')?.textContent || '';
+      const sub    = item.querySelector('.gallery-label-sub')?.textContent   || '';
+      const lbImg  = document.getElementById('lb-img');
+      const photo  = inner.querySelector('img');
 
-      document.getElementById('lb-img').style.background = bg;
-      // Copy any SVG from gallery
-      const svg = inner.querySelector('.gallery-svg');
-      const lbImg = document.getElementById('lb-img');
-      lbImg.innerHTML = svg ? svg.outerHTML : '';
+      if (photo) {
+        // Imagen real: fondo neutro + object-fit:contain para no recortar
+        lbImg.style.background = '#030810';
+        lbImg.style.display    = 'flex';
+        lbImg.innerHTML = `<img src="${photo.src}" alt="${photo.alt}"
+          style="max-width:100%;max-height:100%;object-fit:contain;
+          border-radius:10px;display:block;">`;
+      } else {
+        // Fallback: gradiente/SVG original
+        lbImg.style.background = window.getComputedStyle(inner).background;
+        lbImg.style.display    = '';
+        const svg = inner.querySelector('.gallery-svg');
+        lbImg.innerHTML = svg ? svg.outerHTML : '';
+      }
 
       document.getElementById('lb-title').textContent = title;
       document.getElementById('lb-sub').textContent   = sub;
-
       lb.style.display = 'flex';
       document.body.style.overflow = 'hidden';
     });

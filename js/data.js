@@ -318,7 +318,7 @@ const NIMACH_DATA = {
       breed:    'Pelaje largo',
       photo:    'assets/images/pets/blanca.jpeg',
       owner:    'cristian-nunez',
-      bio:      'Fiel compañera y coinvestigadora.',
+      bio:      'Fiel compañera y coinvestigadora. Vivirá por siempre en nuestros corazones.',
       joined:   '2026',
     },
     {
@@ -558,12 +558,12 @@ const NIMACH_DATA = {
 
   /* ─── Gallery items ─── */
   gallery: [
-    { id:'g1', bg:'gi-1', span:true,  title:'Mediciones de VFC en laboratorio',       sub:'CADI-UMAG · 2024',               featured_home: true  },
-    { id:'g2', bg:'gi-2', span:false, title:'Terreno en Patagonia',                   sub:'Nadadores aguas gélidas · Jun 2024', featured_home: true  },
-    { id:'g3', bg:'gi-3', span:false, title:'Seminario Mentes del Fin del Mundo',     sub:'Punta Arenas · Jun 2025',           featured_home: true  },
-    { id:'g4', bg:'gi-4', span:false, title:'Colaboración MEDIANTAR',                 sub:'Brasil · 2024',                     featured_home: true  },
-    { id:'g5', bg:'gi-5', span:false, title:'CIES Jornadas Talca',                    sub:'Congreso · Sep 2023',               featured_home: false },
-    { id:'g6', bg:'gi-6', span:false, title:'Mediciones mindfulness adultos mayores', sub:'UMAG · 2023',                       featured_home: false },
+    { id:'g1', bg:'gi-1', span:true,  photo: null,  title:'Mediciones de VFC en laboratorio',       sub:'CADI-UMAG · 2024',               featured_home: true  },
+    { id:'g2', bg:'gi-2', span:false, photo: null,  title:'Terreno en Patagonia',                   sub:'Nadadores aguas gélidas · Jun 2024', featured_home: true  },
+    { id:'g3', bg:'gi-3', span:false, photo: null,  title:'Seminario Mentes del Fin del Mundo',     sub:'Punta Arenas · Jun 2025',           featured_home: true  },
+    { id:'g4', bg:'gi-4', span:false, photo: null,  title:'Colaboración MEDIANTAR',                 sub:'Brasil · 2024',                     featured_home: true  },
+    { id:'g5', bg:'gi-5', span:false, photo: null,  title:'CIES Jornadas Talca',                    sub:'Congreso · Sep 2023',               featured_home: false },
+    { id:'g6', bg:'gi-6', span:false, photo: null,  title:'Mediciones mindfulness adultos mayores', sub:'UMAG · 2023',                       featured_home: false },
   ],
   
   /* ─── Tools ─── */

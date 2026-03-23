@@ -1073,6 +1073,7 @@ class NIMPage {
       case 'publicaciones':  this._afterPublicaciones(); break;
       case 'personas':       this._afterPersonas();      break;
       case 'proyectos':      this._afterProyectos();     break;
+      case 'galeria':        this._afterGaleria();       break;
     }
   }
   
@@ -1449,6 +1450,78 @@ class NIMPage {
         });
       }, 200);
     }
+  }
+  
+  static _afterGaleria() {
+    NIMPage._initGalleryLightbox();
+  }
+  
+  /* ══════════════════════════════════
+     GALLERY LIGHTBOX (shared, photo-aware)
+  ══════════════════════════════════ */
+  static _initGalleryLightbox() {
+    const items = document.querySelectorAll('.gallery-item');
+    if (!items.length) return;
+
+    // Reutilizar lightbox si ya existe en el DOM
+    let lb = document.getElementById('lightbox');
+    if (!lb) {
+      lb = document.createElement('div');
+      lb.id = 'lightbox';
+      lb.style.cssText = [
+        'position:fixed', 'inset:0', 'background:rgba(6,14,30,.96)',
+        'z-index:1000', 'display:none', 'align-items:center',
+        'justify-content:center', 'backdrop-filter:blur(14px)', 'cursor:pointer',
+      ].join(';');
+      lb.innerHTML = `
+        <div style="max-width:880px;width:92%;position:relative;">
+          <div id="lb-img" style="
+            width:100%;height:520px;border-radius:14px;
+            overflow:hidden;position:relative;background:#030810;
+            display:flex;align-items:center;justify-content:center;"></div>
+          <div id="lb-title" style="color:#e8f0fa;font-size:16px;font-weight:500;margin-top:16px;"></div>
+          <div id="lb-sub"   style="color:#7a9bbf;font-size:13px;margin-top:4px;"></div>
+          <button id="lb-close" style="
+            position:absolute;top:-48px;right:0;
+            background:rgba(255,255,255,.1);border:none;color:#e8f0fa;
+            width:36px;height:36px;border-radius:50%;font-size:18px;
+            cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+        </div>`;
+      document.body.appendChild(lb);
+
+      const close = () => { lb.style.display = 'none'; document.body.style.overflow = ''; };
+      lb.addEventListener('click', e => { if (e.target === lb) close(); });
+      document.getElementById('lb-close').addEventListener('click', close);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+    }
+
+    items.forEach(item => {
+      if (item.dataset.lbBound) return;   // evita listeners duplicados
+      item.dataset.lbBound = '1';
+      item.addEventListener('click', () => {
+        const inner  = item.querySelector('.gallery-item-inner');
+        const title  = item.querySelector('.gallery-label-title')?.textContent || '';
+        const sub    = item.querySelector('.gallery-label-sub')?.textContent   || '';
+        const lbImg  = document.getElementById('lb-img');
+        const photo  = inner.querySelector('img');
+
+        if (photo) {
+          lbImg.style.background = '#030810';
+          lbImg.innerHTML = `<img src="${photo.src}" alt="${photo.alt}"
+            style="max-width:100%;max-height:100%;object-fit:contain;
+            border-radius:10px;display:block;">`;
+        } else {
+          lbImg.style.background = window.getComputedStyle(inner).background;
+          const svg = inner.querySelector('.gallery-svg');
+          lbImg.innerHTML = svg ? svg.outerHTML : '';
+        }
+
+        document.getElementById('lb-title').textContent = title;
+        document.getElementById('lb-sub').textContent   = sub;
+        lb.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      });
+    });
   }
 }
 
