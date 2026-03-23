@@ -208,7 +208,6 @@ body.dark-mode .social-btn:hover {
 /* Sección títulos y descripciones en light-sections */
 body.dark-mode .section-title      { color: var(--t-hero); }
 body.dark-mode .section-desc       { color: var(--t-muted); }
-body.dark-mode .label              { color: var(--t-dim); }
 
 /* Timeline */
 body.dark-mode .timeline-tag {
@@ -256,7 +255,6 @@ body.dark-mode .project-card {
 }
 body.dark-mode .project-title   { color: var(--t-hero); }
 body.dark-mode .project-pi      { color: var(--t-muted); }
-body.dark-mode .project-agency  { color: var(--t-dim); }
 body.dark-mode .meta-label      { color: var(--t-dim); }
 body.dark-mode .meta-value      { color: var(--t-hero); }
 body.dark-mode .progress-header { color: var(--t-muted); }
@@ -305,7 +303,6 @@ body.dark-mode #contacto .section-title { color: var(--t-hero); }
 body.dark-mode .footer-copy { color: var(--t-dim); }
 
 /* See-all links */
-body.dark-mode .see-all { color: var(--t-muted); }
 body.dark-mode .see-all:hover { color: var(--t-hero); }
 
 /* Section headers separators */
