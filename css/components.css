@@ -1082,12 +1082,14 @@ body:not(.dark-mode) .collab-map-note {
 ───────────────────────────────────────── */
 .hero-paradigm {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
-  flex-wrap: wrap;
   margin-bottom: 24px;
   opacity: 0;
   animation: fade-in .8s .40s forwards;
+  flex-direction: column;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 
 .hero-paradigm-label {
