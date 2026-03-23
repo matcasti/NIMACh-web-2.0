@@ -56,11 +56,13 @@
   transform: translateY(28px);
   transition: opacity .65s var(--ease-out),
               transform .65s var(--ease-out);
+  will-change: opacity, transform;  /* pre-asigna compositing layer en mobile */
 }
 
 .reveal.visible {
   opacity: 1;
   transform: none;
+  will-change: auto;  /* libera la layer una vez completada la transición */
 }
 
 /* Staggered delays */

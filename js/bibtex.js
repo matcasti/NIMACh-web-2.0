@@ -183,14 +183,21 @@ class BibTeXParser {
       </article>`.trim();
     }).join('\n');
 
-    // Re-observar los nuevos elementos .reveal
-    if (window._scrollRevealObserver) {
-      list.querySelectorAll('.reveal').forEach(el =>
-        window._scrollRevealObserver.observe(el)
-      );
-    } else {
-      list.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
-    }
+    // Re-observar los nuevos elementos .reveal.
+    // Double-rAF: garantiza que el browser completa layout + paint
+    // antes de que el IntersectionObserver dispare, evitando el bug
+    // de compositing en mobile (elementos invisibles hasta zoom).
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (window._scrollRevealObserver) {
+          list.querySelectorAll('.reveal').forEach(el =>
+            window._scrollRevealObserver.observe(el)
+          );
+        } else {
+          list.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+        }
+      });
+    });
 
     // Actualizar estadísticos ahora que el store tiene todos los papers del .bib
     if (window.PublicationsEnricher) {
