@@ -43,12 +43,12 @@ class PublicationsEnricher {
   async fetch(doi) {
     const key    = `oa:${doi}`;
     const cached = sessionStorage.getItem(key);
-    if (cached) return JSON.parse(cached);
+    if (cached) {
+      try { return JSON.parse(cached); } catch { sessionStorage.removeItem(key); }
+    }
 
     try {
-      const res  = await fetch(`${this.BASE}${doi}`, {
-        headers: { 'User-Agent': 'NIM-ACh/1.0 (nimach.org)' }
-      });
+      const res = await fetch(`${this.BASE}${doi}`);
       if (!res.ok) return null;
       const data = await res.json();
       sessionStorage.setItem(key, JSON.stringify(data));
