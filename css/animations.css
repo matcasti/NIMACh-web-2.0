@@ -103,6 +103,13 @@
   }
 }
 
+@media (max-width:639px) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* ─── Tooltip ─── */
 [data-tooltip] {
   position: relative;
