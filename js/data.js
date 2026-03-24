@@ -588,7 +588,7 @@ const NIMACH_DATA = {
       author:   'matias-castillo',
       url:      'https://deft-torte-3c1940.netlify.app/',
       github:   '#',
-      docs:     '#',
+      // docs:     '#',
     },
     {
       id:       'hrv-studio',
@@ -609,7 +609,7 @@ const NIMACH_DATA = {
       author:   'matias-castillo',
       url:      'https://adorable-brioche-fa51cc.netlify.app/',
       github:   'https://github.com/matcasti/HRV-Studio',
-      docs:     '#',
+      // docs:     '#',
     },
     {
       id:       'research-os',
@@ -630,7 +630,7 @@ const NIMACH_DATA = {
       author:   'matias-castillo',
       url:      'https://deft-stroopwafel-184346.netlify.app/',
       github:   'https://github.com/matcasti/ResearchOS',
-      docs:     '#',
+      // docs:     '#',
     },
     {
       id:       'clinaxis',
@@ -651,7 +651,7 @@ const NIMACH_DATA = {
       author:   'matias-castillo',
       url:      'clinaxis.netlify.app',
       github:   'https://github.com/matcasti/ClinAxis',
-      docs:     '#',
+      // docs:     '#',
     },
     {
       id:       'elisa-app',
@@ -672,7 +672,7 @@ const NIMACH_DATA = {
       author:   'matias-castillo',
       url:      'https://wondrous-granita-1a1a4b.netlify.app/',
       github:   'https://github.com/matcasti/ELISA-app',
-      docs:     '#',
+      // docs:     '#',
     },
   ],
 
