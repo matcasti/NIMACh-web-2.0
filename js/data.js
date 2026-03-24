@@ -569,12 +569,12 @@ const NIMACH_DATA = {
   /* ─── Tools ─── */
   tools: [
     {
-      id:       'hrv-analyzer',
+      id:       'hrv-recorder',
       icon:     '💓',
       status:   'active',
       featured_home: true,
       featured_page: true,
-      version:  'v2.0',
+      version:  'v2.1.0',
       title:    'HRV Recorder — Polar H10 Web App',
       desc:     'Aplicación web para análisis de variabilidad de frecuencia cardíaca en tiempo real usando bandas Polar H10 vía Web Bluetooth. Sin instalación, sin cuenta, sin costo.',
       features: [
@@ -596,7 +596,7 @@ const NIMACH_DATA = {
       status:   'dev',
       featured_home: true,
       featured_page: false,
-      version:  'v1.0',
+      version:  'v1.1.0',
       title:    'HRV Studio — Pipeline de Análisis de HRV',
       desc:     'Web app para procesamiento batch de archivos RR. Genera reportes automáticos en PDF o HTML con visualizaciones estandarizadas y estadísticas descriptivas.',
       features: [
@@ -608,16 +608,16 @@ const NIMACH_DATA = {
       tags:     ['HRV', 'Análisis', 'Datos', 'Batch'],
       author:   'matias-castillo',
       url:      'https://adorable-brioche-fa51cc.netlify.app/',
-      github:   '#',
+      github:   'https://github.com/matcasti/HRV-Studio',
       docs:     '#',
     },
     {
       id:       'research-os',
       icon:     '🗂️',
-      status:   'active',
+      status:   'dev',
       featured_home: false,
       featured_page: false,
-      version:  'v1.0',
+      version:  'v1.1.2',
       title:    'ResearchOS — Workflow Científico',
       desc:     'Herramienta de productividad científica local-first.',
       features: [
@@ -629,16 +629,16 @@ const NIMACH_DATA = {
       tags:     ['JavaScript', 'Proyectos', 'Research', 'Gestion'],
       author:   'matias-castillo',
       url:      'https://deft-stroopwafel-184346.netlify.app/',
-      github:   '#',
+      github:   'https://github.com/matcasti/ResearchOS',
       docs:     '#',
     },
     {
       id:       'clinaxis',
       icon:     '🗂️',
-      status:   'active',
+      status:   'dev',
       featured_home: false,
       featured_page: false,
-      version:  'v1.0',
+      version:  'v1.2.0',
       title:    'ClinAxis — Gestión de información clínica',
       desc:     'Herramienta de gestión clínica local-first.',
       features: [
@@ -650,7 +650,7 @@ const NIMACH_DATA = {
       tags:     ['JavaScript', 'Gestión clínica', 'Research', 'Gestion'],
       author:   'matias-castillo',
       url:      'clinaxis.netlify.app',
-      github:   '#',
+      github:   'https://github.com/matcasti/ClinAxis',
       docs:     '#',
     },
     {
@@ -659,7 +659,7 @@ const NIMACH_DATA = {
       status:   'active',
       featured_home: true,
       featured_page: false,
-      version:  'v1.0',
+      version:  'v1.0.1',
       title:    'ELISA App — De la pipeta al dato',
       desc:     'Herramienta de laboratorio para ensayos ELISA local-first.',
       features: [
@@ -671,7 +671,7 @@ const NIMACH_DATA = {
       tags:     ['ELISA', 'Laboratorio', 'Research', 'Datos'],
       author:   'matias-castillo',
       url:      'https://wondrous-granita-1a1a4b.netlify.app/',
-      github:   '#',
+      github:   'https://github.com/matcasti/ELISA-app',
       docs:     '#',
     },
   ],
