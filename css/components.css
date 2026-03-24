@@ -185,6 +185,10 @@
 .person-name { font-size: 13px; font-weight: 600; color: #0d1d35; margin-bottom: 4px; }
 .person-role { font-size: 11.5px; color: #4a6280; margin-bottom: 13px; line-height: 1.5; }
 
+#home-people-grid .person-chips {
+  justify-content: center;
+}
+
 .person-chips {
     display: flex;
     gap: 4px;
