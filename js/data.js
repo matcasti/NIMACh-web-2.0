@@ -47,7 +47,12 @@ const NIMACH_DATA = {
       ringColor:     '#e87040',
       bio:           'Kinesiólogo. Investigador de procesos autonomicos cardíacos no estacionarios en respuesta al ejercicio. Desarrolla modelos estadísticos probabilisticos, mecanisticos y generativos para explicar dinámicas autonómicas en respuesta al ejercicio.',
       chips:         ['HRV', 'App Dev', 'Analítica'],
-      links:         { github: '#', orcid: '#' },
+      links:         {
+        github: 'https://github.com/matcasti', 
+        orcid: 'https://orcid.org/0000-0001-7291-247X' , 
+        scholar: "https://scholar.google.com/citations?user=wr_3RfEAAAAJ&hl=es", 
+        researchgate: "https://www.researchgate.net/profile/Matias-Castillo-Aguilar-2"
+      },
     },
     {
       id:            'javiera-gonzalez',
@@ -60,7 +65,7 @@ const NIMACH_DATA = {
       photo:         'assets/images/team/javiera-gonzalez.jpg', 
       bio:           'Encargada de la planificación, ejecución y seguimiento de proyectos científicos. Coordina equipos de trabajo y gestiona procesos asociados a investigación en salud, asegurando el cumplimiento de objetivos, tiempos y estándares de calidad.',
       chips:         ['Gestion'],
-      links:         { researchgate: '#' },
+      // links:         { researchgate: '#' },
     },
     {
       id:            'diego-mabe',
@@ -86,7 +91,7 @@ const NIMACH_DATA = {
       photo:         'assets/images/team/atenea-uribe.jpg', 
       bio:           'Doctora en Fisiología Celular y Molecular. Encargada de la sección de experimentación molecular del grupo. Estudia mecanismos celulares y metabólicos del climaterio en la cognición y procesos neuroplásticos en mujeres.',
       chips:         ['Climaterio', 'Bioquímica', 'Mecanismos moleculares'],
-      links:         { researchgate: 'https://www.researchgate.net/profile/Atenea-Uribe-Ojeda', orcid: "https://orcid.org/0000-0001-9846-8602"},
+      links:         { researchgate: 'https://www.researchgate.net/profile/Atenea-Uribe-Ojeda', orcid: "https://orcid.org/0000-0001-9846-8602", scholar: "https://scholar.google.com/citations?user=pp4FXg0AAAAJ&hl=es"},
     },
     {
       id:            'cristobal-canales',
@@ -101,7 +106,7 @@ const NIMACH_DATA = {
       photo:         'assets/images/team/cristobal-canales.jpg', 
       bio:           'Bioquímico especialista en mediciones moleculares, procedimientos de laboratorio y gestión de inventario de laboratorio.',
       chips:         ['Laboratorio', 'Bioquímica'],
-      links:         { researchgate: '#' },
+      links:         { researchgate: 'https://www.researchgate.net/profile/Cristobal-Canales' },
     },
     {
       id:            'sergio-cares',
