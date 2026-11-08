@@ -831,62 +831,7 @@ window.__SITE_DATA__ = {
       "active": false
     }
   ],
-  "gallery": [
-    {
-      "id": "g1",
-      "bg": "gi-1",
-      "span": true,
-      "photo": "",
-      "title": "Mediciones de VFC en laboratorio",
-      "sub": "CADI-UMAG · 2024",
-      "featured_home": true
-    },
-    {
-      "id": "g2",
-      "bg": "gi-2",
-      "span": false,
-      "photo": "",
-      "title": "Terreno en Patagonia",
-      "sub": "Nadadores aguas gélidas · Jun 2024",
-      "featured_home": true
-    },
-    {
-      "id": "g3",
-      "bg": "gi-3",
-      "span": false,
-      "photo": "",
-      "title": "Seminario Mentes del Fin del Mundo",
-      "sub": "Punta Arenas · Jun 2025",
-      "featured_home": true
-    },
-    {
-      "id": "g4",
-      "bg": "gi-4",
-      "span": false,
-      "photo": "",
-      "title": "Colaboración MEDIANTAR",
-      "sub": "Brasil · 2024",
-      "featured_home": true
-    },
-    {
-      "id": "g5",
-      "bg": "gi-5",
-      "span": false,
-      "photo": "",
-      "title": "CIES Jornadas Talca",
-      "sub": "Congreso · Sep 2023",
-      "featured_home": false
-    },
-    {
-      "id": "g6",
-      "bg": "gi-6",
-      "span": false,
-      "photo": "",
-      "title": "Mediciones mindfulness adultos mayores",
-      "sub": "UMAG · 2023",
-      "featured_home": false
-    }
-  ],
+  "gallery": [],
   "tools": [
     {
       "id": "hrv-recorder",
