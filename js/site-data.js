@@ -381,22 +381,6 @@ window.__SITE_DATA__ = {
   ],
   "alumni": [
     {
-      "id": "katherine-harris",
-      "initials": "KH",
-      "name": "Katherine Harris",
-      "role": "Kinesióloga",
-      "period": "2019-2022",
-      "avatar": "av3",
-      "photo": "assets/images/team/katherine-harris.jpeg",
-      "ringColor": "#7b52d4",
-      "chips": [
-        "Biomecánica",
-        "Traumatología"
-      ],
-      "links": {},
-      "currentPosition": ""
-    },
-    {
       "id": "tiare-ibinarriaga",
       "initials": "TI",
       "name": "Tiare Ibinarriaga",
@@ -447,6 +431,22 @@ window.__SITE_DATA__ = {
       "photo": "assets/images/team/caren-alvarado.jpg",
       "chips": [
         "Medicina"
+      ],
+      "links": {},
+      "currentPosition": ""
+    },
+    {
+      "id": "katherine-harris",
+      "initials": "KH",
+      "name": "Katherine Harris",
+      "role": "Kinesióloga",
+      "period": "2019-2022",
+      "avatar": "av3",
+      "photo": "assets/images/team/katherine-harris.jpeg",
+      "ringColor": "#7b52d4",
+      "chips": [
+        "Biomecánica",
+        "Traumatología"
       ],
       "links": {},
       "currentPosition": ""
