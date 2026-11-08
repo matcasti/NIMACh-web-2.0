@@ -1,35 +1,95 @@
 /* ============================================
-   NIM-ACh Design System — Variables
+   NIM-ACh Design System v3 — Monotono
+   ──────────────────────────────────────────
+   Una sola superficie por modo, escala de grises
+   con un matiz frío y UN acento (azul acero).
+   Claro y oscuro comparten estructura: lo único que
+   cambia son estos tokens. Nada de bloques oscuros
+   dentro del modo claro (ni al revés).
    ============================================ */
 
 :root {
-  /* ── Brand Colors ── */
-  --c-navy:        #060e1e;
-  --c-navy-2:      #0d1d35;
-  --c-navy-3:      #142440;
-  --c-blue:        #3b7abf;
-  --c-blue-light:  #7fb3e8;
-  --c-coral:       #e87040;
-  --c-coral-light: #f5a472;
-  --c-teal:        #1db884;
-  --c-purple:      #7b52d4;
+  /* ── Paleta (modo claro) ── */
+  --bg:          #f7f8fa;            /* fondo único de página        */
+  --bg-alt:      var(--bg);          /* (compatibilidad: sin franjas) */
+  --surface:     #ffffff;            /* tarjetas, paneles            */
+  --surface-2:   #eff1f4;            /* chips, inputs, hover suave   */
+  --line:        rgba(15, 23, 32, .10);
+  --line-strong: rgba(15, 23, 32, .20);
 
-  /* ── Text ── */
-  --t-hero:        #e8f0fa;
-  --t-muted:       #7a9bbf;
-  --t-dim:         #3a5570;
+  --text:        #0f1720;
+  --text-2:      #455468;            /* 7.3:1 sobre --bg             */
+  --text-3:      #5d6c7e;            /* 4.9:1 — mínimo para texto    */
 
-  /* ── Glass surfaces ── */
-  --glass:         rgba(255, 255, 255, 0.04);
-  --glass-hover:   rgba(255, 255, 255, 0.08);
-  --glass-border:  rgba(255, 255, 255, 0.09);
+  --accent:      #265484;            /* azul acero                   */
+  --accent-ink:  #265484;            /* acento usado como texto      */
+  --accent-fg:   #ffffff;            /* texto sobre fondo acento     */
 
-  /* ── Gradients ── */
-  --grad-brand:    linear-gradient(135deg, var(--c-blue), var(--c-coral));
-  --grad-hero:     linear-gradient(105deg, rgba(6,14,30,.97) 0%, rgba(6,14,30,.72) 55%, rgba(6,14,30,.08) 100%);
-  --grad-accent:   linear-gradient(90deg, var(--c-coral), var(--c-coral-light), var(--c-blue-light));
+  /* Componentes RGB: permiten rgba(var(--x-rgb), .1) en cualquier modo */
+  --ink-rgb:     15, 23, 32;
+  --bg-rgb:      247, 248, 250;
+  --accent-rgb:  38, 84, 132;
 
-  /* ── Spacing ── */
+  /* Estados (únicos colores fuera de la paleta; solo en formularios) */
+  --ok:          #17795a;
+  --err:         #b3321a;
+
+  color-scheme: light;
+}
+
+html.dark-mode,
+body.dark-mode {
+  --bg:          #0e1217;
+  --surface:     #151b23;
+  --surface-2:   #1c242e;
+  --line:        rgba(231, 236, 242, .10);
+  --line-strong: rgba(231, 236, 242, .20);
+
+  --text:        #e7ecf2;
+  --text-2:      #a6b2c1;
+  --text-3:      #8693a3;
+
+  --accent:      #8fb4dc;
+  --accent-ink:  #8fb4dc;
+  --accent-fg:   #0e1217;
+
+  --ink-rgb:     231, 236, 242;
+  --bg-rgb:      14, 18, 23;
+  --accent-rgb:  143, 180, 220;
+
+  --ok:          #5fc9a0;
+  --err:         #ff8f78;
+
+  color-scheme: dark;
+}
+
+:root {
+  /* ── Alias antiguos → paleta nueva (todo el CSS legado sigue funcionando) ── */
+  --c-navy:        var(--bg);
+  --c-navy-2:      var(--surface);
+  --c-navy-3:      var(--surface);
+  --c-blue:        var(--accent);
+  --c-blue-light:  var(--accent-ink);
+  --c-coral:       var(--accent);
+  --c-coral-light: var(--accent-ink);
+  --c-teal:        var(--accent);
+  --c-purple:      var(--accent);
+
+  --t-hero:        var(--text);
+  --t-muted:       var(--text-2);
+  --t-dim:         var(--text-3);
+
+  --glass:         rgba(var(--ink-rgb), .035);
+  --glass-hover:   rgba(var(--ink-rgb), .07);
+  --glass-border:  var(--line);
+
+  /* Sin degradados de marca: sólidos */
+  --grad-brand:    linear-gradient(var(--accent), var(--accent));
+  --grad-accent:   linear-gradient(var(--accent), var(--accent));
+  --grad-hero:     none;
+  --grad-cta:      linear-gradient(var(--text), var(--text));
+
+  /* ── Espaciado ── */
   --sp-xs:  4px;
   --sp-sm:  8px;
   --sp-md:  16px;
@@ -37,63 +97,71 @@
   --sp-xl:  40px;
   --sp-2xl: 64px;
 
-  /* ── Radius ── */
+  /* ── Radios (más contenidos = más serio) ── */
   --r-sm:  6px;
-  --r-md:  10px;
-  --r-lg:  14px;
-  --r-xl:  20px;
+  --r-md:  8px;
+  --r-lg:  12px;
+  --r-xl:  16px;
   --r-full: 9999px;
 
-  /* ── Transitions ── */
+  /* ── Transiciones ── */
   --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --dur-fast:    180ms;
-  --dur-mid:     320ms;
-  --dur-slow:    600ms;
+  --ease-spring: cubic-bezier(0.34, 1.3, 0.64, 1);
+  --dur-fast:    160ms;
+  --dur-mid:     280ms;
+  --dur-slow:    520ms;
 
-  /* ── Shadows ── */
-  --shadow-blue:  0 8px 28px rgba(59, 122, 191, 0.35);
-  --shadow-coral: 0 8px 28px rgba(232, 112, 64, 0.38);
-  --shadow-card:  0 2px 16px rgba(0, 0, 0, 0.08);
+  /* ── Sombras: casi inexistentes, solo para separar capas ── */
+  --shadow-sm:    0 1px 2px rgba(0, 0, 0, .04);
+  --shadow-md:    0 6px 20px rgba(0, 0, 0, .07);
+  --shadow-lg:    0 16px 44px rgba(0, 0, 0, .12);
+  --shadow-card:  var(--shadow-sm);
+  --shadow-blue:  var(--shadow-md);
+  --shadow-coral: var(--shadow-md);
 
-  /* ── Typography ── */
-  --font-sans: 'Sora', 'DM Sans', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  /* ── Tipografía ── */
+  --font-sans:    'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Sora', system-ui, sans-serif;
+  --font-body:    'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 
-  /* ── Z-index scale ── */
+  /* ── Z-index ── */
   --z-base:    1;
   --z-above:   10;
   --z-nav:     100;
   --z-modal:   200;
   --z-toast:   300;
+
+  /* ── Escala tipográfica fluida (rem → escala con la raíz en pantallas grandes) ── */
+  --fs-xs:   .75rem;
+  --fs-sm:   clamp(.8125rem, .79rem + .1vw, .875rem);
+  --fs-base: clamp(.9375rem, .91rem + .15vw, 1rem);
+  --fs-md:   clamp(1rem,     .95rem + .25vw, 1.125rem);
+  --fs-lg:   clamp(1.125rem, 1rem + .6vw,    1.375rem);
+  --fs-h2:   clamp(1.5rem,   1.2rem + 1.4vw, 2.25rem);
+  --fs-h1:   clamp(2rem,     1.2rem + 3.6vw, 3.75rem);
+
+  /* ── Espaciado fluido ── */
+  --gutter:    clamp(1rem, .5rem + 2.6vw, 3rem);
+  --section-y: clamp(3.5rem, 2rem + 6vw, 7.5rem);
+  --gap:       clamp(.75rem, .55rem + .9vw, 1.5rem);
+  --card-pad:  clamp(1.1rem, .9rem + 1vw, 1.75rem);
+  --nav-h:     60px;
+  --container-max: 75rem;  /* 1200px a 16px; crece con html font-size */
 }
 
-/* ── Light-mode overrides (sections on white bg) ── */
-.light-section {
-  --s-bg:       #ffffff;
-  --s-bg-2:     #f6f8fc;
-  --s-border:   rgba(0, 0, 0, 0.07);
-  --s-text:     #0d1d35;
-  --s-text-2:   #4a6280;
-  --s-text-3:   #8aa0b8;
-}
-
+/* ── Alias de secciones (--s-*) ── */
+.light-section,
 .dark-section {
-  --s-bg:       var(--c-navy);
-  --s-bg-2:     var(--c-navy-2);
-  --s-border:   var(--glass-border);
-  --s-text:     var(--t-hero);
-  --s-text-2:   var(--t-muted);
-  --s-text-3:   var(--t-dim);
+  --s-bg:       var(--bg);
+  --s-bg-2:     var(--surface);
+  --s-border:   var(--line);
+  --s-text:     var(--text);
+  --s-text-2:   var(--text-2);
+  --s-text-3:   var(--text-3);
 }
 
-/* ══════════════════════════════════
-   DARK MODE — body.dark-mode overrides
-   Activa el modo oscuro global sobre
-   las light-sections y componentes blancos.
-══════════════════════════════════ */
-
-/* Transición suave al cambiar tema */
+/* Transición suave al cambiar de tema */
 body.theme-transitioning,
 body.theme-transitioning *,
 body.theme-transitioning *::before,
@@ -105,211 +173,7 @@ body.theme-transitioning *::after {
     box-shadow       .32s var(--ease-out) !important;
 }
 
-body.dark-mode {
-  background: var(--c-navy-2);
-  color: var(--t-hero);
-}
+body.dark-mode ::-webkit-scrollbar-track { background: var(--bg); }
 
-/* Secciones con fondo inline (override !important necesario) */
-body.dark-mode #investigacion  { background: var(--c-navy-2)  !important; }
-body.dark-mode #proyectos      { background: var(--c-navy-3)  !important; }
-body.dark-mode #personas       { background: var(--c-navy-2)  !important; }
-body.dark-mode #publicaciones  { background: var(--c-navy-3)  !important; }
-body.dark-mode #herramientas   { background: var(--c-navy-2)  !important; }
-body.dark-mode #metricas       { background: var(--c-navy-3)  !important; }
-body.dark-mode #galeria        { background: var(--c-navy-2)  !important; }
-body.dark-mode #contacto       { background: var(--c-navy-2)  !important; }
-
-/* Variables semánticas en modo oscuro */
-body.dark-mode .light-section {
-  --s-bg:     var(--c-navy-2);
-  --s-bg-2:   var(--c-navy-3);
-  --s-border: var(--glass-border);
-  --s-text:   var(--t-hero);
-  --s-text-2: var(--t-muted);
-  --s-text-3: var(--t-dim);
-}
-
-/* Cards */
-body.dark-mode .research-card,
-body.dark-mode .person-card,
-body.dark-mode .project-card,
-body.dark-mode .pub-card,
-body.dark-mode .tool-card,
-body.dark-mode .dataset-card,
-body.dark-mode .metric-card {
-  background:    var(--c-navy-3);
-  border-color:  var(--glass-border);
-}
-
-body.dark-mode .card-title,
-body.dark-mode .person-name,
-body.dark-mode .project-title,
-body.dark-mode .pub-title,
-body.dark-mode .section-title,
-body.dark-mode .meta-value {
-  color: var(--t-hero);
-}
-
-body.dark-mode .card-desc,
-body.dark-mode .person-role,
-body.dark-mode .project-pi,
-body.dark-mode .pub-authors,
-body.dark-mode .section-desc {
-  color: var(--t-muted);
-}
-
-body.dark-mode .tag,
-body.dark-mode .person-chip,
-body.dark-mode .collab-chip,
-body.dark-mode .timeline-tag,
-body.dark-mode .footer-chip {
-  background: rgba(255,255,255,.07);
-  color: var(--t-muted);
-}
-
-/* Inputs */
-body.dark-mode .form-input {
-  background:   var(--c-navy-3);
-  border-color: var(--glass-border);
-  color:        var(--t-hero);
-}
-
-body.dark-mode .form-input::placeholder { color: var(--t-dim); }
-body.dark-mode .form-input:focus {
-  border-color: var(--c-blue);
-  box-shadow: 0 0 0 3px rgba(59,122,191,.15);
-}
-
-/* Timeline */
-body.dark-mode .timeline::before { background: rgba(255,255,255,.08); }
-body.dark-mode .timeline-dot     { background: var(--c-navy-3); }
-body.dark-mode .timeline-text,
-body.dark-mode .timeline-date    { color: var(--t-muted); }
-
-/* Progress tracks */
-body.dark-mode .progress-track { background: rgba(255,255,255,.07); }
-
-/* Contact info */
-body.dark-mode .contact-icon    { background: var(--c-navy-3); }
-body.dark-mode .contact-value   { color: var(--t-hero); }
-body.dark-mode .contact-label   { color: var(--t-dim); }
-
-/* Social buttons */
-body.dark-mode .social-btn {
-  background: rgba(255,255,255,.06);
-  color: var(--t-muted);
-}
-body.dark-mode .social-btn:hover {
-  background: rgba(255,255,255,.12);
-  color: var(--t-hero);
-}
-
-/* Sección títulos y descripciones en light-sections */
-body.dark-mode .section-title      { color: var(--t-hero); }
-body.dark-mode .section-desc       { color: var(--t-muted); }
-
-/* Timeline */
-body.dark-mode .timeline-tag {
-  background: rgba(255,255,255,.06);
-  color: var(--t-muted);
-}
-body.dark-mode .timeline-date { color: var(--t-dim); }
-body.dark-mode .timeline-text { color: var(--t-muted); }
-body.dark-mode .timeline-text a { color: var(--c-coral); }
-
-/* Collab chips & contact */
-body.dark-mode .collab-chip {
-  background: rgba(255,255,255,.06);
-  color: var(--t-muted);
-  border-color: var(--glass-border);
-}
-
-/* Publications */
-body.dark-mode .pub-card {
-  background: var(--c-navy-3);
-  border-color: var(--glass-border);
-}
-body.dark-mode .pub-title   { color: var(--t-hero); }
-body.dark-mode .pub-authors { color: var(--t-muted); }
-
-/* Tools */
-body.dark-mode .tool-card {
-  background: var(--c-navy-3);
-  border-color: var(--glass-border);
-}
-body.dark-mode .tool-title  { color: var(--t-hero); }
-body.dark-mode .tool-desc   { color: var(--t-muted); }
-body.dark-mode .tool-feature{ color: var(--t-muted); }
-body.dark-mode .tool-author { color: var(--t-dim); border-top-color: var(--glass-border); }
-body.dark-mode .tool-btn-ghost {
-  background: rgba(255,255,255,.06);
-  color: var(--t-muted);
-  border-color: var(--glass-border);
-}
-
-/* Projects */
-body.dark-mode .project-card {
-  background: var(--c-navy-3);
-  border-color: var(--glass-border);
-}
-body.dark-mode .project-title   { color: var(--t-hero); }
-body.dark-mode .project-pi      { color: var(--t-muted); }
-body.dark-mode .meta-label      { color: var(--t-dim); }
-body.dark-mode .meta-value      { color: var(--t-hero); }
-body.dark-mode .progress-header { color: var(--t-muted); }
-body.dark-mode .project-tags .tag {
-  background: rgba(255,255,255,.06);
-  color: var(--t-muted);
-}
-
-/* Research cards */
-body.dark-mode .research-card {
-  background: var(--c-navy-3);
-  border-color: var(--glass-border);
-}
-body.dark-mode .card-title   { color: var(--t-hero); }
-body.dark-mode .card-desc    { color: var(--t-muted); }
-body.dark-mode .research-card .tag {
-  background: rgba(255,255,255,.06);
-  color: var(--t-muted);
-}
-
-/* Person cards */
-body.dark-mode .person-card {
-  background: var(--c-navy-3);
-  border-color: var(--glass-border);
-}
-body.dark-mode .person-name  { color: var(--t-hero); }
-body.dark-mode .person-role  { color: var(--t-muted); }
-body.dark-mode .person-chip {
-  background: rgba(255,255,255,.06);
-  color: var(--t-muted);
-}
-
-/* Metrics */
-body.dark-mode .metric-card {
-  background: var(--c-navy-3);
-  border-color: var(--glass-border);
-}
-body.dark-mode .metric-value  { color: var(--t-hero); }
-body.dark-mode .metric-label  { color: var(--t-muted); }
-body.dark-mode .metric-source { color: var(--t-dim); }
-
-/* Contact section title */
-body.dark-mode #contacto .section-title { color: var(--t-hero); }
-
-/* Footer (ya es dark, pero por si acaso) */
-body.dark-mode .footer-copy { color: var(--t-dim); }
-
-/* See-all links */
-body.dark-mode .see-all:hover { color: var(--t-hero); }
-
-/* Section headers separators */
-body.dark-mode .section-header { border-color: var(--glass-border); }
-
-/* Pub list loading */
-body.dark-mode .pub-list-loading { color: var(--t-dim); }
-
-/* Scrollbar */
-body.dark-mode ::-webkit-scrollbar-track { background: var(--c-navy); }
+/* Rótulos sobre fotos: siempre sobre degradado oscuro, así que su tinta es blanca */
+.gallery-item { --ink-rgb: 255, 255, 255; }

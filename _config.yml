@@ -1,0 +1,9 @@
+# GitHub Pages (Jekyll): estos archivos son del proyecto, no del sitio publicado.
+# El editor (admin/) solo funciona en tu computador, así que no se publica.
+exclude:
+  - admin
+  - scripts
+  - docs
+  - Editar sitio.command
+  - Editar sitio.bat
+  - NIMACh web 2.0.Rproj

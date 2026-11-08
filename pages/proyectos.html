@@ -1,24 +1,46 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="Proyectos financiados NIM-ACh · FONDECYT · ERASMUS+">
   <title>Proyectos — NIM-ACh</title>
-  <script>(function(){if(localStorage.getItem('nimach-theme')==='dark'){var s=document.createElement('style');s.textContent='body{background:#0d1d35!important;color:#e8f0fa!important}';document.head.appendChild(s);}})()</script>
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f7f8fa">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('nimach-theme');
+        if (!t && window.matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
+        if (t === 'dark') document.documentElement.classList.add('dark-mode');
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Sora:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="../css/animations.css">
   <link rel="stylesheet" href="../css/nav.css">
   <link rel="stylesheet" href="../css/components.css">
   <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" href="../css/refine.css">
+  <link rel="stylesheet" href="../css/ui.css">
   <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="stylesheet" href="../css/mono.css">
   <link rel="icon" href="../assets/images/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="../assets/images/logo.png">
 </head>
 <body data-page="proyectos">
-<nav class="nav" id="main-nav"></nav>
+<a href="#page-main" class="skip-link">Saltar al contenido</a>
+<nav class="nav" id="main-nav" aria-label="Principal"></nav>
 <main id="page-main"></main>
 <footer class="footer" id="page-footer"></footer>
+<script src="../js/smart.js"></script>
+<script src="../js/ui.js"></script>
+<script src="../js/lite.js"></script>
+<script src="../js/site-data.js"></script>
 <script src="../js/data.js"></script>
 <script src="../js/theme.js"></script>
 <script src="../js/pages.js"></script>

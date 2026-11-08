@@ -4,3 +4,6 @@
 .httr-oauth
 .DS_Store
 .quarto
+
+# Copias de seguridad del editor del sitio
+.admin-backups/

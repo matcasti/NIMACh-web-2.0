@@ -2,7 +2,9 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#f7f8fa" />
   <meta name="description" content="NIM-ACh — Grupo de investigación en neurofisiología. Estudiamos la adaptación del eje cerebro-corazón desde Punta Arenas, Chile." />
   <meta name="keywords" content="neurofisiología, HRV, variabilidad frecuencia cardíaca, cerebro, corazón, Patagonia, UMAG, FONDECYT" />
   <meta property="og:title"       content="NIM-ACh · Neurofisiología" />
@@ -11,6 +13,22 @@
   <meta property="og:type"        content="website" />
   <title>NIM-ACh · Inicio</title>
 
+  <!-- Tema: respeta la elección guardada o, si no hay, la del sistema (sin parpadeo) -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('nimach-theme');
+        if (!t && window.matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
+        if (t === 'dark') document.documentElement.classList.add('dark-mode');
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Fuentes (preconnect + link: no bloquea el render como @import) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Sora:wght@400;500;600&display=swap">
+
   <!-- Styles -->
   <link rel="stylesheet" href="css/variables.css" />
   <link rel="stylesheet" href="css/base.css" />
@@ -18,25 +36,24 @@
   <link rel="stylesheet" href="css/nav.css" />
   <link rel="stylesheet" href="css/hero.css" />
   <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/refine.css" />
+  <link rel="stylesheet" href="css/ui.css" />
   <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="stylesheet" href="css/mono.css">
 
-  <!-- Favicon (SVG inline fallback) -->
+  <!-- Favicon -->
   <link rel="icon" href="assets/images/logo.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/images/logo.png">
-  
-  <!-- EmailJS SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script>
-    // Reemplaza con tu Public Key de emailjs.com
-    (function(){ emailjs.init({ publicKey: 'YP6iPMMZXPwjyDn4z' }); })();
-  </script>
+  <!-- EmailJS: se carga bajo demanda al usar el formulario (ver main.js) -->
 </head>
 <body>
+
+<a href="#contenido" class="skip-link">Saltar al contenido</a>
 
 <!-- ══════════════════════════════════
      NAVIGATION
 ══════════════════════════════════ -->
-<nav class="nav" id="main-nav">
+<nav class="nav" id="main-nav" aria-label="Principal">
   <a href="index.html" class="nav-logo">
     <div class="nav-logo-mark nav-logo-mark--img">
       <img src="assets/images/logo.png" alt="NIM-ACh" class="nav-logo-img">
@@ -47,31 +64,34 @@
     </div>
   </a>
 
-  <div class="nav-links">
-    <a href="#investigacion" class="nav-link active" data-section="investigacion">Investigación</a>
-    <a href="#proyectos"     class="nav-link"        data-section="proyectos">Proyectos</a>
-    <a href="#personas"      class="nav-link"        data-section="personas">Personas</a>
-    <a href="#herramientas"  class="nav-link"        data-section="herramientas">Herramientas</a>
-    <a href="#publicaciones" class="nav-link"        data-section="publicaciones">Publicaciones</a>
-    <a href="#galeria"       class="nav-link"        data-section="galeria">Galería</a>
-    <a href="#dei"           class="nav-link"        data-section="dei">DEI</a>
+  <div class="nav-links" id="nav-links">
+    <a href="#investigacion" class="nav-link" data-section="investigacion">Investigación</a>
+    <a href="#proyectos"     class="nav-link" data-section="proyectos">Proyectos</a>
+    <a href="#personas"      class="nav-link" data-section="personas">Personas</a>
+    <a href="#herramientas"  class="nav-link" data-section="herramientas">Herramientas</a>
+    <a href="#publicaciones" class="nav-link" data-section="publicaciones">Publicaciones</a>
+    <a href="#galeria"       class="nav-link" data-section="galeria">Galería</a>
+    <a href="#dei"           class="nav-link" data-section="dei">DEI</a>
+    <a href="#contacto"      class="nav-link nav-link--cta">Contáctanos</a>
   </div>
 
   <div class="nav-right">
-    <div class="nav-pill">
+    <a class="nav-pill" href="pages/proyectos.html#activos" title="Ver proyectos activos">
       <span class="badge-dot" style="background:var(--c-teal)"></span>
       FONDECYT Activo
-    </div>
-    <button id="theme-toggle" class="theme-toggle" aria-label="Activar modo oscuro">
-      <span id="theme-icon">🌙</span>
+    </a>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema">
+      <span id="theme-icon" aria-hidden="true"></span>
     </button>
     <a href="#contacto" class="nav-cta">Contáctanos</a>
+    <button class="nav-hamburger" type="button" aria-label="Abrir menú"
+            aria-expanded="false" aria-controls="nav-links">
+      <span></span><span></span><span></span>
+    </button>
   </div>
-
-  <button class="nav-hamburger" aria-label="Menú">
-    <span></span><span></span><span></span>
-  </button>
 </nav>
+
+<main id="contenido">
 
 
 <!-- ══════════════════════════════════
@@ -94,7 +114,7 @@
       <span class="hero-title-line">como Ventana al Organismo</span>
     </h1>
 
-    <p class="hero-sub">
+    <p class="hero-sub" id="hero-sub">
       NIMACh estudia cómo se regula y adapta el ser humano frente a desafíos biológicos,
       psicológicos y ambientales, mediante investigación multimodal, intervenciones aplicadas y 
       análisis integrados del eje cerebro-cuerpo.
@@ -104,9 +124,9 @@
     <div class="hero-paradigm">
       <span class="hero-paradigm-label">Paradigma de Investigación</span>
       <div class="hero-paradigm-chips">
-        <span class="hpc hpc-blue">↺ Dinamismo</span>
-        <span class="hpc hpc-coral">⚡ Gestión de recursos</span>
-        <span class="hpc hpc-teal">◉ Aprendizaje corporal</span>
+        <span class="hpc">Dinamismo</span>
+        <span class="hpc">Gestión de recursos</span>
+        <span class="hpc">Aprendizaje corporal</span>
       </div>
     </div>
 
@@ -115,15 +135,15 @@
       <a href="#personas"      class="btn-secondary">Conocer el equipo</a>
     </div>
 
-    <button id="btn-3d" class="btn-3d-link" aria-label="Ver eje cerebro-corazón en 3D">
-      <span class="btn-3d-link-icon">⬡</span>
-      Visualizar eje cerebro-corazón en 3D
-      <span class="btn-3d-link-arrow">→</span>
+    <button id="btn-3d" class="btn-3d-link" aria-label="Explorar el eje cerebro-corazón (diagrama interactivo)">
+      <span class="btn-3d-link-icon" data-icon="network" data-size="18" aria-hidden="true"></span>
+      Explorar el eje cerebro-corazón
+      <span class="btn-3d-link-arrow" aria-hidden="true">→</span>
     </button>
 
     <!-- Stat rings -->
     <div class="hero-stats">
-      <div class="stat-ring-wrap">
+      <a class="stat-ring-wrap" href="pages/publicaciones.html" title="Ver todas las publicaciones">
         <svg class="stat-ring-svg" viewBox="0 0 40 40" aria-hidden="true">
           <circle class="stat-ring-track" cx="20" cy="20" r="16"/>
           <circle class="stat-ring-val ring-blue" cx="20" cy="20" r="16" id="ring1"/>
@@ -132,8 +152,8 @@
           <div class="stat-number" id="cnt1">0</div>
           <div class="stat-label">Publicaciones</div>
         </div>
-      </div>
-      <div class="stat-ring-wrap">
+      </a>
+      <a class="stat-ring-wrap" href="pages/personas.html" title="Conocer al equipo">
         <svg class="stat-ring-svg" viewBox="0 0 40 40" aria-hidden="true">
           <circle class="stat-ring-track" cx="20" cy="20" r="16"/>
           <circle class="stat-ring-val ring-coral" cx="20" cy="20" r="16" id="ring2"/>
@@ -142,8 +162,8 @@
           <div class="stat-number" id="cnt2">0</div>
           <div class="stat-label">Investigadores</div>
         </div>
-      </div>
-      <div class="stat-ring-wrap">
+      </a>
+      <a class="stat-ring-wrap" href="#red" title="Ver la red de colaboración">
         <svg class="stat-ring-svg" viewBox="0 0 40 40" aria-hidden="true">
           <circle class="stat-ring-track" cx="20" cy="20" r="16"/>
           <circle class="stat-ring-val ring-teal" cx="20" cy="20" r="16" id="ring3"/>
@@ -152,7 +172,7 @@
           <div class="stat-number" id="cnt3">0</div>
           <div class="stat-label">Países colaboradores</div>
         </div>
-      </div>
+      </a>
       <div class="stat-ring-wrap">
         <svg class="stat-ring-svg" viewBox="0 0 40 40" aria-hidden="true">
           <circle class="stat-ring-track" cx="20" cy="20" r="16"/>
@@ -180,7 +200,7 @@
 <!-- ══════════════════════════════════
      INVESTIGACIÓN
 ══════════════════════════════════ -->
-<section class="section-pad light-section" id="investigacion" style="background:#f6f8fc;">
+<section class="section-pad light-section section-base" id="investigacion">
   <div class="container">
     <div class="section-header reveal">
       <div class="section-header-left">
@@ -188,80 +208,20 @@
         <h2 class="section-title">Líneas de investigación</h2>
         <p class="section-desc">Tres ejes principales que conectan la neurofisiología con la realidad clínica y el entorno patagónico.</p>
       </div>
-      <a href="pages/investigacion.html" class="see-all">Ver todas las líneas →</a>
+      <a href="pages/investigacion.html" class="see-all">Ver todas las líneas <span class="arrow" aria-hidden="true">→</span></a>
     </div>
     
     <!-- Paradigma banner -->
     <div class="paradigm-banner reveal">
       <div class="paradigm-banner-left">
         <span class="paradigm-banner-eyebrow">¿Para qué investigamos?</span>
-        <p class="paradigm-banner-text">«La resiliencia no es un rasgo, es un proceso dinámico de <em>autopoiesis</em> mediante el cual el organismo gestiona recursos fisiológicos para preservar su autonomía regulatoria, y esa gestión se aprende.»</p>
+        <p class="paradigm-banner-text" id="home-paradigm-text"></p>
       </div>
-      <a href="pages/investigacion.html">
-        <div class="paradigm-banner-pillars">
-          <div class="pb-pillar pb-blue">
-            <span class="pb-icon">↺</span>
-            <span class="pb-num">01</span>
-            <span class="pb-name">Dinamismo</span>
-          </div>
-          <div class="pb-pillar pb-coral">
-            <span class="pb-icon">⚡</span>
-            <span class="pb-num">02</span>
-            <span class="pb-name">Gestión de<br>recursos</span>
-          </div>
-          <div class="pb-pillar pb-teal">
-            <span class="pb-icon">◉</span>
-            <span class="pb-num">03</span>
-            <span class="pb-name">Aprendizaje<br>corporal</span>
-          </div>
-        </div>
-      </a>
+      <div class="paradigm-banner-pillars" id="home-pillars"></div>
     </div>
 
-    <div class="research-grid">
-      <a href="pages/investigacion.html">
-        <article class="research-card rc-blue reveal delay-1" tabindex="0">
-        <div class="card-icon ic-blue">🧠</div>
-        <h3 class="card-title">Neuromodulación en respuesta al ejercicio</h3>
-        <p class="card-desc">Evaluación de la VFC en ejercicio como marcador del control y adaptabilidad autonómica bajo diversas condiciones fisiológicas, psicológicas y ambientales.</p>
-        <div class="card-tags">
-          <span class="tag">HRV</span>
-          <span class="tag">Autonomic NS</span>
-          <span class="tag">Polar H10</span>
-          <span class="tag">Wearables</span>
-        </div>
-        <span class="card-arrow" aria-hidden="true">→</span>
-      </article>
-      </a>
-      <a href="pages/investigacion.html">
-        <article class="research-card rc-coral reveal delay-2" tabindex="0">
-        <div class="card-icon ic-coral">🏔️</div>
-        <h3 class="card-title">Ambientes extremos y resiliencia fisiológica</h3>
-        <p class="card-desc">Respuesta del eje cerebro-corazón al frío extremo, altitud, inmersión en aguas gélidas y ejercicio intenso en la Patagonia.</p>
-        <div class="card-tags">
-          <span class="tag">Cold exposure</span>
-          <span class="tag">Exercise</span>
-          <span class="tag">Patagonia</span>
-          <span class="tag">Open water</span>
-        </div>
-        <span class="card-arrow" aria-hidden="true">→</span>
-      </article>
-      </a>
-      <a href="pages/investigacion.html">
-        <article class="research-card rc-teal reveal delay-3" tabindex="0">
-        <div class="card-icon ic-teal">🌿</div>
-        <h3 class="card-title">Envejecimiento saludable</h3>
-        <p class="card-desc">Efecto de intervenciones de multicomponente sobre la función cognitiva y la regulación autonómica en adultos mayores de Magallanes.</p>
-        <div class="card-tags">
-          <span class="tag">Aging</span>
-          <span class="tag">Mindfulness</span>
-          <span class="tag">Cognition</span>
-          <span class="tag">RIES-LAC</span>
-        </div>
-        <span class="card-arrow" aria-hidden="true">→</span>
-      </article>
-      </a>
-    </div>
+    <div class="research-grid" id="home-research-grid"></div>
+    
   </div>
 </section>
 
@@ -269,18 +229,16 @@
 <!-- ══════════════════════════════════
      PROYECTOS
 ══════════════════════════════════ -->
-<section class="section-pad light-section" id="proyectos" style="background:#fff;">
+<section class="section-pad light-section section-alt" id="proyectos">
   <div class="container">
     <div class="section-header reveal">
       <div class="section-header-left">
         <span class="label">Financiamiento adjudicado</span>
         <h2 class="section-title">Proyectos</h2>
       </div>
-      <a href="pages/proyectos.html" class="see-all">Ver historial completo →</a>
+      <a href="pages/proyectos.html" class="see-all">Ver historial completo <span class="arrow" aria-hidden="true">→</span></a>
     </div>
-    <a href="pages/proyectos.html">
-      <div class="projects-grid" id="home-projects-grid"></div>
-    </a>
+    <div class="projects-grid" id="home-projects-grid"></div>
   </div>
 </section>
 
@@ -288,14 +246,14 @@
 <!-- ══════════════════════════════════
      PERSONAS
 ══════════════════════════════════ -->
-<section class="section-pad light-section" id="personas" style="background:#f6f8fc;">
+<section class="section-pad light-section section-base" id="personas">
   <div class="container">
     <div class="section-header reveal">
       <div class="section-header-left">
         <span class="label">Nuestro equipo</span>
         <h2 class="section-title">Personas</h2>
       </div>
-      <a href="pages/personas.html" class="see-all">Ver todos →</a>
+      <a href="pages/personas.html" class="see-all">Ver todos <span class="arrow" aria-hidden="true">→</span></a>
     </div>
 
     <div class="people-grid" id="home-people-grid"></div>
@@ -305,7 +263,7 @@
 <!-- ══════════════════════════════════
      HERRAMIENTAS
 ══════════════════════════════════ -->
-<section class="section-pad light-section" id="herramientas" style="background:#fff;">
+<section class="section-pad light-section section-alt" id="herramientas">
   <div class="container">
     <div class="section-header reveal">
       <div class="section-header-left">
@@ -313,7 +271,7 @@
         <h2 class="section-title">Herramientas</h2>
         <p class="section-desc">Desarrollamos herramientas de acceso libre para el análisis de señales fisiológicas, disponibles para la comunidad.</p>
       </div>
-      <a href="pages/herramientas.html" class="see-all">Ver todas →</a>
+      <a href="pages/herramientas.html" class="see-all">Ver todas <span class="arrow" aria-hidden="true">→</span></a>
     </div>
 
     <div class="tools-grid" id="home-tools-grid"></div>
@@ -324,7 +282,7 @@
 <!-- ══════════════════════════════════
      PUBLICACIONES + NOTICIAS
 ══════════════════════════════════ -->
-<section class="section-pad light-section" id="publicaciones" style="background:#fff;">
+<section class="section-pad light-section section-base" id="publicaciones">
   <div class="container">
     <div class="pub-news-grid">
 
@@ -335,16 +293,12 @@
             <span class="label">Output científico</span>
             <h2 class="section-title">Publicaciones recientes</h2>
           </div>
-          <a href="pages/publicaciones.html" class="see-all">Ver todas →</a>
+          <a href="pages/publicaciones.html" class="see-all">Ver todas <span class="arrow" aria-hidden="true">→</span></a>
         </div>
 
         <div class="pub-list" data-limit="5">
           <!-- Publicaciones cargadas dinámicamente desde data/publications.bib -->
-          <div class="pub-list-loading" style="
-            text-align:center;padding:32px;
-            font-size:12px;color:var(--s-text-3,#8aa0b8);">
-            Cargando publicaciones…
-          </div>
+          <div class="pub-list-loading" role="status">Cargando publicaciones…</div>
         </div>
       </div>
 
@@ -355,6 +309,7 @@
             <span class="label">Actividad del grupo</span>
             <h2 class="section-title">Noticias</h2>
           </div>
+          <a href="pages/galeria.html#noticias" class="see-all">Ver todas <span class="arrow" aria-hidden="true">→</span></a>
         </div>
 
         <div class="timeline" id="home-news-timeline"></div>
@@ -368,7 +323,7 @@
 <!-- ══════════════════════════════════
      MÉTRICAS DEL GRUPO
 ══════════════════════════════════ -->
-<section class="section-pad light-section" id="metricas" style="background:#f6f8fc;">
+<section class="section-pad light-section section-alt" id="metricas">
   <div class="container">
     <div class="section-header reveal">
       <div class="section-header-left">
@@ -376,48 +331,52 @@
         <h2 class="section-title">Métricas del grupo</h2>
         <p class="section-desc">Datos en tiempo real vía OpenAlex · Actualizados automáticamente desde los DOIs.</p>
       </div>
-      <a href="pages/publicaciones.html" class="see-all">Ver publicaciones →</a>
+      <a href="pages/publicaciones.html" class="see-all">Ver publicaciones <span class="arrow" aria-hidden="true">→</span></a>
     </div>
 
     <!-- KPI strip -->
     <div class="metrics-strip reveal delay-1">
-      <div class="metric-card">
-        <div class="metric-icon" style="background:rgba(59,122,191,.1)">📊</div>
+      <a class="metric-card is-interactive" href="pages/publicaciones.html?orden=citas" title="Ver las publicaciones más citadas">
+        <div class="metric-icon" data-icon="bar-chart" aria-hidden="true"></div>
         <div class="metric-value" id="metric-citations">—</div>
         <div class="metric-label">Citas totales</div>
         <div class="metric-source">OpenAlex</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-icon" style="background:rgba(232,112,64,.1)">🎯</div>
+      <span class="metric-go" aria-hidden="true">↗</span></a>
+      <a class="metric-card is-interactive" href="pages/publicaciones.html?orden=citas" title="Ver las publicaciones que lo componen">
+        <div class="metric-icon" data-icon="target" aria-hidden="true"></div>
         <div class="metric-value" id="metric-hindex">—</div>
         <div class="metric-label">h-index del grupo</div>
         <div class="metric-source">Calculado</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-icon" style="background:rgba(29,184,132,.1)">📝</div>
+      <span class="metric-go" aria-hidden="true">↗</span></a>
+      <a class="metric-card is-interactive" href="pages/publicaciones.html" title="Ver todas las publicaciones">
+        <div class="metric-icon" data-icon="file-text" aria-hidden="true"></div>
         <div class="metric-value" id="metric-pub-count">—</div>
         <div class="metric-label">Publicaciones indexadas</div>
         <div class="metric-source">Base interna</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-icon" style="background:rgba(123,82,212,.1)">🌐</div>
-        <div class="metric-value">5</div>
+      <span class="metric-go" aria-hidden="true">↗</span></a>
+      <a class="metric-card is-interactive" href="#red" title="Ver la red de colaboración">
+        <div class="metric-icon" data-icon="globe" aria-hidden="true"></div>
+        <div class="metric-value" id="metric-countries">—</div>
         <div class="metric-label">Países colaboradores</div>
         <div class="metric-source">MEDIANTAR · RIES-LAC</div>
-      </div>
+      <span class="metric-go" aria-hidden="true">↗</span></a>
     </div>
 
-    <!-- Globo 3D de colaboraciones -->
-    <div class="collab-map-wrap globe-wrap reveal delay-2">
+    <!-- Mapa de la red de colaboración -->
+    <div class="collab-map-wrap reveal delay-2" id="red">
       <div class="collab-map-header">
-        <span class="label">Red internacional</span>
-        <span class="collab-map-note">Arrastra para rotar · Colaboraciones activas 2024–2025</span>
-      </div>
-      <div class="globe-stage">
-        <canvas id="globe-canvas" aria-label="Globo de colaboraciones internacionales"></canvas>
-        <div class="globe-points-legend">
-          <!-- Generado desde NIMACH_DATA.globePoints en main.js -->
+        <div>
+          <span class="label">Red internacional</span>
+          <p class="collab-map-summary" id="net-summary"></p>
         </div>
+        <span class="collab-map-note">Pasa el cursor o toca una ciudad</span>
+      </div>
+      <div class="netmap" id="netmap">
+        <div class="netmap-stage">
+          <canvas id="net-canvas" role="img"
+            aria-label="Mapa de la red de colaboración: sede en Punta Arenas y colaboradores en Brasil, México, España, Italia y Uruguay. La lista contiene la misma información."></canvas>
+        </div>
+        <ul class="netmap-list" id="net-list" aria-label="Sede y colaboradores"></ul>
       </div>
     </div>
   </div>
@@ -426,7 +385,7 @@
 <!-- ══════════════════════════════════
      GALERÍA
 ══════════════════════════════════ -->
-<section class="section-pad light-section" id="galeria" style="background:#f6f8fc;">
+<section class="section-pad light-section section-base" id="galeria">
   <div class="container">
     <div class="section-header reveal">
       <div class="section-header-left">
@@ -434,7 +393,12 @@
         <h2 class="section-title">Galería</h2>
         <p class="section-desc">Momentos del trabajo en terreno, seminarios y colaboraciones del grupo.</p>
       </div>
-      <a href="pages/galeria.html" class="see-all">Ver galería completa →</a>
+      <div class="section-header-actions">
+        <a href="https://www.instagram.com/nimach_group/" class="see-all" target="_blank" rel="noopener">
+          <span data-icon="instagram" data-size="16" aria-hidden="true"></span> @nimach_group
+        </a>
+        <a href="pages/galeria.html" class="see-all">Ver galería completa <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
     </div>
 
     <div class="gallery-grid" id="home-gallery-grid"></div>
@@ -448,32 +412,30 @@
   <canvas id="dei-canvas" aria-hidden="true"></canvas>
   <div class="container dei-inner">
     <div class="reveal">
-      <span class="badge badge-live" style="margin-bottom:14px;display:inline-flex;">
+      <span class="badge badge-live" style="margin-bottom:14px;">
         <span class="badge-dot" style="background:var(--c-teal)"></span>
         Nuestro compromiso
       </span>
-      <h2 style="font-size:clamp(22px,3vw,30px);font-weight:500;color:var(--t-hero);margin-bottom:10px;">
-        Diversidad, Equidad e Inclusión
-      </h2>
-      <p style="font-size:14px;color:var(--t-muted);line-height:1.78;max-width:540px;">
+      <h2 class="dei-title" id="dei-title">Diversidad, Equidad e Inclusión</h2>
+      <p class="dei-lead" id="dei-lead">
         Creemos que la ciencia es más poderosa cuando refleja la diversidad de quienes la protagonizan.
         La equidad no es un objetivo separado — es parte constitutiva de nuestra misión como grupo.
       </p>
     </div>
 
-    <div class="dei-grid">
+    <div class="dei-grid" id="dei-grid">
       <article class="dei-card reveal delay-1">
-        <div class="dei-card-icon">⚖️</div>
+        <div class="dei-card-icon" data-icon="scale" aria-hidden="true"></div>
         <h3 class="dei-card-title">Equidad en ciencia</h3>
         <p class="dei-card-text">Promovemos oportunidades equitativas de formación y participación, con foco en grupos históricamente subrepresentados en ciencias de la salud.</p>
       </article>
       <article class="dei-card reveal delay-2">
-        <div class="dei-card-icon">🌍</div>
+        <div class="dei-card-icon" data-icon="globe" aria-hidden="true"></div>
         <h3 class="dei-card-title">Diversidad cultural</h3>
         <p class="dei-card-text">Colaboraciones con Brasil, España, México y toda Latinoamérica enriquecen nuestros enfoques metodológicos y las preguntas de investigación.</p>
       </article>
       <article class="dei-card reveal delay-3">
-        <div class="dei-card-icon">🤝</div>
+        <div class="dei-card-icon" data-icon="users" aria-hidden="true"></div>
         <h3 class="dei-card-title">Inclusión activa</h3>
         <p class="dei-card-text">Vinculamos la ciencia con estudiantes de enseñanza media de Magallanes, democratizando el acceso al conocimiento científico desde el fin del mundo.</p>
       </article>
@@ -485,7 +447,7 @@
 <!-- ══════════════════════════════════
      CONTACTO
 ══════════════════════════════════ -->
-<section class="section-pad light-section" id="contacto" style="background:#fff;">
+<section class="section-pad light-section section-alt" id="contacto">
   <div class="container">
     <div class="reveal">
       <span class="label">Escríbenos</span>
@@ -493,44 +455,50 @@
     </div>
 
     <div class="contact-grid">
-      <div class="contact-form reveal delay-1">
+      <form class="contact-form reveal delay-1" novalidate>
         <div class="form-row">
-          <input class="form-input" type="text"  name="from_name"  placeholder="Tu nombre" />
-          <input class="form-input" type="text"  name="from_inst"  placeholder="Tu institución" />
+          <input class="form-input" type="text"  name="from_name" placeholder="Tu nombre"        aria-label="Tu nombre"        autocomplete="name" required />
+          <input class="form-input" type="text"  name="from_inst" placeholder="Tu institución"   aria-label="Tu institución"   autocomplete="organization" required />
         </div>
-        <input class="form-input" type="email" name="reply_to"   placeholder="Correo electrónico" />
-        <input class="form-input" type="text"  name="subject"    placeholder="Asunto" />
-        <textarea class="form-input form-textarea" name="message" placeholder="¿En qué podemos ayudarte? Consultas, colaboraciones, postulaciones..."></textarea>
-        <button class="form-submit">Enviar mensaje →</button>
-      </div>
+        <input class="form-input" type="email" name="reply_to" placeholder="Correo electrónico" aria-label="Correo electrónico" autocomplete="email" inputmode="email" required />
+        <input class="form-input" type="text"  name="subject"  placeholder="Asunto"             aria-label="Asunto" required />
+        <textarea class="form-input form-textarea" name="message" aria-label="Mensaje" required
+          placeholder="¿En qué podemos ayudarte? Consultas, colaboraciones, postulaciones..."></textarea>
+        <button class="form-submit" type="submit">Enviar mensaje →</button>
+        <p class="form-status" role="status" aria-live="polite"></p>
+      </form>
 
       <div class="contact-info reveal delay-2">
-        <div class="contact-info-item">
-          <div class="contact-icon">📍</div>
+        <a class="contact-info-item" id="contact-map" target="_blank" rel="noopener"
+           href="https://www.google.com/maps/search/?api=1&amp;query=Av.+Los+Flamencos+01364%2C+Punta+Arenas%2C+Chile"
+           title="Abrir en Google Maps">
+          <div class="contact-icon" data-icon="map-pin" aria-hidden="true"></div>
           <div>
-            <div class="contact-label">Dirección</div>
-            <div class="contact-value">Edificio CADI-UMAG<br>Av. Los Flamencos 01364<br>Punta Arenas, Chile</div>
+            <div class="contact-label">Dirección · Ver en el mapa</div>
+            <div class="contact-value" id="contact-address">Edificio CADI-UMAG<br>Av. Los Flamencos 01364<br>Punta Arenas, Chile</div>
           </div>
-        </div>
+          <span class="contact-go" aria-hidden="true">↗</span>
+        </a>
         <div class="contact-info-item">
-          <div class="contact-icon">🌐</div>
+          <div class="contact-icon" data-icon="globe" aria-hidden="true"></div>
           <div>
             <div class="contact-label">Sitio web</div>
-            <div class="contact-value">nimach.org</div>
+            <div class="contact-value" id="contact-website">nimach.org</div>
           </div>
         </div>
-        <div class="contact-info-item">
-          <div class="contact-icon">🏛️</div>
+        <a class="contact-info-item" target="_blank" rel="noopener" href="https://www.umag.cl" title="Ir al sitio de la Universidad de Magallanes">
+          <div class="contact-icon" data-icon="landmark" aria-hidden="true"></div>
           <div>
             <div class="contact-label">Institución</div>
-            <div class="contact-value">Centro Asistencial Docente e Investigación (CADI)<br>Universidad de Magallanes</div>
+            <div class="contact-value" id="contact-institution">Centro Asistencial Docente e Investigación (CADI)<br>Universidad de Magallanes</div>
           </div>
-        </div>
+          <span class="contact-go" aria-hidden="true">↗</span>
+        </a>
         <div class="contact-info-item">
-          <div class="contact-icon">🤝</div>
+          <div class="contact-icon" data-icon="users" aria-hidden="true"></div>
           <div>
             <div class="contact-label">Colaboradores</div>
-            <div class="collab-chips">
+            <div class="collab-chips" id="contact-chips">
               <span class="collab-chip">MEDIANTAR</span>
               <span class="collab-chip">RIES-LAC</span>
               <span class="collab-chip">CIES</span>
@@ -546,33 +514,51 @@
 </section>
 
 
+</main>
+
 <!-- ══════════════════════════════════
      FOOTER
 ══════════════════════════════════ -->
 <footer class="footer">
-  <div class="footer-left">
-    <div class="nav-logo-mark nav-logo-mark--img" style="width:28px;height:28px;border-radius:7px;flex-shrink:0;">
-      <img src="assets/images/logo.png" alt="NIM-ACh" class="nav-logo-img">
+  <div class="footer-top">
+    <a href="#hero" class="footer-left" aria-label="NIMACh — volver al inicio">
+      <span class="nav-logo-mark nav-logo-mark--img" style="width:30px;height:30px;border-radius:7px;flex-shrink:0;">
+        <img src="assets/images/logo.png" alt="" class="nav-logo-img">
+      </span>
+      <span class="footer-brand">NIMACh Group</span>
+    </a>
+    <nav class="footer-nav" aria-label="Mapa del sitio">
+      <a href="pages/investigacion.html">Investigación</a>
+      <a href="pages/proyectos.html">Proyectos</a>
+      <a href="pages/personas.html">Personas</a>
+      <a href="pages/herramientas.html">Herramientas</a>
+      <a href="pages/publicaciones.html">Publicaciones</a>
+      <a href="pages/galeria.html">Galería</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-chips" id="footer-chips" aria-label="Redes y financiamiento">
+      <span class="footer-chip">MEDIANTAR</span>
+      <span class="footer-chip">HABITAT</span>
+      <span class="footer-chip">CIES</span>
+      <span class="footer-chip">RIES-LAC</span>
+      <span class="footer-chip">FONDECYT</span>
     </div>
-    <span class="footer-brand">NIMACh Group</span>
-    <span class="footer-copy">© 2026</span>
+    <span class="footer-copy">© <span id="footer-year">2026</span> · CADI · Universidad de Magallanes · Punta Arenas</span>
   </div>
-
-  <div class="footer-chips">
-    <span class="footer-chip">MEDIANTAR</span>
-    <span class="footer-chip">HABITAT</span>
-    <span class="footer-chip">CIES</span>
-    <span class="footer-chip">RIES-LAC</span>
-    <span class="footer-chip">FONDECYT</span>
-  </div>
-
-  <div class="footer-copy">CADI · Universidad de Magallanes · Punta Arenas</div>
 </footer>
 
 
+<button id="back-to-top" class="back-to-top" type="button" aria-label="Volver arriba">↑</button>
+
 <!-- Scripts (order matters) -->
+<script src="js/smart.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/lite.js"></script>
+<script src="js/site-data.js"></script>
 <script src="js/data.js"></script>
-<script src="js/pages.js"></script>  <!-- already present, just verify -->
+<script src="js/pages.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     NIMPage.initHomePeople();
@@ -580,14 +566,18 @@
     NIMPage.initHomeProjects();
     NIMPage.initHomeNews();
     NIMPage.initHomeGallery();
+    NIMPage.initHomeResearch();
+    NIMPage.initHomeParadigm();
+    NIMPage.initHomeTexts();
   });
 </script>
 <script src="js/canvas.js"></script>
 <script src="js/scroll.js"></script>
 <script src="js/theme.js"></script>
 <script src="js/publications.js"></script>
-<script src="js/brain3d.js"></script>
-<script src="js/globe.js"></script>
+<script src="js/axis.js"></script>
+<script src="js/land-mask.js"></script>
+<script src="js/network.js"></script>
 <script src="js/bibtex.js"></script>
 <script src="js/main.js"></script>
 

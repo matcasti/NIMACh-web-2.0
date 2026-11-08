@@ -84,13 +84,12 @@ class BibTeXParser {
   _toSchema(e) {
     if (!e.title) return null;
 
-    const year     = parseInt(e.year, 10) || new Date().getFullYear();
+    // Acepta "2021", "Nov 2021", "2021-11"…: toma el primer número de 4 cifras
+    const ym       = String(e.year || '').match(/(?:19|20)\d{2}/);
+    const year     = ym ? parseInt(ym[0], 10) : new Date().getFullYear();
     const journal  = e.journal || e.booktitle || e.publisher || 'Preprint';
     const authors  = this._formatAuthors(e.author || '');
-    const topics   = (e.keywords || '')
-      .split(/[,;]/)
-      .map(k => k.trim().toLowerCase())
-      .filter(Boolean);
+    const topics   = this._cleanTopics(e.keywords || '');
     const quartile = (e.note || '').match(/Q[1-4]/i)?.[0]?.toUpperCase() || '';
     const doi      = e.doi?.replace(/^https?:\/\/doi\.org\//i, '') || '';
 
@@ -99,6 +98,7 @@ class BibTeXParser {
       year,
       title:    e.title,
       authors,
+      authorList: this._authorList(e.author || ''),   // lista COMPLETA (la tarjeta solo muestra 4 + "et al.")
       journal,
       quartile,
       doi,
@@ -106,6 +106,44 @@ class BibTeXParser {
       topics,
       _fromBib: true,
     };
+  }
+
+  /* ── Palabras clave: limpia, unifica variantes y elimina duplicados ──
+     Para unificar un término nuevo, basta con añadir una línea aquí:
+     'variante' → 'término canónico' (en minúsculas, con tildes).            */
+  static TOPIC_ALIASES = {
+    'cognitivo':   'cognición',
+    'cognitiva':   'cognición',
+    'estudianes':  'estudiantes',   // errata
+    'estudiante':  'estudiantes',
+    'aging':       'envejecimiento',
+    'ageing':      'envejecimiento',
+    'cold':        'frío',
+    'antartica':   'antártica',
+    'covid':       'covid-19',
+    'hrv':         'hrv',
+  };
+
+  _cleanTopics(raw) {
+    const fold = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const out = [];
+    String(raw).split(/[,;]/).forEach(k => {
+      k = k.replace(/[{}]/g, '').replace(/\s+/g, ' ').trim().toLowerCase().replace(/[.\s]+$/, '');
+      if (!k || k.length > 32 || /[%()=]/.test(k)) return;          // restos de comentarios/ruido
+      k = BibTeXParser.TOPIC_ALIASES[k] || BibTeXParser.TOPIC_ALIASES[fold(k)] || k;
+      if (!out.includes(k)) out.push(k);
+    });
+    return out;
+  }
+
+  /* ── Lista completa de autores ("Apellido Nombre") para búsquedas por persona ── */
+  _authorList(raw) {
+    if (!raw) return [];
+    return raw.split(/\s+and\s+/i).map(n => {
+      n = n.trim();
+      if (n.includes(',')) { const [l, f = ''] = n.split(',').map(s => s.trim()); return `${l} ${f}`.trim(); }
+      return n;
+    });
   }
 
   /* ── Formatea "Last, First and Last2, First2 ..." ── */
@@ -139,6 +177,7 @@ class BibTeXParser {
         s.title.slice(0, 40) === p.title.slice(0, 40)
       );
       if (!dup) store.push(p);
+      else if (p.authorList) dup.authorList = p.authorList;
     });
   }
 
@@ -153,35 +192,7 @@ class BibTeXParser {
       .sort((a, b) => b.year - a.year)
       .slice(0, limit);
 
-    list.innerHTML = all.map((p, i) => {
-      const delay  = ['', 'delay-1', 'delay-2', 'delay-3', 'delay-4', 'delay-5'][Math.min(i, 5)];
-      const qBadge = p.quartile ? `<span class="pub-q">${p.quartile}</span>` : '';
-      const topics = (p.topics || []).join(' ');
-      const doiTag = p.doi ? `data-doi="${p.doi}"` : '';
-      const href   = p.doi
-        ? `https://doi.org/${p.doi}`
-        : (p.url || '#');
-
-      return `
-      <article class="pub-card reveal ${delay}"
-        data-year="${p.year}"
-        data-topic="${topics}"
-        data-pub-id="${p.id}"
-        ${doiTag}>
-        <div class="pub-year">${p.year}</div>
-        <div class="pub-body">
-          <h4 class="pub-title">${p.title}</h4>
-          <p class="pub-authors">${p.authors}</p>
-          <div class="pub-journal">
-            <a href="${href}" target="_blank" rel="noopener"
-              style="color:inherit;text-decoration:none;">
-              ↗ ${p.journal}
-            </a>
-            ${qBadge}
-          </div>
-        </div>
-      </article>`.trim();
-    }).join('\n');
+    list.innerHTML = all.map((p, i) => NIMPage._pubCardHTML(p, i)).join('\n');
 
     // Re-observar los nuevos elementos .reveal.
     // Double-rAF: garantiza que el browser completa layout + paint

@@ -60,8 +60,7 @@ class StatAnimator {
     // Valores derivados de los datos reales
     const pubCount   = (D.publications || []).length;
     const peopleCount= (D.people       || []).filter(p => p.active !== false).length;
-    const collabCount= (D.globePoints  || []).filter(p => !p.home).length
-                    || (D.collaborators|| []).length;
+    const collabCount= (D.collabCountries || []).length;   // única fuente (data.js)
     const years      = (() => {
       const pubs = D.publications || [];
       if (!pubs.length) return 8;
@@ -156,7 +155,27 @@ class ECGRenderer {
 
     this._resize();
     window.addEventListener('resize', () => this._resize());
+
+    // Solo anima cuando el hero está en pantalla (ahorra batería y CPU)
+    this.running = false;
+    NIMSmart.onTheme(() => { if (!this.running) this._draw(); });
+    if (window.NIMSmart) {
+      NIMSmart.whenVisible(this.canvas,
+        () => this._start(), () => this._stop(),
+        { once: () => { this.running = false; this._loop(); } });
+    } else { this._start(); }
+  }
+
+  _start() {
+    if (this.running) return;
+    this.running = true;
+    cancelAnimationFrame(this.animId);
     this._loop();
+  }
+
+  _stop() {
+    this.running = false;
+    cancelAnimationFrame(this.animId);
   }
 
   /* ─── Modelo sum-of-Gaussians Lead II ─────────────────────────── */
@@ -221,7 +240,7 @@ class ECGRenderer {
   /* ─── Loop principal ────────────────────────────────────────────── */
 
   _loop() {
-    this.animId = requestAnimationFrame(() => this._loop());
+    if (this.running) this.animId = requestAnimationFrame(() => this._loop());
     this.frame++;
 
     // Avanza offset (velocidad modulada por HRV)
@@ -246,29 +265,15 @@ class ECGRenderer {
     this._drawCursor();
   }
 
-  /* Grid de papel ECG que scrollea sincronizado con la traza */
+  /* Cuadrícula finísima que scrollea sincronizada con la traza */
   _drawGrid() {
     const { ctx, W, H, PPB, offset } = this;
+    const P = NIMSmart.palette();
+    const big = PPB / 5;
 
-    // Cuadrado grande: PPB/5 px (equivale a 0.2s a velocidad estándar)
-    const big   = PPB / 5;
-    const small = big  / 5;
-
-    // Líneas pequeñas
-    ctx.strokeStyle = 'rgba(232,112,64,0.042)';
-    ctx.lineWidth   = 0.3;
-    ctx.setLineDash([]);
-    const oS = offset % small;
-    for (let x = W - oS; x > 0; x -= small) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-    }
-    for (let y = small; y < H; y += small) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-    }
-
-    // Líneas grandes
-    ctx.strokeStyle = 'rgba(232,112,64,0.088)';
+    ctx.strokeStyle = `rgba(${P.ink}, 0.07)`;
     ctx.lineWidth   = 0.5;
+    ctx.setLineDash([]);
     const oB = offset % big;
     for (let x = W - oB; x > 0; x -= big) {
       ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
@@ -278,95 +283,48 @@ class ECGRenderer {
     }
   }
 
-  /* Traza ECG con efecto fósforo: 3 passes de glow + core */
+  /* Traza limpia: una sola línea que se desvanece hacia la izquierda */
   _drawTrace() {
     const { ctx, W, H, PPB, offset } = this;
+    const P = NIMSmart.palette();
 
-    // Línea base al 62% de la altura → espacio para R wave hacia arriba
     const baseline = H * 0.62;
-    // Escala: R wave (amp=1.0) ocupa el 80% de la altura disponible sobre baseline
     const scale    = baseline * 0.88;
 
-    // Gradiente de fósforo: izquierda transparente → derecha coral brillante
     const grad = ctx.createLinearGradient(0, 0, W, 0);
-    grad.addColorStop(0.00, 'rgba(232,112,64,0.00)');
-    grad.addColorStop(0.18, 'rgba(232,112,64,0.10)');
-    grad.addColorStop(0.48, 'rgba(232,112,64,0.50)');
-    grad.addColorStop(0.78, 'rgba(232,112,64,0.88)');
-    grad.addColorStop(1.00, 'rgba(232,112,64,1.00)');
+    grad.addColorStop(0.00, `rgba(${P.accent}, 0)`);
+    grad.addColorStop(0.30, `rgba(${P.accent}, 0.18)`);
+    grad.addColorStop(0.75, `rgba(${P.accent}, 0.65)`);
+    grad.addColorStop(1.00, `rgba(${P.accent}, 0.95)`);
 
-    // Construye el path una vez y lo reutiliza (3 passes = 3 × 1 build)
-    const buildPath = () => {
-      ctx.beginPath();
-      for (let x = 0; x <= W; x++) {
-        const phase = ((offset + x) / PPB) % 1;
-        const py    = baseline - this._sample(phase) * scale;
-        x === 0 ? ctx.moveTo(0, py) : ctx.lineTo(x, py);
-      }
-    };
-
-    ctx.lineCap   = 'round';
-    ctx.lineJoin  = 'round';
-
-    // Pass 1 — halo exterior ancho (bloom suave)
-    ctx.save();
+    ctx.lineCap  = 'round';
+    ctx.lineJoin = 'round';
     ctx.strokeStyle = grad;
-    ctx.lineWidth   = 7;
-    ctx.globalAlpha = 0.13;
-    ctx.shadowColor = 'rgba(232,112,64,0.55)';
-    ctx.shadowBlur  = 18;
-    buildPath(); ctx.stroke();
-    ctx.restore();
-
-    // Pass 2 — glow intermedio
-    ctx.save();
-    ctx.strokeStyle = grad;
-    ctx.lineWidth   = 3;
-    ctx.globalAlpha = 0.50;
-    ctx.shadowColor = 'rgba(255,155,70,0.75)';
-    ctx.shadowBlur  = 7;
-    buildPath(); ctx.stroke();
-    ctx.restore();
-
-    // Pass 3 — línea core nítida y brillante
-    ctx.save();
-    ctx.strokeStyle = grad;
-    ctx.lineWidth   = 1.5;
-    ctx.globalAlpha = 1.0;
-    ctx.shadowColor = 'rgba(255,200,140,0.55)';
-    ctx.shadowBlur  = 3;
-    buildPath(); ctx.stroke();
-    ctx.restore();
+    ctx.lineWidth   = 1.4;
+    ctx.beginPath();
+    for (let x = 0; x <= W; x++) {
+      const phase = ((offset + x) / PPB) % 1;
+      const py    = baseline - this._sample(phase) * scale;
+      x === 0 ? ctx.moveTo(0, py) : ctx.lineTo(x, py);
+    }
+    ctx.stroke();
   }
 
-  /* Cursor luminoso en el extremo derecho (frente de avance) */
+  /* Punto en el extremo de avance */
   _drawCursor() {
     const { ctx, W, H, PPB, offset } = this;
+    const P = NIMSmart.palette();
     const baseline = H * 0.62;
     const scale    = baseline * 0.88;
     const phase    = ((offset + W) / PPB) % 1;
     const py       = baseline - this._sample(phase) * scale;
 
-    // Anillo de pulso exterior
-    ctx.save();
-    ctx.strokeStyle = 'rgba(255,200,140,0.40)';
+    ctx.strokeStyle = `rgba(${P.accent}, 0.35)`;
     ctx.lineWidth   = 1;
-    ctx.shadowColor = 'rgba(255,150,70,0.9)';
-    ctx.shadowBlur  = 10;
-    ctx.beginPath();
-    ctx.arc(W, py, 5.5, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.restore();
+    ctx.beginPath(); ctx.arc(W - 3, py, 6, 0, Math.PI * 2); ctx.stroke();
 
-    // Punto core blanco-cálido
-    ctx.save();
-    ctx.fillStyle   = '#fff8f0';
-    ctx.shadowColor = 'rgba(255,130,50,1.0)';
-    ctx.shadowBlur  = 18;
-    ctx.beginPath();
-    ctx.arc(W, py, 2.8, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
+    ctx.fillStyle = `rgb(${P.accent})`;
+    ctx.beginPath(); ctx.arc(W - 3, py, 2.6, 0, Math.PI * 2); ctx.fill();
   }
 
   destroy() {
@@ -374,59 +332,101 @@ class ECGRenderer {
   }
 }
 
-/* ── Nav scroll behavior ── */
+/* ── Nav: estado "scrolled" + smart hide (baja → se oculta · sube → reaparece) ── */
 class NavScroll {
   constructor() {
     this.nav = document.querySelector('.nav');
     if (!this.nav) return;
-    window.addEventListener('scroll', () => this.update(), { passive: true });
+    this.lastY = window.scrollY;
+    this.ticking = false;
+    window.addEventListener('scroll', () => {
+      if (this.ticking) return;
+      this.ticking = true;
+      requestAnimationFrame(() => { this.update(); this.ticking = false; });
+    }, { passive: true });
+    this.update();
   }
 
   update() {
-    this.nav.classList.toggle('scrolled', window.scrollY > 60);
+    const y = window.scrollY;
+    const dy = y - this.lastY;
+    this.nav.classList.toggle('scrolled', y > 24);
+
+    const pinned = this.nav.classList.contains('nav--open') ||
+                   this.nav.contains(document.activeElement);
+    if (y < 120 || pinned || dy < -4)      this.nav.classList.remove('nav--hidden');
+    else if (dy > 8 && y > 240)            this.nav.classList.add('nav--hidden');
+
+    if (Math.abs(dy) > 4) this.lastY = y;
   }
 }
 
-/* ── Mobile nav toggle ── */
+/* ── Menú móvil: accesible, cierra con Esc / enlace / clic fuera / al agrandar ── */
 class MobileNav {
   constructor() {
+    this.nav   = document.querySelector('.nav');
     this.btn   = document.querySelector('.nav-hamburger');
     this.links = document.querySelector('.nav-links');
-    if (!this.btn || !this.links) return;
+    if (!this.nav || !this.btn || !this.links) return;
+
     this.btn.addEventListener('click', () => this.toggle());
-    document.addEventListener('click', e => {
-      if (!e.target.closest('.nav')) this.close();
+    this.links.addEventListener('click', e => { if (e.target.closest('a')) this.close(); });
+    document.addEventListener('click', e => { if (!e.target.closest('.nav')) this.close(); });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && this.isOpen()) { this.close(); this.btn.focus(); }
     });
+    window.matchMedia('(min-width: 1080px)').addEventListener('change', e => { if (e.matches) this.close(); });
   }
 
-  toggle() {
-    this.links.classList.toggle('open');
+  isOpen() { return this.links.classList.contains('open'); }
+
+  toggle() { this.isOpen() ? this.close() : this.open(); }
+
+  open() {
+    this.links.classList.add('open');
+    this.nav.classList.add('nav--open');
+    this.btn.setAttribute('aria-expanded', 'true');
+    this.btn.setAttribute('aria-label', 'Cerrar menú');
   }
 
   close() {
     this.links.classList.remove('open');
+    this.nav.classList.remove('nav--open');
+    this.btn.setAttribute('aria-expanded', 'false');
+    this.btn.setAttribute('aria-label', 'Abrir menú');
   }
 }
 
-/* ── Active nav link on scroll ── */
+/* ── Enlace activo según la sección que cruza el centro de la pantalla ── */
 class ActiveSection {
   constructor() {
-    this.links    = document.querySelectorAll('.nav-link[data-section]');
-    this.sections = [];
-    this.links.forEach(l => {
+    const links = [...document.querySelectorAll('.nav-link[data-section]')];
+    this.map = new Map();
+    links.forEach(l => {
       const s = document.getElementById(l.dataset.section);
-      if (s) this.sections.push({ link: l, section: s });
+      if (s) this.map.set(s, l);
     });
-    if (!this.sections.length) return;
-    window.addEventListener('scroll', () => this.update(), { passive: true });
+    if (!this.map.size || !('IntersectionObserver' in window)) return;
+
+    // banda delgada en el centro del viewport: la sección que la cruza es la activa
+    this.io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (en.isIntersecting) this.set(this.map.get(en.target));
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    this.map.forEach((_, s) => this.io.observe(s));
+
+    // arriba del todo (hero) no hay sección activa
+    const hero = document.getElementById('hero');
+    if (hero) new IntersectionObserver(([e]) => { if (e.isIntersecting) this.set(null); },
+      { rootMargin: '-45% 0px -50% 0px' }).observe(hero);
   }
 
-  update() {
-    const mid = window.scrollY + window.innerHeight / 2;
-    this.sections.forEach(({ link, section }) => {
-      const top    = section.offsetTop;
-      const bottom = top + section.offsetHeight;
-      link.classList.toggle('active', mid >= top && mid < bottom);
+  set(link) {
+    this.map.forEach(l => {
+      const on = l === link;
+      l.classList.toggle('active', on);
+      if (on) l.setAttribute('aria-current', 'true'); else l.removeAttribute('aria-current');
     });
   }
 }

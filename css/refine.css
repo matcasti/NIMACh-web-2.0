@@ -1,0 +1,281 @@
+/* ============================================================
+   NIM-ACh — Refine (v2)
+   Capa de pulido visual: un solo lenguaje para tarjetas,
+   encabezados, botones y formularios. Va después de
+   components.css y pages.css; lee solo tokens de variables.css.
+   ============================================================ */
+
+/* ─────────────────────────────────────────
+   1. ENCABEZADOS DE SECCIÓN
+───────────────────────────────────────── */
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--gap);
+  margin-bottom: clamp(1.5rem, 1rem + 2vw, 2.75rem);
+}
+
+.section-header-left { flex: 1; min-width: 0; }
+.section-title { margin-bottom: .4rem; }
+
+.see-all {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  min-height: 40px;
+  padding: .5rem 1rem;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--accent-ink);
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-full);
+  white-space: nowrap;
+  transition: color var(--dur-fast), background var(--dur-fast), border-color var(--dur-fast);
+}
+
+.see-all:hover {
+  color: var(--accent-fg);
+  background: var(--accent);
+  border-color: var(--c-blue);
+}
+
+/* Enlaces que envuelven tarjetas completas (home) */
+a:has(> .research-card),
+a:has(> .projects-grid),
+a:has(> .paradigm-banner-pillars) { display: block; color: inherit; }
+
+/* ─────────────────────────────────────────
+   2. TARJETAS — un solo lenguaje
+───────────────────────────────────────── */
+.research-card,
+.person-card,
+.project-card,
+.pub-card,
+.tool-card,
+.metric-card,
+.person-page-card,
+.paradigm-banner,
+.collab-map-wrap,
+.pub-toolbar {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.research-card,
+.project-card,
+.tool-card,
+.person-card { padding: var(--card-pad); }
+
+.pub-card { padding: clamp(.9rem, .7rem + .8vw, 1.25rem) var(--card-pad); }
+
+.card-title   { font-size: var(--fs-md); font-weight: 500; line-height: 1.4; }
+.card-desc    { font-size: var(--fs-sm); line-height: 1.7; }
+.project-title{ font-size: var(--fs-md); line-height: 1.45; }
+.pub-title    { font-size: var(--fs-base); line-height: 1.45; }
+.pub-authors  { font-size: var(--fs-sm); }
+.pub-journal  { font-size: var(--fs-sm); }
+
+.pub-journal  { color: var(--accent-ink); }                       /* coral con contraste AA */
+body.dark-mode .pub-journal { color: var(--c-coral-light); }
+
+.card-arrow { color: var(--text-3); }
+
+/* Metric cards: iconos y cifras */
+.metric-card { padding: var(--card-pad); }
+.metric-value { font-family: var(--font-display); font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.5rem); }
+
+/* ─────────────────────────────────────────
+   3. PERSONAS
+───────────────────────────────────────── */
+.person-card { align-items: center; text-align: center; min-width: 0; }
+.avatar { width: clamp(64px, 4.5rem, 92px); height: clamp(64px, 4.5rem, 92px); }
+.person-name { font-size: var(--fs-base); font-weight: 600; overflow-wrap: anywhere; }
+.person-role { font-size: var(--fs-sm); }
+.person-chips { justify-content: center; }
+.person-chip  { font-size: var(--fs-xs); padding: 3px 10px; background: var(--surface-2); color: var(--text-2); }
+.person-link-btn,
+.social-btn { min-height: 32px; display: inline-flex; align-items: center; }
+
+/* ─────────────────────────────────────────
+   4. HERRAMIENTAS / PROYECTOS — detalles
+───────────────────────────────────────── */
+.tool-title { font-size: var(--fs-md); }
+.tool-desc, .tool-feature { font-size: var(--fs-sm); }
+.tool-btn { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; }
+.tool-btn-ghost { background: var(--surface-2); color: var(--text-2); border: 1px solid var(--line); }
+
+.project-meta { flex-wrap: wrap; row-gap: .75rem; }
+.progress-track { height: 4px; background: var(--surface-2); }
+
+/* ─────────────────────────────────────────
+   5. TIMELINE / NOTICIAS
+───────────────────────────────────────── */
+.timeline-date { color: var(--text-3); }
+.timeline-text { font-size: var(--fs-sm); }
+.timeline-tag  { font-size: var(--fs-xs); background: var(--surface-2); color: var(--text-2); }
+.timeline-text a { color: var(--c-coral); font-weight: 500; }
+.timeline-dot { background: var(--surface); }
+
+/* ─────────────────────────────────────────
+   6. FORMULARIO
+───────────────────────────────────────── */
+.contact-form { gap: .85rem; }
+
+.form-input {
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+  font-size: max(16px, var(--fs-base));    /* ≥16px: evita el zoom automático de iOS */
+  padding: .8rem 1rem;
+  min-height: 48px;
+}
+.form-input::placeholder { color: var(--text-3); }
+.form-input:focus {
+  border-color: var(--c-blue);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .18);
+}
+.form-textarea { min-height: 8.5rem; height: auto; resize: vertical; }
+
+.form-submit {
+  min-height: 50px;
+  font-size: var(--fs-base);
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--accent), var(--c-blue));
+  border-radius: var(--r-md);
+}
+
+.contact-icon  { background: var(--surface-2); }
+.contact-label { font-size: var(--fs-xs); color: var(--text-3); letter-spacing: .1em; }
+.contact-value { font-size: var(--fs-base); color: var(--text); }
+
+.collab-chip {
+  font-size: var(--fs-xs);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text-2);
+}
+
+/* ─────────────────────────────────────────
+   7. DEI
+───────────────────────────────────────── */
+.dei-section { padding-block: var(--section-y); }
+.dei-card { padding: var(--card-pad); cursor: default; }
+.dei-card-title { font-size: var(--fs-md); }
+.dei-card-text  { font-size: var(--fs-sm); }
+.dei-title { font-size: var(--fs-h2); font-weight: 500; color: var(--t-hero); margin-bottom: .6rem; }
+.dei-lead  { font-size: var(--fs-md); color: var(--text-2); line-height: 1.75; max-width: 40rem; }
+
+/* ─────────────────────────────────────────
+   8. FOOTER
+───────────────────────────────────────── */
+.footer {
+  padding: clamp(1.25rem, 1rem + 1.2vw, 2.25rem) max(var(--gutter), calc((100% - var(--container-max)) / 2));
+  border-top: 1px solid rgba(var(--ink-rgb), .08);
+}
+.footer-brand { font-family: var(--font-display); font-size: var(--fs-base); color: var(--text-2); }
+.footer-copy  { font-size: var(--fs-xs); color: var(--text-3); }
+.footer-chip  { font-size: var(--fs-xs); color: var(--text-2); border-color: rgba(var(--ink-rgb), .1); }
+
+/* ─────────────────────────────────────────
+   9. HERO: chips de paradigma (viven en components.css)
+───────────────────────────────────────── */
+.hero-paradigm-label { color: var(--text-3); font-size: var(--fs-xs); }
+.hpc { font-size: var(--fs-xs); padding: 5px 12px; }
+
+/* ─────────────────────────────────────────
+   10. PÁGINAS INTERIORES
+───────────────────────────────────────── */
+.page-hero {
+  padding: calc(var(--nav-h) + clamp(2rem, 4vw, 4.5rem)) 0 clamp(2rem, 3vw, 3.5rem);
+}
+.page-hero-title { font-size: var(--fs-h1); margin-bottom: .75rem; }
+.page-hero-desc  { font-size: var(--fs-md); color: var(--text-2); max-width: 42rem; }
+.page-back-link  { font-size: var(--fs-sm); color: var(--text-3); min-height: 32px; }
+.page-back-link:hover { color: var(--t-hero); }
+.page-section    { padding-block: clamp(2.5rem, 2rem + 3vw, 5rem); background: var(--bg); }
+body.dark-mode .page-section { background: var(--bg) !important; }
+
+.pub-stat-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+}
+.pub-stat { border-right: 1px solid rgba(var(--ink-rgb), .08); padding: .75rem 1rem; }
+.pub-stat-lbl { color: var(--text-3); font-size: var(--fs-xs); }
+
+.pub-filter-btn,
+.pub-topic-btn,
+.people-tab { min-height: 36px; }
+.pub-filter-btn { font-size: var(--fs-sm); }
+.pub-topic-btn  { font-size: var(--fs-xs); color: var(--text-2); }
+
+.pub-search { font-size: max(16px, var(--fs-base)); min-height: 46px; background: var(--surface-2); border-color: var(--line); color: var(--text); }
+
+/* ─────────────────────────────────────────
+   11. BOTÓN "VOLVER ARRIBA"
+───────────────────────────────────────── */
+.back-to-top {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: var(--z-above);
+  width: 46px; height: 46px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--c-navy-2);
+  color: var(--t-hero);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity .25s, transform .25s var(--ease-out), background .2s;
+}
+.back-to-top.show { opacity: 1; transform: none; pointer-events: auto; }
+.back-to-top:hover { background: var(--c-blue); }
+
+/* ─────────────────────────────────────────
+   12. ACCESIBILIDAD Y PREFERENCIAS
+───────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--c-coral);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hero-title-line,
+  .hero-sub, .hero-btns, .btn-3d-link, .hero-stats, .hero-paradigm {
+    opacity: 1 !important; transform: none !important; animation: none !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root { --line: rgba(0, 0, 0, .35); --text-3: #3f566f; }
+  html.dark-mode, body.dark-mode { --line: rgba(var(--ink-rgb), .35); --text-3: var(--text-2); }
+}
+
+/* Dispositivos táctiles: nada de "hover pegado" */
+@media (hover: none) {
+  .research-card:hover, .project-card:hover, .tool-card:hover, .person-card:hover,
+  .metric-card:hover, .person-page-card:hover, .pub-card:hover, .gallery-item:hover,
+  .dei-card:hover { transform: none; box-shadow: var(--shadow-sm); }
+  .card-arrow { opacity: .7; transform: none; }
+}
+
+.pub-list-loading {
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: var(--fs-sm);
+  color: var(--text-3);
+}
+
+.person-social { flex-wrap: wrap; justify-content: center; gap: 6px; }
+.person-card .person-chips { max-width: 100%; }
+
+.pub-journal { flex-wrap: wrap; row-gap: .25rem; }
+.pub-cites { margin-left: 0; font-size: var(--fs-xs); }
+.pub-q { font-size: var(--fs-xs); }

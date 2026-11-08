@@ -2,14 +2,34 @@
  * NIM-ACh — PublicationsEnricher
  * Consulta OpenAlex (gratuito, sin API key) para enriquecer
  * las publicaciones de NIMACH_DATA con citas reales.
- * Cache en sessionStorage para evitar requests redundantes.
+ * Consulta por lotes (≈2 peticiones para ~90 DOIs) y cachea 24 h
+ * en localStorage; si la API falla, usa la última copia guardada.
  */
 class PublicationsEnricher {
   constructor() {
-    this.BASE = 'https://api.openalex.org/works/https://doi.org/';
+    this.API   = 'https://api.openalex.org/works';
+    this.CACHE = 'nimach:openalex:v2';
+    this.TTL   = 24 * 60 * 60 * 1000;     // 24 h
+    this.BATCH = 40;                      // DOIs por petición
     // Placeholder DOIs no se consultan
     this.SKIP = /^10\.XXXX/;
     this.enrich();
+  }
+
+  /** Normaliza un DOI (con o sin https://doi.org/) a minúsculas */
+  norm(doi) {
+    return String(doi || '').replace(/^https?:\/\/(dx\.)?doi\.org\//i, '').trim().toLowerCase();
+  }
+
+  readCache() {
+    try {
+      const c = JSON.parse(localStorage.getItem(this.CACHE) || 'null');
+      return c && c.data ? c : null;
+    } catch { return null; }
+  }
+
+  writeCache(data) {
+    try { localStorage.setItem(this.CACHE, JSON.stringify({ ts: Date.now(), data })); } catch {}
   }
 
   async enrich() {
@@ -22,38 +42,65 @@ class PublicationsEnricher {
     );
     if (!pubs.length) return; // sin DOIs reales → citas y h-index quedan en 0
 
-    const results = await Promise.allSettled(pubs.map(p => this.fetch(p.doi)));
+    const dois  = [...new Set(pubs.map(p => this.norm(p.doi)))];
+    const cache = this.readCache();
+    const fresh = cache && (Date.now() - cache.ts) < this.TTL &&
+                  dois.every(d => d in cache.data);
 
-    results.forEach((res, i) => {
-      if (res.status !== 'fulfilled' || !res.value) return;
-      const data = res.value;
-      const pub  = pubs[i];
+    // Caché vigente → 0 peticiones. Si no, lotes de 40 (≈2 peticiones en vez de ~80).
+    let data = fresh ? cache.data : await this.fetchAll(dois);
+    // Sin red / API saturada → usar lo último que tengamos, aunque esté vencido
+    if (!Object.keys(data).length && cache) data = cache.data;
+    if (!fresh && Object.keys(data).length) this.writeCache({ ...(cache ? cache.data : {}), ...data });
 
-      pub.citations = data.cited_by_count ?? 0;
-      pub.oa_url    = data.open_access?.oa_url  ?? null;
-      pub.pdf_url   = data.best_oa_location?.pdf_url ?? null;
-
+    pubs.forEach(pub => {
+      const d = data[this.norm(pub.doi)];
+      if (!d) return;
+      pub.citations = d.c ?? 0;
+      pub.oa_url    = d.oa  || null;
+      pub.pdf_url   = d.pdf || null;
       this.updateCard(pub);
     });
 
     // Segunda pasada con citas reales ya asignadas
     this.renderMetrics();
-  }
-  
-  async fetch(doi) {
-    const key    = `oa:${doi}`;
-    const cached = sessionStorage.getItem(key);
-    if (cached) {
-      try { return JSON.parse(cached); } catch { sessionStorage.removeItem(key); }
-    }
 
-    try {
-      const res = await fetch(`${this.BASE}${doi}`);
-      if (!res.ok) return null;
-      const data = await res.json();
-      sessionStorage.setItem(key, JSON.stringify(data));
-      return data;
-    } catch { return null; }
+    // Si la página tiene filtros/orden, reaplicarlos ahora que hay citas (p. ej. "Más citadas")
+    if (window.NIMPage && document.getElementById('pub-page-list')) NIMPage._applyPubFilters(true);
+  }
+
+  /** Consulta OpenAlex por lotes. Varias instancias simultáneas comparten UNA sola consulta. */
+  fetchAll(dois) {
+    const key = dois.join(',');
+    const p = PublicationsEnricher._pending;
+    if (p && p.key === key) return p.promise;
+    const promise = this._fetchBatches(dois).finally(() => { PublicationsEnricher._pending = null; });
+    PublicationsEnricher._pending = { key, promise };
+    return promise;
+  }
+
+  /** filter=doi:a|b|c en lotes de BATCH */
+  async _fetchBatches(dois) {
+    const out = {};
+    for (let i = 0; i < dois.length; i += this.BATCH) {
+      const chunk = dois.slice(i, i + this.BATCH);
+      const filter = 'doi:' + chunk.map(encodeURIComponent).join('|');
+      const url = `${this.API}?filter=${filter}&per-page=${this.BATCH}` +
+                  '&select=doi,cited_by_count,open_access,best_oa_location';
+      try {
+        const res = await fetch(url);
+        if (!res.ok) continue;
+        const json = await res.json();
+        (json.results || []).forEach(w => {
+          out[this.norm(w.doi)] = {
+            c:   w.cited_by_count ?? 0,
+            oa:  w.open_access?.oa_url ?? null,
+            pdf: w.best_oa_location?.pdf_url ?? null,
+          };
+        });
+      } catch { /* sin red: seguimos con lo que haya */ }
+    }
+    return out;
   }
 
   updateCard(pub) {
@@ -61,6 +108,8 @@ class PublicationsEnricher {
     document.querySelectorAll('.pub-card').forEach(card => {
       const titleEl = card.querySelector('.pub-title');
       if (!titleEl || !titleEl.textContent.includes(pub.title.slice(0, 30))) return;
+
+      card.dataset.cites = pub.citations || 0;   // permite ordenar por "Más citadas"
 
       // Añadir badge de citas si no existe
       const journalEl = card.querySelector('.pub-journal');
@@ -74,7 +123,7 @@ class PublicationsEnricher {
 
       // Enlace OA
       if (pub.oa_url && !card.querySelector('.pub-oa')) {
-        const body   = card.querySelector('.pub-body');
+        const body   = card.querySelector('.pub-actions') || card.querySelector('.pub-body');
         const link   = document.createElement('a');
         link.className = 'pub-oa';
         link.href      = pub.pdf_url || pub.oa_url;

@@ -12,12 +12,12 @@
 class NIMPage {
 
   static init(pageId) {
-    // ThemeManager se aplica inmediatamente (antes de pintar)
-    if (window.ThemeManager) new ThemeManager();
-
     document.getElementById('main-nav').innerHTML  = this._navHTML(pageId);
     document.getElementById('page-main').innerHTML = this._mainHTML(pageId);
     document.getElementById('page-footer').innerHTML = this._footerHTML();
+
+    // Tema (después de inyectar el nav, para que el botón exista al aplicar el estado)
+    if (window.ThemeManager) new ThemeManager();
 
     // Post-render init específico por página
     this._afterRender(pageId);
@@ -35,8 +35,8 @@ class NIMPage {
     ];
 
     const linksHTML = links.map(l => `
-      <a href="${l.href}" class="nav-link${l.key === active ? ' active' : ''}">${l.label}</a>
-    `).join('');
+      <a href="${l.href}" class="nav-link${l.key === active ? ' active' : ''}"${l.key === active ? ' aria-current="page"' : ''}>${l.label}</a>
+    `).join('') + '<a href="../index.html#contacto" class="nav-link nav-link--cta">Contáctanos</a>';
 
     return `
       <a href="../index.html" class="nav-logo">
@@ -48,37 +48,48 @@ class NIMPage {
           <span class="nav-sub">Neurofisiología · UMAG</span>
         </div>
       </a>
-      <div class="nav-links">${linksHTML}</div>
+      <div class="nav-links" id="nav-links">${linksHTML}</div>
       <div class="nav-right">
-        <div class="nav-pill">
+        <a class="nav-pill" href="proyectos.html#activos" title="Ver proyectos activos">
           <span class="badge-dot" style="background:var(--c-teal)"></span>
           FONDECYT Activo
-        </div>
-        <button id="theme-toggle" class="theme-toggle" aria-label="Activar modo oscuro">
-          <span id="theme-icon">🌙</span>
+        </a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema">
+          <span id="theme-icon" aria-hidden="true"></span>
         </button>
         <a href="../index.html#contacto" class="nav-cta">Contáctanos</a>
-      </div>
-      <button class="nav-hamburger" aria-label="Menú">
-        <span></span><span></span><span></span>
-      </button>`;
+        <button class="nav-hamburger" type="button" aria-label="Abrir menú"
+                aria-expanded="false" aria-controls="nav-links">
+          <span></span><span></span><span></span>
+        </button>
+      </div>`;
   }
 
   /* ══ FOOTER ══ */
   static _footerHTML() {
-    const chips = ['MEDIANTAR','HABITAT','CIES','RIES-LAC','FONDECYT'];
+    const chips = ((window.NIMACH_DATA || {}).collaborators || []).filter(c => c.inFooter !== false).map(c => c.name);
+    const nav = [
+      ['Investigación','investigacion.html'], ['Proyectos','proyectos.html'],
+      ['Personas','personas.html'], ['Herramientas','herramientas.html'],
+      ['Publicaciones','publicaciones.html'], ['Galería','galeria.html'],
+      ['Contacto','../index.html#contacto'],
+    ];
     return `
-      <div class="footer-left">
-        <div class="nav-logo-mark nav-logo-mark--img" style="width:28px;height:28px;border-radius:7px;flex-shrink:0;">
-          <img src="../assets/images/logo.png" alt="NIMACh" class="nav-logo-img">
-        </div>
-        <span class="footer-brand">NIMACh Group</span>
-        <span class="footer-copy">© 2025</span>
+      <div class="footer-top">
+        <a href="../index.html" class="footer-left" aria-label="NIMACh — ir al inicio">
+          <span class="nav-logo-mark nav-logo-mark--img" style="width:30px;height:30px;border-radius:7px;flex-shrink:0;">
+            <img src="../assets/images/logo.png" alt="" class="nav-logo-img">
+          </span>
+          <span class="footer-brand">NIMACh Group</span>
+        </a>
+        <nav class="footer-nav" aria-label="Mapa del sitio">
+          ${nav.map(([l, h]) => `<a href="${h}">${l}</a>`).join('')}
+        </nav>
       </div>
-      <div class="footer-chips">
-        ${chips.map(c => `<span class="footer-chip">${c}</span>`).join('')}
-      </div>
-      <div class="footer-copy">CADI · Universidad de Magallanes · Punta Arenas</div>`;
+      <div class="footer-bottom">
+        <div class="footer-chips">${chips.map(c => `<span class="footer-chip">${c}</span>`).join('')}</div>
+        <span class="footer-copy">© ${new Date().getFullYear()} · CADI · Universidad de Magallanes · Punta Arenas</span>
+      </div>`;
   }
 
   /* ══ PAGE HERO ══ */
@@ -116,7 +127,7 @@ class NIMPage {
       case 'investigacion':  return this._investigacionHTML();
       case 'proyectos':      return this._proyectosHTML();
       case 'galeria':        return this._galeriaHTML();
-      default: return '<p style="padding:80px 32px;color:#8aa0b8;">Página no encontrada.</p>';
+      default: return '<p style="padding:80px 32px;color:var(--text-3);">Página no encontrada.</p>';
     }
   }
 
@@ -129,7 +140,7 @@ class NIMPage {
 
     // Extrae años y tópicos únicos
     const years  = [...new Set(pubs.map(p => p.year))].sort((a, b) => b - a);
-    const topics = [...new Set(pubs.flatMap(p => p.topics || []))].sort();
+    const topics = this._topicsByFreq(pubs);
 
     const pubCount  = pubs.length;
     const q1Count   = pubs.filter(p => p.quartile === 'Q1').length;
@@ -154,7 +165,7 @@ class NIMPage {
               <div class="pub-stat-lbl">Publicaciones</div>
             </div>
             <div class="pub-stat">
-              <div class="pub-stat-val" id="ps-cites" style="color:var(--c-coral);">—</div>
+              <div class="pub-stat-val" id="ps-cites">—</div>
               <div class="pub-stat-lbl">Citas totales</div>
             </div>
             <div class="pub-stat">
@@ -162,7 +173,7 @@ class NIMPage {
               <div class="pub-stat-lbl">h-index</div>
             </div>
             <div class="pub-stat">
-              <div class="pub-stat-val" id="ps-oa" style="color:var(--c-teal);">—</div>
+              <div class="pub-stat-val" id="ps-oa">—</div>
               <div class="pub-stat-lbl">Open Access</div>
             </div>
             <div class="pub-stat">
@@ -186,63 +197,137 @@ class NIMPage {
             <div class="biblio-chart-card">
               <span class="label" style="margin-bottom:8px;display:block;">Perfil de citas · h-index</span>
               <div id="chart-citations" style="min-height:110px;display:flex;align-items:center;justify-content:center;">
-                <span style="font-size:11px;color:var(--s-text-3,#8aa0b8);">Cargando OpenAlex…</span>
+                <span style="font-size:11px;color:var(--text-3);">Cargando OpenAlex…</span>
               </div>
             </div>
           </div>
 
-          <!-- Toolbar -->
-          <div class="pub-toolbar reveal">
-
-          <!-- Toolbar -->
-          <div class="pub-toolbar reveal">
-            <div class="pub-filter-group">
-              <button class="pub-filter-btn active" data-filter="all" data-type="year">Todos</button>
-              ${years.map(y =>
-                `<button class="pub-filter-btn" data-filter="${y}" data-type="year">${y}</button>`
-              ).join('')}
+          <!-- Barra de herramientas: búsqueda · orden · año · tema -->
+          <div class="pub-toolbar reveal" role="search" id="pub-toolbar">
+            <div class="pub-toolbar-row">
+              <div class="pub-search-wrap" id="pub-search-wrap">
+                <input id="pub-search" class="pub-search" type="search" autocomplete="off"
+                  placeholder="Buscar por título, autor o revista…" aria-label="Buscar publicaciones" />
+                <button type="button" class="pub-search-clear" id="pub-search-clear" aria-label="Borrar búsqueda">✕</button>
+                <kbd class="pub-search-kbd" aria-hidden="true">/</kbd>
+              </div>
+              <div class="seg" role="group" aria-label="Ordenar por" id="pub-sort">
+                <button type="button" class="seg-btn active" data-sort="recent" aria-pressed="true">Recientes</button>
+                <button type="button" class="seg-btn" data-sort="cites" aria-pressed="false">Más citadas</button>
+              </div>
             </div>
-            <div class="pub-filter-group">
-              ${topics.map(t =>
-                `<button class="pub-topic-btn" data-topic="${t}">${t}</button>`
-              ).join('')}
+            <div class="pub-toolbar-row">
+              <span class="pub-toolbar-label">Año</span>
+              <div class="pub-filter-group pub-filter-group--scroll" id="pub-years">${this._yearButtonsHTML(years)}</div>
             </div>
-            <div class="pub-search-wrap">
-              <input id="pub-search" class="pub-search" type="search"
-                placeholder="Buscar por título, autor, revista…" />
+            <div class="pub-toolbar-row">
+              <span class="pub-toolbar-label">Tema</span>
+              <div class="pub-filter-group" id="pub-topics">${this._topicButtonsHTML(topics)}</div>
             </div>
           </div>
 
-          <!-- Cards -->
+          <!-- Resultados + filtros activos -->
+          <div class="pub-results" id="pub-results" aria-live="polite"></div>
+
+          <!-- Tarjetas -->
           <div class="pub-list" id="pub-page-list">
             ${pubs.map((p, i) => this._pubCardHTML(p, i)).join('')}
+          </div>
+          <div class="empty-state" id="pub-empty" hidden>
+            <strong>Ninguna publicación coincide</strong>
+            Prueba con otra palabra, quita algún filtro o revisa la ortografía.
+            <div><button type="button" class="btn-primary" data-pub-reset>Limpiar filtros</button></div>
           </div>
 
         </div>
       </section>`;
   }
 
+  static _yearButtonsHTML(years) {
+    return `<button type="button" class="pub-filter-btn active" data-filter="all" data-type="year" aria-pressed="true">Todos</button>` +
+      years.map(y => `<button type="button" class="pub-filter-btn" data-filter="${y}" data-type="year" aria-pressed="false">${y}</button>`).join('');
+  }
+
+  /** Temas ordenados por frecuencia (los más usados primero) */
+  static _topicsByFreq(pubs) {
+    const f = {};
+    pubs.forEach(p => (p.topics || []).forEach(t => { f[t] = (f[t] || 0) + 1; }));
+    return Object.keys(f).sort((a, b) => f[b] - f[a] || a.localeCompare(b));
+  }
+
+  /** Muestra los 10 temas más frecuentes; el resto se despliega con "+N más" */
+  static _topicButtonsHTML(topics) {
+    const SHOW = 10;
+    const btns = topics.map((t, i) =>
+      `<button type="button" class="pub-topic-btn${i >= SHOW ? ' is-extra' : ''}" data-topic="${t}" aria-pressed="false">${t}</button>`).join('');
+    const more = topics.length > SHOW
+      ? `<button type="button" class="pub-topic-btn chip-more" data-more aria-expanded="false">+${topics.length - SHOW} más</button>` : '';
+    return btns + more;
+  }
+
+  /* ══ Utilidades de publicaciones ══ */
+  static _norm(str) {
+    return String(str || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .toLowerCase().replace(/[-–]/g, ' ').replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+
+  /** Nombre de pila + apellidos de una persona, normalizados */
+  static _personMatcher(person) {
+    const t = this._norm(person.name).split(' ').filter(Boolean);
+    return { given: t[0] || '', surnames: t.slice(1).filter(x => x.length > 2) };
+  }
+
+  /**
+   * ¿Figura esta persona entre los autores? Coincide si el autor tiene el nombre de pila
+   * (o su inicial) Y algún apellido, en cualquier orden: "Mabe-Castro, Diego" · "Mabe Castro D."
+   * Usa la lista COMPLETA de autores cuando existe (la tarjeta solo muestra 4 + "et al.").
+   */
+  static _pubHasAuthor(pub, person) {
+    const m = person._m || (person._m = this._personMatcher(person));
+    if (!m.given || !m.surnames.length) return false;
+    const entries = pub.authorList || String(pub.authors || '').split(/,\s+/).filter(x => x && !/et al/i.test(x));
+    return entries.some(e => {
+      const tk = this._norm(e).split(' ');
+      return m.surnames.some(s => tk.includes(s)) && (tk.includes(m.given) || tk.includes(m.given[0]));
+    });
+  }
+
+  static _pubCite(p) {
+    const doi = (p.doi || '').startsWith('10.') ? ` https://doi.org/${p.doi}` : '';
+    return `${p.authors} (${p.year}). ${p.title}. ${p.journal || ''}.${doi}`.replace(/\s+/g, ' ').trim();
+  }
+
   static _pubCardHTML(p, i) {
+    const E       = window.NIMUI ? NIMUI.esc : (x => x);
     const delay   = ['','delay-1','delay-2','delay-3','delay-4','delay-5'][Math.min(i % 6, 5)];
     const q       = p.quartile ? `<span class="pub-q">${p.quartile}</span>` : '';
     const doi     = p.doi || '';
-    const href    = doi.startsWith('10.') ? `https://doi.org/${doi}` : (p.url || '#');
-    const topics  = (p.topics || []).join(' ');
+    const hasDoi  = doi.startsWith('10.');
+    const href    = hasDoi ? `https://doi.org/${doi}` : ((window.NIMUI && NIMUI.isReal(p.url)) ? p.url : '');
+    const topics  = (p.topics || []).join('|');   // '|' porque hay temas de varias palabras
+    const search  = this._norm(`${p.title} ${p.authors} ${p.journal} ${p.year}`);
+
+    // El TÍTULO es el enlace al artículo; la tarjeta entera responde (enlace extendido)
+    const title = href
+      ? `<a class="card-link" href="${E(href)}" target="_blank" rel="noopener">${p.title}<span class="visually-hidden"> (se abre en una pestaña nueva)</span></a>`
+      : p.title;
 
     return `
-      <article class="pub-card reveal ${delay}"
+      <article class="pub-card${href ? ' is-interactive' : ''} reveal ${delay}"
         data-year="${p.year}"
-        data-topic="${topics}"
-        data-pub-id="${p.id}"
-        ${doi ? `data-doi="${doi}"` : ''}>
+        data-topic="${E(topics)}"
+        data-pub-id="${E(p.id)}"
+        data-cites="${p.citations || 0}"
+        data-search="${E(search)}"
+        ${hasDoi ? `data-doi="${E(doi)}"` : ''}>
         <div class="pub-year">${p.year}</div>
         <div class="pub-body">
-          <h4 class="pub-title">${p.title}</h4>
+          <h4 class="pub-title">${title}</h4>
           <p class="pub-authors">${p.authors}</p>
-          <div class="pub-journal">
-            <a href="${href}" target="_blank" rel="noopener"
-              style="color:inherit;text-decoration:none;">↗ ${p.journal}</a>
-            ${q}
+          <div class="pub-journal"><span>${p.journal || ''}</span>${q}</div>
+          <div class="pub-actions">
+            ${hasDoi ? `<button type="button" class="mini-btn" data-copy="${E(doi)}" data-copy-msg="DOI copiado">Copiar DOI</button>` : ''}
+            <button type="button" class="mini-btn" data-copy="${E(this._pubCite(p))}" data-copy-msg="Cita copiada">Copiar cita</button>
           </div>
         </div>
       </article>`;
@@ -271,7 +356,7 @@ class NIMPage {
       })}
 
       <!-- Miembros activos -->
-      <section class="page-section light-section" style="background:#f6f8fc;">
+      <section class="page-section light-section">
         <div class="container">
 
           <div class="people-filter-bar reveal">
@@ -297,7 +382,7 @@ class NIMPage {
 
       <!-- NIMAChinos -->
       ${pets.length ? `
-      <section class="page-section light-section" id="nimachinos" style="background:#fff;">
+      <section class="page-section light-section" id="nimachinos">
         <div class="container">
           <div class="reveal" style="margin-bottom:28px;">
             <span class="label">Los que realmente mandan</span>
@@ -312,7 +397,7 @@ class NIMPage {
 
       <!-- Alumni -->
       ${alumni.length ? `
-      <section class="page-section light-section" id="alumni" style="background:#f6f8fc;">
+      <section class="page-section light-section" id="alumni">
         <div class="container">
           <div class="reveal" style="margin-bottom:28px;">
             <span class="label">Parte de nuestra historia</span>
@@ -338,36 +423,34 @@ class NIMPage {
   
   static _personCardHTML(p, i) {
     const delay = ['','delay-1','delay-2','delay-3'][Math.min(i % 4, 3)];
-    const pubs  = (window.NIMACH_DATA.publications || [])
-      .filter(pub => pub.authors && pub.authors.includes(p.name.split(' ')[0]));
+    const pubs  = (window.NIMACH_DATA.publications || []).filter(pub => NIMPage._pubHasAuthor(pub, p));
+    const labels = { researchgate:'ResearchGate', orcid:'ORCID', scholar:'Scholar', github:'GitHub' };
 
-    const linksHTML = Object.entries(p.links || {}).map(([k, v]) => {
-      const labels = { researchgate:'ResearchGate', orcid:'ORCID',
-                       scholar:'Scholar', github:'GitHub' };
-      return `<a href="${v}" target="_blank" rel="noopener"
-        class="person-link-btn">${labels[k] || k}</a>`;
-    }).join('');
+    // Solo enlaces reales: nada de botones que no llevan a ningún sitio
+    const linksHTML = Object.entries(p.links || {}).filter(([, v]) => (window.NIMUI ? NIMUI.isReal(v) : v && v !== '#')).map(([k, v]) =>
+      `<a href="${v}" target="_blank" rel="noopener" class="person-link-btn">${labels[k] || k}</a>`
+    ).join('');
 
-    const chipsHTML = (p.chips || []).map(c =>
-      `<span class="person-chip">${c}</span>`).join('');
+    const chipsHTML = (p.chips || []).map(c => `<span class="person-chip">${c}</span>`).join('');
 
     return `
-      <article class="person-page-card reveal ${delay}"
+      <article class="person-page-card reveal ${delay}" id="${p.id}"
         data-cat="${(Array.isArray(p.role_category) ? p.role_category : [p.role_category]).join(' ')}">
         <div class="person-page-top">
           <div class="avatar-wrap">
             ${NIMPage._avatarInnerHTML(p)}
-            <div class="avatar-ring" style="color:${p.ringColor};"></div>
+            <div class="avatar-ring"></div>
           </div>
           <div class="person-page-meta">
             <h3 class="person-name">${p.name}</h3>
             <p class="person-role">${p.role}</p>
-            ${pubs.length ? `<span class="person-pub-count">${pubs.length} pub${pubs.length!==1?'s':''}</span>` : ''}
+            ${pubs.length ? `<a class="person-pub-count" href="publicaciones.html?autor=${p.id}"
+                title="Ver las ${pubs.length} publicaciones de ${p.name}">${pubs.length} pub${pubs.length !== 1 ? 's' : ''}</a>` : ''}
           </div>
         </div>
         <p class="person-bio">${p.bio || ''}</p>
         <div class="person-chips">${chipsHTML}</div>
-        <div class="person-links">${linksHTML}</div>
+        ${linksHTML ? `<div class="person-links">${linksHTML}</div>` : ''}
       </article>`;
   }
   
@@ -404,12 +487,10 @@ class NIMPage {
 
   static _alumniCardHTML(a, i) {
     const delay = ['','delay-1','delay-2','delay-3'][Math.min(i, 3)];
-    const linksHTML = Object.entries(a.links || {}).map(([k, v]) => {
-      const labels = { researchgate:'RG', orcid:'ORCID', scholar:'Scholar', github:'GitHub' };
-      return `<a href="${v}" target="_blank" rel="noopener"
-        class="person-link-btn" style="font-size:10px;padding:4px 9px;">
-        ${labels[k] || k}</a>`;
-    }).join('');
+    const labels = { researchgate:'RG', orcid:'ORCID', scholar:'Scholar', github:'GitHub' };
+    const linksHTML = Object.entries(a.links || {}).filter(([, v]) => (window.NIMUI ? NIMUI.isReal(v) : v && v !== '#')).map(([k, v]) =>
+      `<a href="${v}" target="_blank" rel="noopener" class="person-link-btn">${labels[k] || k}</a>`
+    ).join('');
 
     return `
       <article class="alumni-card reveal ${delay}">
@@ -427,75 +508,72 @@ class NIMPage {
             <span class="alumni-current-label">Actualmente en:</span>
             ${a.currentPosition}
           </p>` : ''}
-          <div class="alumni-links">${linksHTML}</div>
+          ${linksHTML ? `<div class="alumni-links">${linksHTML}</div>` : ''}
         </div>
       </article>`;
   }
-  
   /* ══════════════════════════════════
      HOME — People preview
   ══════════════════════════════════ */
   static _homePersonCardHTML(p, i) {
-    const delay   = ['','delay-1','delay-2','delay-3'][Math.min(i, 3)];
-    const linksHTML = Object.entries(p.links || {}).map(([k, v]) => {
-      const labels = { researchgate:'ResearchGate', orcid:'ORCID',
-                       scholar:'Scholar', github:'GitHub' };
-      return `<button class="social-btn" onclick="window.open('${v}')">${labels[k] || k}</button>`;
-    }).join('');
-
-    const chipsHTML = (p.chips || []).map(c =>
-      `<span class="person-chip">${c}</span>`).join('');
+    const delay  = ['','delay-1','delay-2','delay-3'][Math.min(i, 3)];
+    const labels = { researchgate:'ResearchGate', orcid:'ORCID', scholar:'Scholar', github:'GitHub' };
+    const linksHTML = Object.entries(p.links || {}).filter(([, v]) => (window.NIMUI ? NIMUI.isReal(v) : v && v !== '#')).map(([k, v]) =>
+      `<a class="social-btn" href="${v}" target="_blank" rel="noopener">${labels[k] || k}</a>`
+    ).join('');
+    const chipsHTML = (p.chips || []).map(c => `<span class="person-chip">${c}</span>`).join('');
 
     return `
-      <article class="person-card reveal ${delay}">
+      <article class="person-card is-interactive reveal ${delay}">
         <div class="avatar-wrap">
           ${NIMPage._avatarInnerHTML(p, null, '')}
-          <div class="avatar-ring" style="color:${p.ringColor};"></div>
+          <div class="avatar-ring"></div>
         </div>
-        <h3 class="person-name">${p.name}</h3>
+        <h3 class="person-name"><a class="card-link" href="pages/personas.html#${p.id}">${p.name}</a></h3>
         <p class="person-role">${p.role}</p>
         <div class="person-chips">${chipsHTML}</div>
-        <div class="person-social">${linksHTML}</div>
+        ${linksHTML ? `<div class="person-social">${linksHTML}</div>` : ''}
+        <span class="card-cta" aria-hidden="true">Ver perfil <span class="arrow">→</span></span>
       </article>`;
   }
   
   static _svgByBg() {
     return {
       'gi-1': `<svg viewBox="0 0 200 360" aria-hidden="true">
-        <circle cx="100" cy="130" r="55" fill="none" stroke="rgba(127,179,232,.5)" stroke-width=".8"/>
-        <circle cx="100" cy="130" r="6" fill="rgba(127,179,232,.85)"/>
-        <line x1="100" y1="130" x2="58"  y2="96"  stroke="rgba(127,179,232,.4)" stroke-width=".7"/>
-        <line x1="100" y1="130" x2="142" y2="96"  stroke="rgba(127,179,232,.4)" stroke-width=".7"/>
-        <circle cx="58"  cy="96"  r="4" fill="rgba(232,112,64,.75)"/>
-        <circle cx="142" cy="96"  r="4" fill="rgba(232,112,64,.75)"/>
+        <circle cx="100" cy="130" r="55" fill="none" stroke="rgba(var(--accent-rgb),.5)" stroke-width=".8"/>
+        <circle cx="100" cy="130" r="6" fill="rgba(var(--accent-rgb),.85)"/>
+        <line x1="100" y1="130" x2="58"  y2="96"  stroke="rgba(var(--accent-rgb),.4)" stroke-width=".7"/>
+        <line x1="100" y1="130" x2="142" y2="96"  stroke="rgba(var(--accent-rgb),.4)" stroke-width=".7"/>
+        <circle cx="58"  cy="96"  r="4" fill="rgba(var(--accent-rgb),.75)"/>
+        <circle cx="142" cy="96"  r="4" fill="rgba(var(--accent-rgb),.75)"/>
         <path d="M10 270 L44 270 L48 252 L52 280 L56 236 L60 286 L64 270 L110 270 L114 250 L118 278 L122 232 L128 282 L132 270 L190 270"
-          stroke="rgba(232,112,64,.7)" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+          stroke="rgba(var(--accent-rgb),.7)" stroke-width="1.3" fill="none" stroke-linecap="round"/>
       </svg>`,
       'gi-2': `<svg viewBox="0 0 200 180" aria-hidden="true">
-        <path d="M20 90 Q60 40 100 90 Q140 140 180 90" stroke="rgba(127,179,232,.7)" stroke-width="1.2" fill="none"/>
-        <circle cx="20"  cy="90" r="4" fill="rgba(232,112,64,.9)"/>
-        <circle cx="100" cy="90" r="5" fill="rgba(29,184,132,.9)"/>
-        <circle cx="180" cy="90" r="4" fill="rgba(127,179,232,.9)"/>
+        <path d="M20 90 Q60 40 100 90 Q140 140 180 90" stroke="rgba(var(--accent-rgb),.7)" stroke-width="1.2" fill="none"/>
+        <circle cx="20"  cy="90" r="4" fill="rgba(var(--accent-rgb),.9)"/>
+        <circle cx="100" cy="90" r="5" fill="rgba(var(--accent-rgb),.9)"/>
+        <circle cx="180" cy="90" r="4" fill="rgba(var(--accent-rgb),.9)"/>
       </svg>`,
       'gi-3': `<svg viewBox="0 0 200 180" aria-hidden="true">
-        <rect x="30" y="40" width="140" height="90" rx="4" fill="none" stroke="rgba(127,179,232,.4)" stroke-width=".8"/>
-        <line x1="30" y1="60" x2="170" y2="60" stroke="rgba(127,179,232,.3)" stroke-width=".6"/>
-        <circle cx="100" cy="100" r="20" fill="none" stroke="rgba(232,112,64,.6)" stroke-width="1"/>
-        <circle cx="100" cy="100" r="4" fill="rgba(232,112,64,.9)"/>
+        <rect x="30" y="40" width="140" height="90" rx="4" fill="none" stroke="rgba(var(--accent-rgb),.4)" stroke-width=".8"/>
+        <line x1="30" y1="60" x2="170" y2="60" stroke="rgba(var(--accent-rgb),.3)" stroke-width=".6"/>
+        <circle cx="100" cy="100" r="20" fill="none" stroke="rgba(var(--accent-rgb),.6)" stroke-width="1"/>
+        <circle cx="100" cy="100" r="4" fill="rgba(var(--accent-rgb),.9)"/>
       </svg>`,
       'gi-4': `<svg viewBox="0 0 200 180" aria-hidden="true">
-        <circle cx="100" cy="90" r="48" fill="none" stroke="rgba(123,82,212,.65)" stroke-width=".9"/>
-        <circle cx="100" cy="90" r="24" fill="none" stroke="rgba(123,82,212,.4)" stroke-width=".6"/>
-        <circle cx="100" cy="90" r="4" fill="rgba(123,82,212,.9)"/>
+        <circle cx="100" cy="90" r="48" fill="none" stroke="rgba(var(--accent-rgb),.65)" stroke-width=".9"/>
+        <circle cx="100" cy="90" r="24" fill="none" stroke="rgba(var(--accent-rgb),.4)" stroke-width=".6"/>
+        <circle cx="100" cy="90" r="4" fill="rgba(var(--accent-rgb),.9)"/>
       </svg>`,
       'gi-5': `<svg viewBox="0 0 200 180" aria-hidden="true">
-        <path d="M30 130 Q65 65 100 88 Q135 112 170 38" stroke="rgba(59,170,191,.7)" stroke-width="1.2" fill="none"/>
-        <circle cx="100" cy="88" r="4" fill="rgba(59,170,191,.95)"/>
+        <path d="M30 130 Q65 65 100 88 Q135 112 170 38" stroke="rgba(var(--accent-rgb),.7)" stroke-width="1.2" fill="none"/>
+        <circle cx="100" cy="88" r="4" fill="rgba(var(--accent-rgb),.95)"/>
       </svg>`,
       'gi-6': `<svg viewBox="0 0 200 180" aria-hidden="true">
-        <circle cx="100" cy="80" r="36" fill="none" stroke="rgba(29,184,132,.55)" stroke-width=".8"/>
-        <path d="M64 110 Q80 130 100 125 Q120 130 136 110" fill="none" stroke="rgba(29,184,132,.6)" stroke-width="1"/>
-        <circle cx="100" cy="80" r="4" fill="rgba(29,184,132,.9)"/>
+        <circle cx="100" cy="80" r="36" fill="none" stroke="rgba(var(--accent-rgb),.55)" stroke-width=".8"/>
+        <path d="M64 110 Q80 130 100 125 Q120 130 136 110" fill="none" stroke="rgba(var(--accent-rgb),.6)" stroke-width="1"/>
+        <circle cx="100" cy="80" r="4" fill="rgba(var(--accent-rgb),.9)"/>
       </svg>`,
     };
   }
@@ -503,22 +581,70 @@ class NIMPage {
   static _galleryItemHTML(item, i, basePath = '../') {
     const delay   = ['','delay-1','delay-2','delay-3','delay-4','delay-5'][Math.min(i, 5)];
     const svgMap  = this._svgByBg();
+    // Las publicaciones de Instagram traen texto libre: se escapa. Los datos propios (data.js) se confían.
+    const E       = item.ig ? NIMUI.esc : (x => x);
     const media   = item.photo
-      ? `<img src="${basePath}${item.photo}" alt="${item.title}"
-             style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">`
+      ? `<img src="${basePath}${E(item.photo)}" alt="${E(item.alt || item.title)}"
+             style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy" decoding="async">`
       : `<div class="gallery-svg">${svgMap[item.bg] || ''}</div>`;
 
     return `
-      <div class="gallery-item${item.span ? ' g-span-2' : ''} reveal ${delay}">
+      <div class="gallery-item${item.span ? ' g-span-2' : ''}${item.ig ? ' gallery-item--ig' : ''} reveal ${delay}"
+           role="button" tabindex="0" aria-label="Ampliar imagen: ${E(item.title)}"
+           ${item.ig ? `data-permalink="${E(item.permalink)}" data-caption="${E(item.caption || '')}"` : ''}>
         <div class="gallery-item-inner ${item.photo ? '' : item.bg}">
           ${media}
           <div class="gallery-overlay"></div>
           <div class="gallery-label">
-            <div class="gallery-label-title">${item.title}</div>
-            <div class="gallery-label-sub">${item.sub}</div>
+            <div class="gallery-label-title">${E(item.title)}</div>
+            <div class="gallery-label-sub">${E(item.sub)}</div>
           </div>
         </div>
       </div>`;
+  }
+
+  /* ══════════════════════════════════
+     INSTAGRAM  (data/instagram.json, ver docs/INSTAGRAM.md)
+  ══════════════════════════════════ */
+  /** Lee el feed guardado. Nunca rechaza: devuelve null si no existe o es inválido. */
+  static loadInstagram() {
+    if (!this._igPromise) {
+      const base = location.pathname.includes('/pages/') ? '../' : '';
+      this._igPromise = fetch(base + 'data/instagram.json', { cache: 'no-cache' })
+        .then(r => (r.ok ? r.json() : null))
+        .then(d => (d && Array.isArray(d.posts) ? d : null))
+        .catch(() => null);
+    }
+    return this._igPromise;
+  }
+
+  /** Publicaciones → elementos de galería (solo rutas y enlaces con el formato esperado) */
+  static _igItems(feed, limit = 12) {
+    if (!feed) return [];
+    const fmt = new Intl.DateTimeFormat('es-CL', { day: 'numeric', month: 'short', year: 'numeric' });
+    return feed.posts
+      .filter(p => p && /^https:\/\/www\.instagram\.com\//.test(p.permalink || '') &&
+                   /^assets\/images\/instagram\/[\w.-]+$/.test(p.image || ''))
+      .slice(0, limit)
+      .map(p => {
+        const caption = String(p.caption || '').replace(/\s+/g, ' ').trim();
+        const body    = caption.replace(/(\s*#[\p{L}\d_]+)+\s*$/u, '').trim() || caption;   // sin hashtags finales
+        let title = body || 'Publicación de Instagram';
+        if (title.length > 80) title = title.slice(0, 80).replace(/\s+\S*$/, '') + '…';
+        const d = new Date(p.date);
+        return { id: 'ig-' + p.id, ig: true, photo: p.image, title, caption, permalink: p.permalink,
+                 sub: isNaN(d) ? 'Instagram' : fmt.format(d), alt: title };
+      });
+  }
+
+  /** Reemplaza el contenido de una cuadrícula por las publicaciones (si hay) */
+  static _fillGridFromIG(grid, items, basePath) {
+    grid.classList.add('gallery-grid--ig');
+    grid.innerHTML = items.map((it, i) => this._galleryItemHTML(it, i, basePath)).join('');
+    requestAnimationFrame(() => grid.querySelectorAll('.reveal').forEach(el => {
+      if (window._scrollRevealObserver) window._scrollRevealObserver.observe(el);
+      else el.classList.add('visible');
+    }));
   }
 
   static _newsItemHTML(n, i) {
@@ -556,35 +682,127 @@ class NIMPage {
     const grid = document.getElementById('home-gallery-grid');
     if (!grid || !window.NIMACH_DATA) return;
 
-    const items = (window.NIMACH_DATA.gallery || [])
-      .filter(g => g.featured_home);
-
-    grid.innerHTML = items
-      .map((item, i) => NIMPage._galleryItemHTML(item, i, ''))
-      .join('');
-
-    requestAnimationFrame(() => {
-      grid.querySelectorAll('.reveal').forEach(el => {
+    const placeholders = () => {
+      grid.innerHTML = (window.NIMACH_DATA.gallery || []).filter(g => g.featured_home)
+        .map((item, i) => NIMPage._galleryItemHTML(item, i, '')).join('');
+      requestAnimationFrame(() => grid.querySelectorAll('.reveal').forEach(el => {
         if (window._scrollRevealObserver) window._scrollRevealObserver.observe(el);
         else el.classList.add('visible');
-      });
+      }));
+    };
+
+    grid.setAttribute('aria-busy', 'true');
+    NIMPage.loadInstagram().then(feed => {
+      const items = NIMPage._igItems(feed, 6);
+      items.length ? NIMPage._fillGridFromIG(grid, items, '') : placeholders();
+      grid.removeAttribute('aria-busy');
     });
   }
-  
-  static _projectCardHTML(p, i) {
+
+  /* ══════════════════════════════════
+     PORTADA dirigida por datos (editables desde el editor del sitio)
+  ══════════════════════════════════ */
+  static _observeReveal(root) {
+    requestAnimationFrame(() => root.querySelectorAll('.reveal').forEach(el => {
+      if (window._scrollRevealObserver) window._scrollRevealObserver.observe(el);
+      else el.classList.add('visible');
+    }));
+  }
+
+  static initHomeResearch() {
+    const grid = document.getElementById('home-research-grid');
+    const lines = (window.NIMACH_DATA || {}).research || [];
+    if (!grid) return;
+    grid.innerHTML = lines.map((l, i) => `
+      <article class="research-card is-interactive reveal delay-${Math.min(i + 1, 3)}">
+        <div class="card-icon" aria-hidden="true">${NIMUI.icon(l.icon, 20)}</div>
+        <h3 class="card-title"><a class="card-link" href="pages/investigacion.html#${NIMUI.esc(l.id)}">${l.title}</a></h3>
+        <p class="card-desc">${l.desc}</p>
+        <div class="card-tags">${(l.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
+        <span class="card-cta" aria-hidden="true">Explorar línea <span class="arrow">→</span></span>
+      </article>`).join('');
+    this._observeReveal(grid);
+  }
+
+  static initHomeParadigm() {
+    const P = (window.NIMACH_DATA || {}).paradigm;
+    if (!P) return;
+    const txt = document.getElementById('home-paradigm-text');
+    if (txt) txt.innerHTML = '«' + NIMLite.toHtml(P.summary || P.quote || '') + '»';
+    const box = document.getElementById('home-pillars');
+    if (box) box.innerHTML = (P.pillars || []).map((pl, i) => `
+      <a class="pb-pillar" href="pages/investigacion.html#pdg-${NIMUI.esc(pl.id)}">
+        <span class="pb-icon" aria-hidden="true">${NIMUI.icon(pl.icon, 20)}</span>
+        <span class="pb-num">${String(i + 1).padStart(2, '0')}</span>
+        <span class="pb-name">${pl.label}</span>
+      </a>`).join('');
+  }
+
+  /** Hero, DEI, contacto y chips de colaboradores (el HTML trae el texto actual como respaldo) */
+  static initHomeTexts() {
+    const D = window.NIMACH_DATA || {}, T = D.texts || {};
+    const $ = id => document.getElementById(id);
+    const lines = s => NIMLite.toHtml(s || '');          // saltos de línea → <br>, texto escapado
+
+    if (T.hero && T.hero.subtitle && $('hero-sub')) $('hero-sub').innerHTML = NIMLite.toHtml(T.hero.subtitle);
+
+    const dei = T.dei;
+    if (dei) {
+      if (dei.title && $('dei-title')) $('dei-title').textContent = dei.title.replace(/&lt;/g, '<');
+      if (dei.lead && $('dei-lead')) $('dei-lead').innerHTML = NIMLite.toHtml(dei.lead);
+      if ((dei.cards || []).length && $('dei-grid')) {
+        $('dei-grid').innerHTML = dei.cards.map((c, i) => `
+          <article class="dei-card reveal delay-${Math.min(i + 1, 3)}">
+            <div class="dei-card-icon" aria-hidden="true">${NIMUI.icon(c.icon, 24)}</div>
+            <h3 class="dei-card-title">${c.title}</h3>
+            <p class="dei-card-text">${c.text}</p>
+          </article>`).join('');
+        this._observeReveal($('dei-grid'));
+      }
+    }
+
+    const C = T.contact;
+    if (C) {
+      if (C.address && $('contact-address')) $('contact-address').innerHTML = lines(C.address);
+      if (C.address && $('contact-map')) {
+        $('contact-map').href = 'https://www.google.com/maps/search/?api=1&query=' +
+          encodeURIComponent(C.address.replace(/\s*\n\s*/g, ', ').replace(/^[^,]*CADI[^,]*,\s*/i, ''));
+      }
+      if (C.institution && $('contact-institution')) $('contact-institution').innerHTML = lines(C.institution);
+      if (C.website && $('contact-website')) $('contact-website').textContent = C.website;
+    }
+
+    const collab = D.collaborators || [];
+    if ($('contact-chips') && collab.length) $('contact-chips').innerHTML = collab.map(c => this._collabChip(c)).join('');
+    if ($('footer-chips') && collab.length) {
+      $('footer-chips').innerHTML = collab.filter(c => c.inFooter !== false)
+        .map(c => `<span class="footer-chip">${c.name}</span>`).join('');
+    }
+    if (window.NIMUI) NIMUI.hydrateIcons();
+  }
+
+  static _collabChip(c) {
+    return c.url
+      ? `<a class="collab-chip" href="${NIMUI.esc(c.url)}" target="_blank" rel="noopener">${c.name}</a>`
+      : `<span class="collab-chip">${c.name}</span>`;
+  }
+
+  static _projectCardHTML(p, i, opts = {}) {
     const delay    = ['','delay-1','delay-2','delay-3'][Math.min(i, 3)];
     const badge    = p.status === 'active'
       ? `<span class="badge badge-active"><span class="badge-dot"></span>En curso</span>`
       : `<span class="badge badge-complete">Finalizado</span>`;
     const tagsHTML = (p.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+    // En la home la tarjeta lleva a SU proyecto; en la página de proyectos no se enlaza a sí misma
+    const title = opts.href ? `<a class="card-link" href="${opts.href}">${p.title}</a>` : p.title;
 
     return `
-      <article class="project-card reveal ${delay}">
+      <article class="project-card${opts.href ? ' is-interactive' : ''} reveal ${delay}" id="${p.id}">
         <div class="project-top">
           ${badge}
           <div class="project-agency">${p.agency}<br>${p.code}</div>
         </div>
-        <h3 class="project-title">${p.title}</h3>
+        <h3 class="project-title">${title}</h3>
         <p class="project-pi">${p.pi}</p>
         <div class="project-meta">
           <div class="project-meta-item">
@@ -609,6 +827,7 @@ class NIMPage {
           </div>
         </div>
         <div class="project-tags">${tagsHTML}</div>
+        ${opts.href ? `<span class="card-cta" aria-hidden="true">Ver proyecto <span class="arrow">→</span></span>` : ''}
       </article>`;
   }
 
@@ -620,7 +839,7 @@ class NIMPage {
       .filter(p => p.featured_home);
 
     grid.innerHTML = projects
-      .map((p, i) => NIMPage._projectCardHTML(p, i))
+      .map((p, i) => NIMPage._projectCardHTML(p, i, { href: `pages/proyectos.html#${p.id}` }))
       .join('');
 
     // Activar barras de progreso
@@ -703,7 +922,7 @@ class NIMPage {
 
           <!-- Contribute callout -->
           <div class="contribute-callout reveal">
-            <div class="contribute-icon">🛠️</div>
+            <div class="contribute-icon">${NIMUI.icon('wrench', 26)}</div>
             <div class="contribute-body">
               <div class="contribute-title">¿Quieres contribuir?</div>
               <p class="contribute-desc">
@@ -741,7 +960,7 @@ class NIMPage {
       <article class="tool-card tool-featured reveal" style="margin-bottom:20px;">
         <div class="tool-header">
           <div style="display:flex;align-items:center;gap:12px;">
-            <div class="tool-icon">${t.icon}</div>
+            <div class="tool-icon">${NIMUI.icon(t.icon, 22)}</div>
             <div>
               <div class="tool-badges">
                 <span class="badge badge-active"><span class="badge-dot"></span>En producción</span>
@@ -778,8 +997,8 @@ class NIMPage {
     return `
       <article class="tool-card tool-upcoming reveal ${delay}">
         <div class="tool-header">
-          <div class="tool-icon">${t.icon}</div>
-          <span class="badge" style="background:rgba(123,82,212,.1);color:var(--c-purple);border:0.5px solid rgba(123,82,212,.2);">
+          <div class="tool-icon">${NIMUI.icon(t.icon, 22)}</div>
+          <span class="badge badge-complete">
             ${st.label}
           </span>
         </div>
@@ -801,21 +1020,16 @@ class NIMPage {
     const p = window.NIMACH_DATA.paradigm;
     if (!p) return '';
 
-    const colorMap = {
-      blue:  { border: 'var(--c-blue)',  bg: 'rgba(59,122,191,.08)',  text: 'var(--c-blue-light)' },
-      coral: { border: 'var(--c-coral)', bg: 'rgba(232,112,64,.08)',  text: 'var(--c-coral)' },
-      teal:  { border: 'var(--c-teal)',  bg: 'rgba(29,184,132,.08)',  text: 'var(--c-teal)' },
-    };
+
 
     const pillarsHTML = p.pillars.map((pl, i) => {
-      const c = colorMap[pl.color];
       const delay = ['', 'delay-1', 'delay-2'][i];
       const tagsHTML = pl.tags.map(t => `<span class="tag">${t}</span>`).join('');
       return `
-        <div class="pdg-pillar pdg-${pl.color} reveal ${delay}">
+        <div class="pdg-pillar pdg-${pl.color} reveal ${delay}" id="pdg-${pl.id}">
           <div class="pdg-pillar-top">
-            <span class="pdg-pillar-icon" style="color:${c.text};background:${c.bg};">${pl.icon}</span>
-            <span class="pdg-pillar-num" style="color:${c.text};">${pl.num}</span>
+            <span class="pdg-pillar-icon">${NIMUI.icon(pl.icon, 20)}</span>
+            <span class="pdg-pillar-num">${pl.num}</span>
           </div>
           <h3 class="pdg-pillar-name">${pl.label}</h3>
           <p class="pdg-pillar-question">${pl.question}</p>
@@ -843,7 +1057,7 @@ class NIMPage {
         <div class="pdg-diagram-center">
           <div class="pdg-diagram-node">
             <div class="pdg-node-pulse"></div>
-            <span class="pdg-node-icon">⬡</span>
+            <span class="pdg-node-icon">${NIMUI.icon('network', 22)}</span>
             <span class="pdg-node-label">Resiliencia<br>como proceso</span>
           </div>
           <div class="pdg-diagram-arms">
@@ -872,26 +1086,42 @@ class NIMPage {
         )
       )).slice(0, 3);
 
+    // Tema más frecuente entre las publicaciones de cada línea → enlace "Ver todas"
+    const allPubs   = window.NIMACH_DATA.publications || [];
+    const topicFor  = id => {
+      const tags = (lines.find(l => l.id === id)?.tags || []).map(t => t.toLowerCase());
+      const freq = {};
+      allPubs.forEach(p => (p.topics || []).forEach(t => {
+        if (tags.some(tag => tag.includes(t) || t.includes(tag))) freq[t] = (freq[t] || 0) + 1;
+      }));
+      return Object.entries(freq).sort((a, b) => b[1] - a[1])[0]?.[0];
+    };
+
     const lineCards = lines.map((l, i) => {
       const delay = ['','delay-1','delay-2'][i] || '';
       const relPubs = pubsByLine(l.id);
 
+      const topic = topicFor(l.id);
       const pubsHTML = relPubs.length ? `
         <div class="rl-pubs">
           <div class="rl-pubs-label">Publicaciones relacionadas</div>
-          ${relPubs.map(p => `
-            <div class="rl-pub-item">
-              <span class="rl-pub-year">${p.year}</span>
-              <span class="rl-pub-title">${p.title.slice(0,75)}…</span>
-            </div>`).join('')}
+          ${relPubs.map(p => {
+            const hasDoi = (p.doi || '').startsWith('10.');
+            const t = p.title.length > 75 ? p.title.slice(0, 75) + '…' : p.title;
+            const inner = `<span class="rl-pub-year">${p.year}</span><span class="rl-pub-title">${t}</span>`;
+            return hasDoi
+              ? `<a class="rl-pub-item" href="https://doi.org/${p.doi}" target="_blank" rel="noopener" title="Abrir el artículo">${inner}</a>`
+              : `<div class="rl-pub-item">${inner}</div>`;
+          }).join('')}
+          ${topic ? `<a class="mini-btn rl-more" href="publicaciones.html?tema=${encodeURIComponent(topic)}">Ver todas las publicaciones de esta línea →</a>` : ''}
         </div>` : '';
 
       const tagsHTML = (l.tags||[]).map(t => `<span class="tag">${t}</span>`).join('');
 
       return `
-        <article class="rl-card ${l.color} reveal ${delay}">
+        <article class="rl-card ${l.color} reveal ${delay}" id="${l.id}">
           <div class="rl-card-header">
-            <div class="card-icon ${l.ic}">${l.icon}</div>
+            <div class="card-icon ${l.ic}">${NIMUI.icon(l.icon, 20)}</div>
             <div class="rl-card-meta">
               <h2 class="rl-card-title">${l.title}</h2>
             </div>
@@ -903,8 +1133,11 @@ class NIMPage {
     }).join('');
 
     // Colaboradores
+    // Solo se ven como botón los colaboradores con enlace real; el resto son etiquetas
     const collabs = (window.NIMACH_DATA.collaborators||[]).map(c =>
-      `<a href="${c.url}" class="collab-chip" target="_blank" rel="noopener">${c.name}</a>`
+      c.url
+        ? `<a href="${c.url}" class="collab-chip" target="_blank" rel="noopener">${c.name}</a>`
+        : `<span class="collab-chip">${c.name}</span>`
     ).join('');
 
     return `
@@ -963,7 +1196,7 @@ class NIMPage {
         <div class="container">
           <div class="pub-stat-strip">
             <div class="pub-stat">
-              <div class="pub-stat-val" style="color:var(--c-teal);">${active.length}</div>
+              <div class="pub-stat-val">${active.length}</div>
               <div class="pub-stat-lbl">Proyectos activos</div>
             </div>
             <div class="pub-stat">
@@ -971,7 +1204,7 @@ class NIMPage {
               <div class="pub-stat-lbl">Total proyectos</div>
             </div>
             <div class="pub-stat">
-              <div class="pub-stat-val" style="color:var(--c-coral);">${complete.length}</div>
+              <div class="pub-stat-val">${complete.length}</div>
               <div class="pub-stat-lbl">Completados</div>
             </div>
             <div class="pub-stat">
@@ -986,7 +1219,7 @@ class NIMPage {
         <div class="container">
 
           ${active.length ? `
-          <div class="proj-section-title reveal">
+          <div class="proj-section-title reveal" id="activos">
             <span class="label">En desarrollo</span>
             <h3 class="section-title">Proyectos activos</h3>
           </div>
@@ -995,7 +1228,7 @@ class NIMPage {
           </div>` : ''}
 
           ${complete.length ? `
-          <div class="proj-section-title reveal" style="margin-top:48px;">
+          <div class="proj-section-title reveal" id="completados" style="margin-top:48px;">
             <span class="label">Historial</span>
             <h3 class="section-title">Proyectos completados</h3>
           </div>
@@ -1030,13 +1263,19 @@ class NIMPage {
       <!-- Gallery grid -->
       <section class="page-section light-section" >
         <div class="container">
-          <span class="label reveal">Fotografías y eventos</span>
-          <div class="gallery-grid" style="margin-top:16px;">${galleryCards}</div>
+          <div class="gallery-head reveal">
+            <span class="label">Fotografías y eventos</span>
+            <a class="see-all" href="https://www.instagram.com/nimach_group/" target="_blank" rel="noopener">
+              <span data-icon="instagram" data-size="16" aria-hidden="true"></span> Síguenos en Instagram @nimach_group
+            </a>
+          </div>
+          <div class="gallery-grid" id="page-gallery-grid" style="margin-top:16px;" aria-busy="true">${galleryCards}</div>
+          <p class="ig-note" id="ig-note" hidden></p>
         </div>
       </section>
 
       <!-- Timeline de noticias -->
-      <section class="page-section light-section">
+      <section class="page-section light-section" id="noticias">
         <div class="container">
           <div class="reveal">
             <span class="label">Actividad del grupo</span>
@@ -1061,20 +1300,15 @@ class NIMPage {
       bar.style.width = Math.min(pct, 100) + '%';
     }, { passive: true });
     
-    // Re-bind theme toggle (inyectado en el nav)
-    const themeBtn = document.getElementById('theme-toggle');
-    if (themeBtn && window.ThemeManager) {
-      // ThemeManager ya se instanció; sólo re-bind
-      const tm = new ThemeManager();
-      // ThemeManager ya llama bindToggle() en constructor; evitar doble bind
-    }
-
     switch (pageId) {
       case 'publicaciones':  this._afterPublicaciones(); break;
       case 'personas':       this._afterPersonas();      break;
       case 'proyectos':      this._afterProyectos();     break;
       case 'galeria':        this._afterGaleria();       break;
     }
+
+    // Enlaces tipo pagina.html#elemento: llevar al elemento y resaltarlo (ya renderizado)
+    if (window.NIMUI) setTimeout(() => NIMUI.handleHash(), 150);
   }
   
   /* ══════════════════════════════════
@@ -1111,25 +1345,25 @@ class NIMPage {
       const isMax  = counts[i] === maxCount;
       return `
         <rect x="${x}" y="${yy}" width="${barW.toFixed(1)}" height="${bh.toFixed(1)}"
-          rx="2" fill="${isNew ? '#e87040' : '#3b7abf'}" opacity="${isNew ? 0.88 : 0.52}">
+          rx="2" fill="${isNew ? 'var(--accent)' : 'var(--text-3)'}" opacity="${isNew ? 0.95 : 0.4}">
           <title>${y}: ${counts[i]}</title></rect>
         ${showLbl ? `<text x="${(+x + barW / 2).toFixed(1)}" y="${(H - pB + 14).toFixed(1)}"
-          text-anchor="middle" font-size="7.5" fill="var(--s-text-3,#8aa0b8)">${y}</text>` : ''}
+          text-anchor="middle" font-size="7.5" fill="var(--text-3)">${y}</text>` : ''}
         ${isMax ? `<text x="${(+x + barW / 2).toFixed(1)}" y="${(+yy - 3).toFixed(1)}"
-          text-anchor="middle" font-size="8" fill="var(--s-text-2,#4a6280)">${counts[i]}</text>` : ''}`;
+          text-anchor="middle" font-size="8" fill="var(--text-2)">${counts[i]}</text>` : ''}`;
     }).join('');
 
     // Legend dots
     const legend = `
-      <rect x="${pL}" y="2" width="10" height="6" rx="1.5" fill="#3b7abf" opacity="0.52"/>
-      <text x="${pL + 13}" y="9" font-size="8" fill="var(--s-text-3,#8aa0b8)">anterior</text>
-      <rect x="${pL + 60}" y="2" width="10" height="6" rx="1.5" fill="#e87040" opacity="0.88"/>
-      <text x="${pL + 73}" y="9" font-size="8" fill="var(--s-text-3,#8aa0b8)">últimos 3 años</text>`;
+      <rect x="${pL}" y="2" width="10" height="6" rx="1.5" fill="var(--text-3)" opacity="0.4"/>
+      <text x="${pL + 13}" y="9" font-size="8" fill="var(--text-3)">anterior</text>
+      <rect x="${pL + 60}" y="2" width="10" height="6" rx="1.5" fill="var(--accent)" opacity="0.95"/>
+      <text x="${pL + 73}" y="9" font-size="8" fill="var(--text-3)">últimos 3 años</text>`;
 
     el.innerHTML = `
       <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;">
         <line x1="${pL}" y1="${pT + cH}" x2="${W - pR}" y2="${pT + cH}"
-          stroke="rgba(0,0,0,0.07)" stroke-width="0.5"/>
+          stroke="var(--line)" stroke-width="0.5"/>
         ${bars}
         ${legend}
       </svg>`;
@@ -1143,7 +1377,7 @@ class NIMPage {
     const hasCites = pubs.some(p => (p.citations || 0) > 0);
 
     if (!hasCites) {
-      el.innerHTML = `<span style="font-size:11px;color:var(--s-text-3,#8aa0b8);">Sin datos aún…</span>`;
+      el.innerHTML = `<span style="font-size:11px;color:var(--text-3);">Sin datos aún…</span>`;
       return;
     }
 
@@ -1164,7 +1398,7 @@ class NIMPage {
       const x  = (pL + i * gap + gap / 2 - barW / 2).toFixed(1);
       const yy = (pT + cH - bh).toFixed(1);
       return `<rect x="${x}" y="${yy}" width="${barW.toFixed(1)}" height="${bh.toFixed(1)}"
-        rx="1" fill="${i < h ? '#e87040' : '#3b7abf'}" opacity="${i < h ? 0.85 : 0.4}">
+        rx="1" fill="${i < h ? 'var(--accent)' : 'var(--text-3)'}" opacity="${i < h ? 0.95 : 0.35}">
         <title>Rank ${i + 1}: ${c} citas</title></rect>`;
     }).join('');
 
@@ -1174,36 +1408,36 @@ class NIMPage {
       const hy = (pT + cH - (h / maxCites) * cH).toFixed(1);
       return `
         <line x1="${pL}" y1="${hy}" x2="${W - pR}" y2="${hy}"
-          stroke="#1db884" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.65"/>
+          stroke="var(--text-2)" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.8"/>
         <line x1="${hx}" y1="${pT}" x2="${hx}" y2="${pT + cH}"
-          stroke="#1db884" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.65"/>
+          stroke="var(--text-2)" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.8"/>
         <text x="${(+hx + 3).toFixed(1)}" y="${(+hy - 3).toFixed(1)}"
-          font-size="8" fill="#1db884" font-weight="600">h = ${h}</text>`;
+          font-size="8" fill="var(--text-2)" font-weight="600">h = ${h}</text>`;
     })() : '';
 
     // Y-axis ticks (3 values: 0, mid, max)
     const ticks = [0, Math.round(maxCites / 2), maxCites].map(v => {
       const ty = (pT + cH - (v / maxCites) * cH + 3).toFixed(1);
       return `<text x="${pL - 3}" y="${ty}" text-anchor="end"
-        font-size="7.5" fill="var(--s-text-3,#8aa0b8)">${v}</text>`;
+        font-size="7.5" fill="var(--text-3)">${v}</text>`;
     }).join('');
 
     // Legend — mirrors year chart legend position (top-left area)
     const legend = `
-      <rect x="${pL}" y="2" width="10" height="6" rx="1.5" fill="#e87040" opacity="0.85"/>
-      <text x="${pL + 13}" y="9" font-size="8" fill="var(--s-text-3,#8aa0b8)">h-core</text>
-      <rect x="${pL + 58}" y="2" width="10" height="6" rx="1.5" fill="#3b7abf" opacity="0.4"/>
-      <text x="${pL + 71}" y="9" font-size="8" fill="var(--s-text-3,#8aa0b8)">resto</text>
+      <rect x="${pL}" y="2" width="10" height="6" rx="1.5" fill="var(--accent)" opacity="0.95"/>
+      <text x="${pL + 13}" y="9" font-size="8" fill="var(--text-3)">h-core</text>
+      <rect x="${pL + 58}" y="2" width="10" height="6" rx="1.5" fill="var(--text-3)" opacity="0.35"/>
+      <text x="${pL + 71}" y="9" font-size="8" fill="var(--text-3)">resto</text>
       <line x1="${pL + 118}" y1="5" x2="${pL + 133}" y2="5"
-        stroke="#1db884" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.65"/>
-      <text x="${pL + 136}" y="9" font-size="8" fill="var(--s-text-3,#8aa0b8)">h-index</text>`;
+        stroke="var(--text-2)" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.8"/>
+      <text x="${pL + 136}" y="9" font-size="8" fill="var(--text-3)">h-index</text>`;
 
     el.innerHTML = `
       <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;">
         <line x1="${pL}" y1="${pT}" x2="${pL}" y2="${pT + cH}"
-          stroke="rgba(0,0,0,0.07)" stroke-width="0.5"/>
+          stroke="var(--line)" stroke-width="0.5"/>
         <line x1="${pL}" y1="${pT + cH}" x2="${W - pR}" y2="${pT + cH}"
-          stroke="rgba(0,0,0,0.07)" stroke-width="0.5"/>
+          stroke="var(--line)" stroke-width="0.5"/>
         ${ticks}
         ${hLine}
         ${bars}
@@ -1215,12 +1449,6 @@ class NIMPage {
     NIMPage._initPubFilter();
     // Deferred so layout is complete and chart container has width
     setTimeout(() => NIMPage._renderPubsByYearChart(), 150);
-
-    // Búsqueda de texto
-    const searchEl = document.getElementById('pub-search');
-    if (searchEl) {
-      searchEl.addEventListener('input', () => NIMPage._applyPubFilters());
-    }
 
     // OpenAlex enrichment (calcula y actualiza todos los stats al terminar)
     if (window.PublicationsEnricher) new PublicationsEnricher();
@@ -1240,24 +1468,101 @@ class NIMPage {
   }
 
   static _initPubFilter() {
-    const list = document.getElementById('pub-page-list') ||
-                 document.querySelector('.pub-list');
-    if (!list) return;
+    const toolbar = document.getElementById('pub-toolbar');
+    const list = document.getElementById('pub-page-list');
+    if (!toolbar || !list) return;          // la home no tiene barra de filtros
+    if (toolbar.dataset.bound) return;      // delegación: se enlaza una sola vez
+    toolbar.dataset.bound = '1';
 
-    document.querySelectorAll('.pub-filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.pub-filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        NIMPage._applyPubFilters();
-      });
+    this._pubState = this._readPubURL();
+    const st = () => this._pubState;
+
+    toolbar.addEventListener('click', e => {
+      const more = e.target.closest('[data-more]');
+      if (more) {                                   // desplegar / contraer temas
+        const g = document.getElementById('pub-topics');
+        const open = g.classList.toggle('expanded');
+        const n = g.querySelectorAll('.is-extra').length;
+        more.textContent = open ? 'Ver menos' : `+${n} más`;
+        more.setAttribute('aria-expanded', String(open));
+        return;
+      }
+      const y = e.target.closest('.pub-filter-btn');
+      const t = e.target.closest('.pub-topic-btn');
+      const o = e.target.closest('[data-sort]');
+      if (y) { st().year = y.dataset.filter; }
+      else if (t) { const k = t.dataset.topic; st().topics.has(k) ? st().topics.delete(k) : st().topics.add(k); }
+      else if (o) { st().sort = o.dataset.sort; }
+      else if (e.target.closest('#pub-search-clear')) {
+        const i = document.getElementById('pub-search'); i.value = ''; st().q = ''; i.focus();
+      } else return;
+      this._applyPubFilters();
     });
 
-    document.querySelectorAll('.pub-topic-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        btn.classList.toggle('active');
-        NIMPage._applyPubFilters();
-      });
+    // Chips de filtros activos, botón de reinicio y estado vacío (están fuera de la toolbar)
+    document.addEventListener('click', e => {
+      const rm = e.target.closest('[data-remove]');
+      if (rm) {
+        const k = rm.dataset.remove;
+        if (k === 'year') st().year = 'all';
+        else if (k === 'q') { st().q = ''; document.getElementById('pub-search').value = ''; }
+        else if (k === 'autor') st().author = null;
+        else if (k.startsWith('tema:')) st().topics.delete(k.slice(5));
+        this._applyPubFilters();
+      } else if (e.target.closest('[data-pub-reset]')) {
+        this._pubState = { year: 'all', topics: new Set(), q: '', sort: st().sort, author: null };
+        document.getElementById('pub-search').value = '';
+        this._applyPubFilters();
+        document.getElementById('pub-search').focus();
+      }
     });
+
+    const input = document.getElementById('pub-search');
+    let timer;
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { st().q = input.value; this._applyPubFilters(); }, 120);
+      document.getElementById('pub-search-wrap').classList.toggle('has-value', !!input.value);
+    });
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && input.value) { input.value = ''; st().q = ''; this._applyPubFilters(); }
+    });
+
+    // Atajo "/" para buscar (como en GitHub o MDN)
+    document.addEventListener('keydown', e => {
+      if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+      const tag = (e.target.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+      e.preventDefault(); input.focus(); input.select();
+    });
+
+    input.value = st().q;
+    document.getElementById('pub-search-wrap').classList.toggle('has-value', !!input.value);
+    this._applyPubFilters(true);
+  }
+
+  /** Estado inicial desde la URL: ?q= &tema=a,b &anio= &orden=citas &autor=id */
+  static _readPubURL() {
+    const sp = new URLSearchParams(location.search);
+    return {
+      q:      sp.get('q') || '',
+      year:   sp.get('anio') || sp.get('year') || 'all',
+      topics: new Set((sp.get('tema') || '').split(',').map(x => x.trim()).filter(Boolean)),
+      sort:   sp.get('orden') === 'citas' ? 'cites' : 'recent',
+      author: sp.get('autor') || null,
+    };
+  }
+
+  /** Mantiene la URL compartible sin recargar ni ensuciar el historial */
+  static _writePubURL() {
+    const st = this._pubState, sp = new URLSearchParams();
+    if (st.q.trim()) sp.set('q', st.q.trim());
+    if (st.year !== 'all') sp.set('anio', st.year);
+    if (st.topics.size) sp.set('tema', [...st.topics].join(','));
+    if (st.sort === 'cites') sp.set('orden', 'citas');
+    if (st.author) sp.set('autor', st.author);
+    const qs = sp.toString();
+    history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
   }
   
   /**
@@ -1271,7 +1576,7 @@ class NIMPage {
 
     // ── Recomputar derivados ──
     const years     = [...new Set(pubs.map(p => p.year))].sort((a, b) => b - a);
-    const topics    = [...new Set(pubs.flatMap(p => p.topics || []))].sort();
+    const topics    = NIMPage._topicsByFreq(pubs);
     const yearRange = years.length > 1
       ? `${years[years.length - 1]} – ${years[0]}`
       : years[0] || '—';
@@ -1285,53 +1590,87 @@ class NIMPage {
     setEl('ps-q1',     pubs.filter(p => p.quartile === 'Q1').length);
     setEl('ps-period', yearRange);
 
-    // ── Reconstruir botones de año ──
-    const yearGroup = document.querySelector('.pub-filter-group');
-    if (yearGroup) {
-      yearGroup.innerHTML =
-        `<button class="pub-filter-btn active" data-filter="all" data-type="year">Todos</button>` +
-        years.map(y =>
-          `<button class="pub-filter-btn" data-filter="${y}" data-type="year">${y}</button>`
-        ).join('');
-    }
+    // ── Reconstruir botones de año y tema con los datos del .bib ──
+    const yearGroup  = document.getElementById('pub-years');
+    const topicGroup = document.getElementById('pub-topics');
+    if (yearGroup)  yearGroup.innerHTML  = NIMPage._yearButtonsHTML(years);
+    if (topicGroup && topics.length) topicGroup.innerHTML = NIMPage._topicButtonsHTML(topics);
 
-    // ── Reconstruir botones de topic ──
-    const topicGroup = document.querySelectorAll('.pub-filter-group')[1];
-    if (topicGroup && topics.length) {
-      topicGroup.innerHTML = topics.map(t =>
-        `<button class="pub-topic-btn" data-topic="${t}">${t}</button>`
-      ).join('');
-    }
-
-    // ── Re-enlazar listeners (los nodos fueron recreados) ──
+    // La delegación sobrevive al re-render; solo reaplicamos el estado (URL) a las nuevas tarjetas
     NIMPage._initPubFilter();
+    NIMPage._applyPubFilters(true);
 
     // Re-render year chart now that BibTeX data is available
     NIMPage._renderPubsByYearChart();
   }
 
-  static _applyPubFilters() {
-    const list = document.getElementById('pub-page-list') ||
-                 document.querySelector('.pub-list');
-    if (!list) return;
+  static _applyPubFilters(initial) {
+    const list = document.getElementById('pub-page-list');
+    if (!list || !this._pubState) return;
+    const st = this._pubState;
+    const E = NIMUI.esc;
 
-    const activeYear  = document.querySelector('.pub-filter-btn.active')?.dataset.filter || 'all';
-    const activeTopics = [...document.querySelectorAll('.pub-topic-btn.active')]
-      .map(b => b.dataset.topic);
-    const search = (document.getElementById('pub-search')?.value || '').toLowerCase().trim();
-
-    list.querySelectorAll('.pub-card').forEach(card => {
-      const year    = card.dataset.year  || '';
-      const topic   = card.dataset.topic || '';
-      const text    = card.textContent.toLowerCase();
-
-      const yearOK  = activeYear === 'all' || year === activeYear;
-      const topicOK = activeTopics.length === 0 ||
-                      activeTopics.some(t => topic.includes(t));
-      const searchOK = !search || text.includes(search);
-
-      card.style.display = yearOK && topicOK && searchOK ? '' : 'none';
+    // ── Sincronizar estado visual de los controles ──
+    document.querySelectorAll('.pub-filter-btn').forEach(b => {
+      const on = b.dataset.filter === st.year;
+      b.classList.toggle('active', on); b.setAttribute('aria-pressed', String(on));
     });
+    document.querySelectorAll('.pub-topic-btn').forEach(b => {
+      const on = st.topics.has(b.dataset.topic);
+      b.classList.toggle('active', on); b.setAttribute('aria-pressed', String(on));
+    });
+    document.querySelectorAll('[data-sort]').forEach(b => {
+      const on = b.dataset.sort === st.sort;
+      b.classList.toggle('active', on); b.setAttribute('aria-pressed', String(on));
+    });
+    const activeYearBtn = document.querySelector('.pub-filter-btn.active');
+    if (activeYearBtn && !initial) activeYearBtn.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+
+    // ── Filtrar ──
+    const words = this._norm(st.q).split(' ').filter(Boolean);
+    const person = st.author ? (NIMACH_DATA.people || []).concat(NIMACH_DATA.alumni || []).find(p => p.id === st.author) : null;
+    const byId = new Map((NIMACH_DATA.publications || []).map(p => [String(p.id), p]));
+    const cards = [...list.querySelectorAll('.pub-card')];
+    let shown = 0;
+
+    cards.forEach(card => {
+      const yearOK  = st.year === 'all' || card.dataset.year === st.year;
+      const topics  = (card.dataset.topic || '').split('|');
+      const topicOK = !st.topics.size || [...st.topics].some(t => topics.includes(t));
+      const hay     = card.dataset.search || this._norm(card.textContent);
+      const textOK  = words.every(w => hay.includes(w));          // todas las palabras, en cualquier orden
+      const authOK  = !person || (byId.get(card.dataset.pubId) && this._pubHasAuthor(byId.get(card.dataset.pubId), person));
+      const ok = yearOK && topicOK && textOK && authOK;
+      card.hidden = !ok;
+      card.style.display = ok ? '' : 'none';
+      if (ok) shown++;
+    });
+
+    // ── Ordenar (estable) ──
+    const idx = new Map(cards.map((c, i) => [c, i]));
+    const key = c => st.sort === 'cites'
+      ? [-(+c.dataset.cites || 0), -(+c.dataset.year || 0), idx.get(c)]
+      : [-(+c.dataset.year || 0), idx.get(c)];
+    cards.sort((a, b) => { const A = key(a), B = key(b); for (let i = 0; i < A.length; i++) if (A[i] !== B[i]) return A[i] - B[i]; return 0; });
+    cards.forEach(c => list.appendChild(c));
+
+    // ── Resultados + chips de filtros activos ──
+    const chips = [];
+    if (person) chips.push(`<span class="active-chip">Autor: ${E(person.name)}<button type="button" data-remove="autor" aria-label="Quitar filtro de autor">✕</button></span>`);
+    if (st.year !== 'all') chips.push(`<span class="active-chip">Año ${E(st.year)}<button type="button" data-remove="year" aria-label="Quitar filtro de año">✕</button></span>`);
+    st.topics.forEach(t => chips.push(`<span class="active-chip">${E(t)}<button type="button" data-remove="tema:${E(t)}" aria-label="Quitar tema ${E(t)}">✕</button></span>`));
+    if (st.q.trim()) chips.push(`<span class="active-chip">“${E(st.q.trim())}”<button type="button" data-remove="q" aria-label="Quitar búsqueda">✕</button></span>`);
+
+    const res = document.getElementById('pub-results');
+    if (res) {
+      res.innerHTML = `<span>Mostrando <strong>${shown}</strong> de <strong>${cards.length}</strong> publicaciones</span>` +
+        chips.join('') + (chips.length ? `<button type="button" class="link-btn" data-pub-reset>Limpiar todo</button>` : '');
+    }
+    const empty = document.getElementById('pub-empty');
+    if (empty) empty.hidden = shown > 0;
+
+    if (!initial) this._writePubURL();
+    else if (chips.length || st.sort === 'cites') { /* ya viene de la URL */ }
   }
 
   static _afterPersonas() {
@@ -1355,7 +1694,7 @@ class NIMPage {
       if (grid)     grid.innerHTML = '';
       if (sentinel) sentinel.style.display = 'block';
 
-      loaderHandle = NIMPage._initPeopleLazyLoad(subset);
+      loaderHandle = NIMPage._initPeopleLazyLoad(subset, { all: !!location.hash });
     };
 
     document.querySelectorAll('.people-tab').forEach(tab => {
@@ -1372,8 +1711,8 @@ class NIMPage {
 
   // people: pre-filtered array to render. Returns { disconnect } so the caller
   // can tear down this loader when a filter change clears the grid.
-  static _initPeopleLazyLoad(people) {
-    const BATCH    = 6;
+  static _initPeopleLazyLoad(people, opts = {}) {
+    const BATCH    = opts.all ? Math.max(people.length, 1) : 6;   // con #persona se carga todo para poder llegar a ella
     const grid     = document.getElementById('people-page-grid');
     const sentinel = document.getElementById('people-sentinel');
     const noop     = { disconnect: () => {} };
@@ -1383,7 +1722,7 @@ class NIMPage {
     if (!people.length) {
       grid.innerHTML = `
         <p style="grid-column:1/-1;text-align:center;padding:40px 20px;
-          font-size:13px;color:var(--s-text-3,#8aa0b8);">
+          font-size:13px;color:var(--text-3);">
           No hay miembros en esta categoría.</p>`;
       sentinel.style.display = 'none';
       return noop;
@@ -1453,76 +1792,25 @@ class NIMPage {
   }
   
   static _afterGaleria() {
-    NIMPage._initGalleryLightbox();
-  }
-  
-  /* ══════════════════════════════════
-     GALLERY LIGHTBOX (shared, photo-aware)
-  ══════════════════════════════════ */
-  static _initGalleryLightbox() {
-    const items = document.querySelectorAll('.gallery-item');
-    if (!items.length) return;
-
-    // Reutilizar lightbox si ya existe en el DOM
-    let lb = document.getElementById('lightbox');
-    if (!lb) {
-      lb = document.createElement('div');
-      lb.id = 'lightbox';
-      lb.style.cssText = [
-        'position:fixed', 'inset:0', 'background:rgba(6,14,30,.96)',
-        'z-index:1000', 'display:none', 'align-items:center',
-        'justify-content:center', 'backdrop-filter:blur(14px)', 'cursor:pointer',
-      ].join(';');
-      lb.innerHTML = `
-        <div style="max-width:880px;width:92%;position:relative;">
-          <div id="lb-img" style="
-            width:100%;height:520px;border-radius:14px;
-            overflow:hidden;position:relative;background:#030810;
-            display:flex;align-items:center;justify-content:center;"></div>
-          <div id="lb-title" style="color:#e8f0fa;font-size:16px;font-weight:500;margin-top:16px;"></div>
-          <div id="lb-sub"   style="color:#7a9bbf;font-size:13px;margin-top:4px;"></div>
-          <button id="lb-close" style="
-            position:absolute;top:-48px;right:0;
-            background:rgba(255,255,255,.1);border:none;color:#e8f0fa;
-            width:36px;height:36px;border-radius:50%;font-size:18px;
-            cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
-        </div>`;
-      document.body.appendChild(lb);
-
-      const close = () => { lb.style.display = 'none'; document.body.style.overflow = ''; };
-      lb.addEventListener('click', e => { if (e.target === lb) close(); });
-      document.getElementById('lb-close').addEventListener('click', close);
-      document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-    }
-
-    items.forEach(item => {
-      if (item.dataset.lbBound) return;   // evita listeners duplicados
-      item.dataset.lbBound = '1';
-      item.addEventListener('click', () => {
-        const inner  = item.querySelector('.gallery-item-inner');
-        const title  = item.querySelector('.gallery-label-title')?.textContent || '';
-        const sub    = item.querySelector('.gallery-label-sub')?.textContent   || '';
-        const lbImg  = document.getElementById('lb-img');
-        const photo  = inner.querySelector('img');
-
-        if (photo) {
-          lbImg.style.background = '#030810';
-          lbImg.innerHTML = `<img src="${photo.src}" alt="${photo.alt}"
-            style="max-width:100%;max-height:100%;object-fit:contain;
-            border-radius:10px;display:block;">`;
-        } else {
-          lbImg.style.background = window.getComputedStyle(inner).background;
-          const svg = inner.querySelector('.gallery-svg');
-          lbImg.innerHTML = svg ? svg.outerHTML : '';
+    // El visor de imágenes vive en ui.js (NIMUI.Lightbox) y se activa por delegación.
+    if (window.NIMUI) NIMUI.hydrateIcons();
+    const grid = document.getElementById('page-gallery-grid');
+    NIMPage.loadInstagram().then(feed => {
+      const items = NIMPage._igItems(feed, 24);
+      if (grid && items.length) {
+        NIMPage._fillGridFromIG(grid, items, '../');
+        const note = document.getElementById('ig-note');
+        const d = feed.updated ? new Date(feed.updated) : null;
+        if (note) {
+          note.innerHTML = `Publicaciones de <a href="${NIMUI.esc(feed.profileUrl || 'https://www.instagram.com/nimach_group/')}" target="_blank" rel="noopener">@${NIMUI.esc(feed.username || 'nimach_group')}</a>` +
+            (d && !isNaN(d) ? ` · actualizado el ${d.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}` : '');
+          note.hidden = false;
         }
-
-        document.getElementById('lb-title').textContent = title;
-        document.getElementById('lb-sub').textContent   = sub;
-        lb.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-      });
+      }
+      if (grid) grid.removeAttribute('aria-busy');
     });
   }
+
 }
 
 /* ─────────────────────────────────────────
