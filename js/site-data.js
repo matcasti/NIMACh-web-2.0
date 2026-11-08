@@ -155,7 +155,7 @@ window.__SITE_DATA__ = {
       "active": true,
       "initials": "CC",
       "name": "Cristobal Canales",
-      "role": "Investigador",
+      "role": "Bioquímico",
       "role_category": [
         "researcher",
         "staff"
