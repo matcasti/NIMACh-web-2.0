@@ -467,8 +467,8 @@ window.__SITE_DATA__ = {
       "id": "pet-vader",
       "name": "Vader",
       "species": "Gato",
-      "breed": "Mestizo rescatado",
-      "photo": "assets/images/pets/vader.jpeg",
+      "breed": "Mestizo pelo semilargo",
+      "photo": "assets/images/pets/vader--mw8071y1.jpg",
       "owner": "matias-castillo",
       "bio": "Supervisor técnico del desarrollo de aplicaciones. Verifica cada commit con su mirada escéptica y ocasionalmente camina sobre el teclado para contribuir.",
       "joined": "2026"
