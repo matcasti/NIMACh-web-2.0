@@ -827,7 +827,44 @@
       "active": false
     }
   ],
-  "gallery": [],
+  "gallery": [
+    {
+      "bg": "gi-1",
+      "span": false,
+      "photo": "assets/images/gallery/taller-escolar-de-electroencefalograma-eeg--mw8in7bs.jpg",
+      "featured_home": true,
+      "title": "Taller escolar de electroencefalograma (EEG)",
+      "sub": "Extracto del taller de EEG durante el seminario de Mentes del Fin del Mundo",
+      "id": "g-taller-escolar-de-electroencefalograma-eeg"
+    },
+    {
+      "bg": "gi-1",
+      "span": false,
+      "photo": "assets/images/gallery/nimach-presente-en-la-plaza-ciudadana-experienci--mw8intqy.jpg",
+      "featured_home": true,
+      "title": "¡NIMACh presente en la Plaza Ciudadana: Experiencia en Movimiento!",
+      "sub": "¡NIMACh presente en la Plaza Ciudadana: Experiencia en Movimiento!",
+      "id": "g-nimach-presente-en-la-plaza-ciudadana-experienci"
+    },
+    {
+      "bg": "gi-1",
+      "span": false,
+      "photo": "assets/images/gallery/gallery--mw8iq7ag.jpg",
+      "featured_home": true,
+      "title": "II edición de Mentes del Fin del Mundo",
+      "sub": "La II edición de Mentes del Fin del Mundo llegó a su fin, dejándonos una jornada llena de aprendizaje, nuevas ideas y entusiasmo por la investigación científica.",
+      "id": "g-ii-edicion-de-mentes-del-fin-del-mundo"
+    },
+    {
+      "bg": "gi-1",
+      "span": false,
+      "photo": "assets/images/gallery/las-grandes-preguntas-cientificas-tambien-nacen---mw8isjjz.jpg",
+      "featured_home": true,
+      "title": "Las grandes preguntas científicas también nacen en las aulas.",
+      "sub": "Uno de los propósitos de Mentes del Fin del Mundo es acercar la investigación a las nuevas generaciones, promoviendo la curiosidad, el pensamiento crítico y la creatividad.",
+      "id": "g-las-grandes-preguntas-cientificas-tambien-nacen-"
+    }
+  ],
   "tools": [
     {
       "id": "hrv-recorder",
