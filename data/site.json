@@ -43,7 +43,7 @@
       "photo": "assets/images/team/cris-nunez.jpg",
       "featured_home": true,
       "ringColor": "#3b7abf",
-      "bio": "Doctor en Fisiología. Especialista en neurofisiología y regulación autonómica cardíaca. Lidera el laboratorio NIM-ACh y proyectos FONDECYT sobre el eje cerebro-corazón en contextos extremos patagónicos. Académico de la Escuela de Medicina de la UMAG.",
+      "bio": "Doctor en Fisiología. Especialista en neurofisiología y regulación autonómica cardíaca. Lidera el laboratorio NIMACh y proyectos FONDECYT sobre el eje cerebro-corazón en contextos extremos patagónicos. Académico de la Escuela de Medicina de la UMAG.",
       "chips": [
         "FONDECYT",
         "Neurofisiología",
@@ -760,7 +760,7 @@
       "lat": -53.16,
       "lon": -70.91,
       "label": "Punta Arenas",
-      "sub": "NIM-ACh · Sede",
+      "sub": "NIMACh · Sede",
       "country": "Chile",
       "home": true
     },
@@ -968,7 +968,7 @@
     },
     {
       "date": "Oct 2024",
-      "html": "NIM-ACh presentó 3 trabajos en el congreso CIES 2024 en Talca. Dos menciones de honor.",
+      "html": "NIMACh presentó 3 trabajos en el congreso CIES 2024 en Talca. Dos menciones de honor.",
       "tag": "Congreso",
       "hot": false,
       "featured_home": true
@@ -989,7 +989,7 @@
     },
     {
       "date": "Dic 2023",
-      "html": "NIM-ACh se incorpora a la Red RIES-LAC de envejecimiento saludable en América Latina.",
+      "html": "NIMACh se incorpora a la Red RIES-LAC de envejecimiento saludable en América Latina.",
       "tag": "Red científica",
       "hot": false,
       "featured_home": true
